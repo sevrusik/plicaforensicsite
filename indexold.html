@@ -143,34 +143,6 @@ section{padding:88px 48px;}
 .measure-note a{color:var(--night);font-family:var(--mono);font-size:12px;
   text-decoration:none;white-space:nowrap;}
 
-/* HERO PHILOSOPHY LINE */
-.hero-philosophy{font-size:15px;color:var(--ink);line-height:1.6;
-  margin:0 0 28px;max-width:520px;border-left:2px solid var(--copper);
-  padding-left:16px;}
-.hero-philosophy strong{color:var(--night);font-weight:600;}
-
-/* PRODUCTS */
-#products{background:var(--white);border-top:1px solid var(--border);}
-.products-intro{max-width:640px;margin-bottom:40px;}
-.prod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;
-  background:var(--border);border:1px solid var(--border);}
-.prod-card{padding:32px 26px;background:var(--white);
-  display:flex;flex-direction:column;gap:14px;transition:all 0.2s;
-  border-top:3px solid transparent;}
-.prod-card:hover{background:var(--surface);border-top-color:var(--copper);}
-.prod-num{font-family:var(--mono);font-size:10px;color:var(--muted);
-  letter-spacing:0.16em;}
-.prod-name{font-family:var(--serif);font-size:21px;color:var(--night);
-  line-height:1.15;}
-.prod-desc{font-size:13.5px;color:var(--muted);line-height:1.65;flex:1;}
-.prod-tag{font-family:var(--mono);font-size:10px;color:var(--copper);
-  letter-spacing:0.06em;border-top:1px solid var(--border);padding-top:12px;}
-.prod-footer{margin-top:32px;text-align:center;font-family:var(--mono);
-  font-size:12px;color:var(--muted);letter-spacing:0.04em;}
-.prod-footer strong{color:var(--night);font-weight:500;}
-@media(max-width:860px){.prod-grid{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:480px){.prod-grid{grid-template-columns:1fr;}}
-
 /* ENGAGEMENTS */
 #engagements{background:var(--surface);}
 .eng-list{display:flex;flex-direction:column;gap:2px;}
@@ -321,8 +293,6 @@ html.dark .art-card{background:var(--surface);}
 <nav>
   <a class="nav-brand" href="#">PLICA</a>
   <ul class="nav-links">
-    <li><a href="#products" data-i18n="nav.products">Products</a></li>
-    <li><a href="use-cases.html" data-i18n="nav.usecases">Use cases</a></li>
     <li><a href="#problem" data-i18n="nav.problem">Problem</a></li>
     <li><a href="#measure" data-i18n="nav.measure">Methodology</a></li>
     <li><a href="#engagements" data-i18n="nav.engagements">Engagements</a></li>
@@ -348,7 +318,6 @@ html.dark .art-card{background:var(--surface);}
       <h1 class="hero-title" data-i18n-html="hero.title">AI makes decisions.<br><em>We make them defensible.</em></h1>
       <p class="hero-body" data-i18n="hero.body">Plica is an independent forensic boutique for regulated file workflows. We audit the gap between the file your client submitted and the file your stack actually examined.</p>
       <div class="hero-tagline" data-i18n="hero.tagline">Truth lives in the layers.</div>
-      <p class="hero-philosophy" data-i18n-html="hero.philosophy">No single layer catches every fake. Plica checks the document from several sides — container metadata, embedded pixels, provenance chain — and returns <strong>one enforceable decision</strong> for your compliance workflow.</p>
       <div class="hero-actions">
         <a class="btn-primary" href="https://api.plicaforensic.com/try" target="_blank" style="background:var(--copper);border-color:var(--copper);">Try the API — free →</a>
         <a class="btn-primary" href="mailto:ruslanm@plicaforensic.com" data-i18n="hero.cta1">Book Phase 0 →</a>
@@ -445,44 +414,6 @@ html.dark .art-card{background:var(--surface);}
 
 </svg>
     </div>
-  </div>
-</section>
-
-<!-- PRODUCTS -->
-<section id="products">
-  <div class="container">
-    <div class="products-intro">
-      <div class="s-tag" data-i18n="products.tag">What you get</div>
-      <h2 class="s-title" data-i18n-html="products.title">Four ways to <em>establish trust.</em></h2>
-    </div>
-    <div class="prod-grid">
-      <div class="prod-card">
-        <div class="prod-num">01</div>
-        <div class="prod-name" data-i18n="products.p1.name">Document Forensic Check</div>
-        <div class="prod-desc" data-i18n="products.p1.desc">Find out whether a file is AI-generated or edited — in seconds. Container, pixel, and sensor layers, one verdict.</div>
-        <div class="prod-tag" data-i18n="products.p1.tag">API · image + PDF</div>
-      </div>
-      <div class="prod-card">
-        <div class="prod-num">02</div>
-        <div class="prod-name" data-i18n="products.p2.name">Compliance Policy Pack</div>
-        <div class="prod-desc" data-i18n="products.p2.desc">Machine-readable actions for your agent: approve, hold for review, reject, request re-submission. Built for autonomous workflows.</div>
-        <div class="prod-tag" data-i18n="products.p2.tag">policy actions · webhook</div>
-      </div>
-      <div class="prod-card">
-        <div class="prod-num">03</div>
-        <div class="prod-name" data-i18n="products.p3.name">Evidence Packet</div>
-        <div class="prod-desc" data-i18n="products.p3.desc">A defensible record for the regulator: what arrived at intake versus what the model decided on. Reproducible months later.</div>
-        <div class="prod-tag" data-i18n="products.p3.tag">intake → decision record</div>
-      </div>
-      <div class="prod-card">
-        <div class="prod-num">04</div>
-        <div class="prod-name" data-i18n="products.p4.name">SDB-26 Benchmark</div>
-        <div class="prod-desc" data-i18n="products.p4.desc">Measure how often synthetic documents slip past your KYC stack. The open benchmark — your own metric, not your vendor's.</div>
-        <div class="prod-tag" data-i18n="products.p4.tag">open standard · CC BY 4.0</div>
-      </div>
-    </div>
-    <div style="text-align:center;margin-top:20px;"><a href="use-cases.html" class="btn-secondary" data-i18n="products.seeusecases" style="display:inline-block;">See use cases by industry →</a></div>
-    <div class="prod-footer" data-i18n="products.footer">Plugs into your KYC stack — works alongside Sumsub, Onfido, Veriff. <strong>It does not replace them.</strong></div>
   </div>
 </section>
 
@@ -776,21 +707,13 @@ No signup</div>
 <script>
 const i18n = {
   en: {
-    'nav.problem':'Problem','nav.products':'Products','nav.usecases':'Use cases','nav.measure':'Methodology','nav.engagements':'Engagements',
+    'nav.problem':'Problem','nav.measure':'Methodology','nav.engagements':'Engagements',
     'nav.who':"Who it's for",'nav.writing':'Writing','nav.faq':'FAQ','nav.cta':'Book Phase 0 →',
     'hero.pre':'Independent Forensic Boutique · Larnaca, Cyprus',
     'hero.title':'AI makes decisions.<br><em>We make them defensible.</em>',
     'hero.body':'Plica is an independent forensic boutique for regulated file workflows. We audit the gap between the file your client submitted and the file your stack actually examined.',
     'hero.tagline':'Truth lives in the layers.',
-    'hero.philosophy':'No single layer catches every fake. Plica checks the document from several sides — container metadata, embedded pixels, provenance chain — and returns <strong>one enforceable decision</strong> for your compliance workflow.',
     'hero.cta1':'Book Phase 0 →','hero.cta2':'Read the methodology',
-    'products.tag':'What you get','products.title':'Four ways to <em>establish trust.</em>',
-    'products.p1.name':'Document Forensic Check','products.p1.desc':'Find out whether a file is AI-generated or edited — in seconds. Container, pixel, and sensor layers, one verdict.','products.p1.tag':'API · image + PDF',
-    'products.p2.name':'Compliance Policy Pack','products.p2.desc':'Machine-readable actions for your agent: approve, hold for review, reject, request re-submission. Built for autonomous workflows.','products.p2.tag':'policy actions · webhook',
-    'products.p3.name':'Evidence Packet','products.p3.desc':'A defensible record for the regulator: what arrived at intake versus what the model decided on. Reproducible months later.','products.p3.tag':'intake → decision record',
-    'products.p4.name':'SDB-26 Benchmark','products.p4.desc':"Measure how often synthetic documents slip past your KYC stack. The open benchmark — your own metric, not your vendor's.",'products.p4.tag':'open standard · CC BY 4.0',
-    'products.seeusecases':'See use cases by industry →',
-    'products.footer':'Plugs into your KYC stack — works alongside Sumsub, Onfido, Veriff. <strong>It does not replace them.</strong>',
     'problem.tag':'The problem',
     'problem.title':'The detector sees a copy.<br><em>Not the original.</em>',
     'problem.body':'Most KYC teams believe they verify the customer\'s file. In reality, the detector often sees a pipeline copy — already resized, recompressed, normalised, or sanitised by the intake stack.<br><br>That means the verdict may be valid for the derivative object — but <strong>not defensible for the original evidence.</strong>',
@@ -863,21 +786,13 @@ const i18n = {
     'connect.web_sub':'Documentation · SDB-26 · engagements',
   },
   ru: {
-    'nav.problem':'Проблема','nav.products':'Продукты','nav.usecases':'Применение','nav.measure':'Методология','nav.engagements':'Услуги',
+    'nav.problem':'Проблема','nav.measure':'Методология','nav.engagements':'Услуги',
     'nav.who':'Для кого','nav.writing':'Статьи','nav.faq':'FAQ','nav.cta':'Начать Phase 0 →',
     'hero.pre':'Независимая Forensic Boutique · Ларнака, Кипр',
     'hero.title':'ИИ принимает решения.<br><em>Мы делаем их защищаемыми.</em>',
     'hero.body':'Plica — независимая forensic boutique для регулируемых файловых процессов. Мы аудируем разрыв между файлом, который подал клиент, и файлом, который реально проверил ваш стек.',
     'hero.tagline':'Истина живёт в слоях.',
-    'hero.philosophy':'Ни один слой не ловит всё. Plica проверяет документ с нескольких сторон — метаданные контейнера, встроенные пиксели, цепочку происхождения — и отдаёт <strong>одно enforceable решение</strong> для вашего compliance-процесса.',
     'hero.cta1':'Начать Phase 0 →','hero.cta2':'Читать методологию',
-    'products.tag':'Что вы получаете','products.title':'Четыре способа <em>установить доверие.</em>',
-    'products.p1.name':'Document Forensic Check','products.p1.desc':'Узнайте, AI-сгенерирован файл или отредактирован — за секунды. Контейнер, пиксели, сенсор — один вердикт.','products.p1.tag':'API · изображения + PDF',
-    'products.p2.name':'Compliance Policy Pack','products.p2.desc':'Machine-readable действия для вашего агента: одобрить, отправить на review, отклонить, запросить повторно. Для автономных процессов.','products.p2.tag':'policy actions · webhook',
-    'products.p3.name':'Evidence Packet','products.p3.desc':'Защищаемая запись для регулятора: что пришло на входе против того, на чём модель приняла решение. Воспроизводимо спустя месяцы.','products.p3.tag':'intake → decision record',
-    'products.p4.name':'SDB-26 Benchmark','products.p4.desc':'Измерьте, как часто синтетические документы проходят мимо вашего KYC. Открытый бенчмарк — ваш метрик, не вендорский.','products.p4.tag':'открытый стандарт · CC BY 4.0',
-    'products.seeusecases':'Применение по индустриям →',
-    'products.footer':'Встраивается в ваш KYC-стек — работает рядом с Sumsub, Onfido, Veriff. <strong>Не заменяет их.</strong>',
     'problem.tag':'Проблема',
     'problem.title':'Детектор видит копию.<br><em>Не оригинал.</em>',
     'problem.body':'Большинство KYC-команд считают, что проверяют файл клиента. На самом деле детектор часто видит производную pipeline — уже уменьшенную, пересжатую, нормализованную или санитизированную intake-стеком.<br><br>Это означает, что вердикт может быть обоснованным для производного объекта — но <strong>не защищаемым для исходного доказательства.</strong>',

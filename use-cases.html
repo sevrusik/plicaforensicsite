@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plica — Use Cases</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --white:#F8F6F1;--surface:#EFEDE6;--cream:#E8E4DA;--cream-mid:#E2DDD2;
+  --ink:#1C1C1A;--muted:#6B6B63;--border:#CEC9BC;
+  --night:#1A3A3A;--night-soft:#244F4F;--night-deep:#122929;
+  --copper:#8B5E3C;--copper-bg:#F5EDE4;--copper-border:#D4A882;
+  --serif:'DM Serif Display',Georgia,serif;--mono:'DM Mono',monospace;--sans:'DM Sans',system-ui,sans-serif;
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--white);color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(248,246,241,0.96);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:0 48px;height:60px;}
+.nav-brand{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--night);
+  letter-spacing:0.18em;text-decoration:none;}
+.nav-tabs{display:flex;gap:4px;}
+.nav-tab{font-family:var(--mono);font-size:11px;color:var(--muted);background:none;border:none;
+  cursor:pointer;padding:8px 14px;letter-spacing:0.04em;transition:all 0.15s;border-bottom:2px solid transparent;}
+.nav-tab:hover{color:var(--ink);}
+.nav-tab.active{color:var(--night);border-bottom-color:var(--copper);}
+.nav-right{display:flex;align-items:center;gap:14px;}
+.lang-switch{display:flex;border:1px solid var(--border);overflow:hidden;}
+.lang-btn{font-family:var(--mono);font-size:11px;font-weight:500;padding:6px 11px;background:transparent;
+  border:none;cursor:pointer;color:var(--muted);letter-spacing:0.06em;transition:all 0.15s;}
+.lang-btn.active{background:var(--night);color:white;}
+.lang-btn:hover:not(.active){background:var(--cream-mid);color:var(--ink);}
+.nav-cta{font-family:var(--mono);font-size:11px;font-weight:500;background:var(--copper);
+  color:var(--white);padding:9px 18px;text-decoration:none;letter-spacing:0.08em;white-space:nowrap;}
+.uc{display:none;}
+.uc.active{display:block;}
+section{padding:72px 48px;}
+.container{max-width:1040px;margin:0 auto;}
+.hero-uc{padding-top:140px;padding-bottom:64px;}
+.uc-tag{font-family:var(--mono);font-size:10px;color:var(--copper);letter-spacing:0.18em;
+  text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:10px;}
+.uc-tag::before{content:'';width:24px;height:1px;background:var(--copper);}
+.uc-h1{font-family:var(--serif);font-size:clamp(34px,4.5vw,54px);line-height:1.08;
+  color:var(--ink);margin-bottom:24px;max-width:800px;}
+.uc-h1 em{font-style:italic;color:var(--night);}
+.uc-sub{font-size:18px;color:var(--muted);line-height:1.7;max-width:640px;margin-bottom:32px;}
+.uc-actions{display:flex;gap:12px;flex-wrap:wrap;}
+.btn-primary{font-family:var(--mono);font-size:11px;font-weight:500;background:var(--night);
+  color:var(--white);padding:13px 28px;text-decoration:none;letter-spacing:0.1em;transition:background 0.2s;}
+.btn-primary:hover{background:var(--night-soft);}
+.btn-copper{background:var(--copper);}
+.btn-copper:hover{background:#7A5234;}
+.btn-secondary{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--night);
+  border:1px solid var(--night);padding:12px 28px;text-decoration:none;letter-spacing:0.1em;transition:all 0.2s;}
+.btn-secondary:hover{background:var(--night);color:var(--white);}
+.s-tag{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:0.18em;
+  text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.s-tag::before{content:'';width:20px;height:1px;background:var(--border);}
+.s-title{font-family:var(--serif);font-size:clamp(26px,3vw,38px);line-height:1.12;
+  color:var(--ink);margin-bottom:40px;}
+.s-title em{font-style:italic;color:var(--night);}
+.alt{background:var(--surface);}
+.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border);
+  border:1px solid var(--border);}
+.doc-cell{background:var(--white);padding:24px;}
+.doc-cell-name{font-family:var(--mono);font-size:12px;color:var(--night);font-weight:500;margin-bottom:8px;}
+.doc-cell-attack{font-size:13px;color:var(--muted);line-height:1.6;}
+@media(max-width:760px){.docs-grid{grid-template-columns:1fr;}}
+.break-box{background:var(--copper-bg);border-left:3px solid var(--copper);padding:28px 32px;max-width:780px;}
+.break-box p{font-size:16px;color:var(--ink);line-height:1.7;}
+.break-box strong{color:var(--copper);}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.step-n{font-family:var(--serif);font-size:32px;color:var(--border);line-height:1;margin-bottom:12px;}
+.step-name{font-family:var(--serif);font-size:19px;color:var(--night);margin-bottom:8px;}
+.step-desc{font-size:14px;color:var(--muted);line-height:1.65;}
+@media(max-width:760px){.steps{grid-template-columns:1fr;gap:28px;}}
+.cta-band{background:var(--night);text-align:center;padding:72px 48px;}
+.cta-band h2{font-family:var(--serif);font-size:clamp(26px,3vw,36px);color:var(--white);margin-bottom:16px;line-height:1.15;}
+.cta-band h2 em{font-style:italic;color:var(--copper-border);}
+.cta-band p{font-size:15px;color:rgba(255,255,255,0.6);margin-bottom:28px;font-family:var(--mono);letter-spacing:0.04em;}
+.cta-band .btn-primary{background:var(--copper);}
+.cta-band .btn-primary:hover{background:#7A5234;}
+.foot{padding:32px 48px;text-align:center;border-top:1px solid var(--border);
+  font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:0.04em;}
+.foot strong{color:var(--night);}
+.foot a{color:var(--night);text-decoration:none;}
+@media(max-width:680px){
+  nav{padding:0 16px;flex-wrap:wrap;height:auto;gap:8px;padding-top:8px;padding-bottom:8px;}
+  .nav-tabs{order:3;width:100%;overflow-x:auto;}
+  section{padding:56px 24px;}
+  .hero-uc{padding-top:120px;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="index.html">PLICA</a>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showUC('emi',this)" data-i18n="tab.emi">EMI / FX Onboarding</button>
+    <button class="nav-tab" onclick="showUC('insurance',this)" data-i18n="tab.insurance">Insurance Claims</button>
+    <button class="nav-tab" onclick="showUC('rental',this)" data-i18n="tab.rental">Car Rental</button>
+    <button class="nav-tab" onclick="showUC('agentic',this)" data-i18n="tab.agentic">Agentic Workflows</button>
+  </div>
+  <div class="nav-right">
+    <div class="lang-switch">
+      <button class="lang-btn active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('ru')">RU</button>
+    </div>
+    <a class="nav-cta" href="https://api.plicaforensic.com/try" target="_blank" data-i18n="cta.try">Try the API →</a>
+  </div>
+</nav>
+
+<!-- EMI -->
+<div class="uc active" id="uc-emi">
+  <section class="hero-uc"><div class="container">
+    <div class="uc-tag" data-i18n="emi.tag">Regulated onboarding · CySEC / EMI / PSP</div>
+    <h1 class="uc-h1" data-i18n-html="emi.h1">Your KYC vendor said PASS.<br><em>Can you prove what it examined?</em></h1>
+    <p class="uc-sub" data-i18n="emi.sub">When AMLA or your supervisor asks what document your system actually verified, a vendor confidence score is not an answer. Plica gives you an independent forensic record — at the object level, before your pipeline touched the file.</p>
+    <div class="uc-actions">
+      <a class="btn-primary btn-copper" href="https://api.plicaforensic.com/try" target="_blank" data-i18n="btn.tryfree">Try the API — free →</a>
+      <a class="btn-secondary" href="mailto:ruslanm@plicaforensic.com?subject=EMI%20Trust%20Readiness%20Scan" data-i18n="emi.cta2">Book a 15-min audit call</a>
+    </div>
+  </div></section>
+  <section class="alt"><div class="container">
+    <div class="s-tag" data-i18n="label.faked">What gets faked</div>
+    <h2 class="s-title" data-i18n-html="emi.docs.title">The documents behind <em>onboarding fraud.</em></h2>
+    <div class="docs-grid">
+      <div class="doc-cell"><div class="doc-cell-name" data-i18n="emi.d1.n">ID / passport</div><div class="doc-cell-attack" data-i18n="emi.d1.a">AI-generated or face-swapped identity documents that pass basic OCR and template checks.</div></div>
+      <div class="doc-cell"><div class="doc-cell-name" data-i18n="emi.d2.n">Proof of address</div><div class="doc-cell-attack" data-i18n="emi.d2.a">Synthetic utility bills assembled in software — perfect layout, no capture provenance.</div></div>
+      <div class="doc-cell"><div class="doc-cell-name" data-i18n="emi.d3.n">Source of funds</div><div class="doc-cell-attack" data-i18n="emi.d3.a">Edited bank statements where balances or transactions were altered after export.</div></div>
+    </div>
+  </div></section>
+  <section><div class="container">
+    <div class="s-tag" data-i18n="label.breaks">What breaks today</div>
+    <h2 class="s-title" data-i18n-html="emi.break.title">The detector sees a copy — <em>not the original.</em></h2>
+    <div class="break-box"><p data-i18n-html="emi.break.body">Between upload and analysis, your intake pipeline resizes, recompresses and strips metadata. The detector scores a <strong>derivative</strong>, not the file your client submitted. The forensic signals needed to prove authenticity may already be gone — and you cannot reconstruct what was examined. We call this <strong>Pipeline-Induced Provenance Loss</strong>.</p></div>
+  </div></section>
+  <section class="alt"><div class="container">
+    <div class="s-tag" data-i18n="label.how">How Plica solves it</div>
+    <h2 class="s-title" data-i18n-html="emi.steps.title">Three steps to a <em>defensible record.</em></h2>
+    <div class="steps">
+      <div class="step"><div class="step-n">01</div><div class="step-name" data-i18n="step.verify">Verify</div><div class="step-desc" data-i18n="emi.s1">Forensic check across container metadata, embedded pixels and provenance — one verdict with reason codes, not a black-box score.</div></div>
+      <div class="step"><div class="step-n">02</div><div class="step-name" data-i18n="step.policy">Policy</div><div class="step-desc" data-i18n="emi.s2">Machine-readable action for your workflow: approve, hold for review, reject — calibrated to provenance quality, not task risk.</div></div>
+      <div class="step"><div class="step-n">03</div><div class="step-name" data-i18n="step.evidence">Evidence</div><div class="step-desc" data-i18n="emi.s3">A defensible packet tying the verdict to the original intake object. Reproducible when AMLA or CySEC asks, months later.</div></div>
+    </div>
+  </div></section>
+</div>
+
+<!-- INSURANCE -->
+<div class="uc" id="uc-insurance">
+  <section class="hero-uc"><div class="container">
+    <div class="uc-tag" data-i18n="ins.tag">Insurance claims · damage & document fraud</div>
+    <h1 class="uc-h1" data-i18n-html="ins.h1">The claim photo looks real.<br><em>Was it edited before you paid?</em></h1>
+    <p class="uc-sub" data-i18n="ins.sub">Claimants now edit damage photos and generate supporting documents with mobile AI tools. The adjuster sees a clean image; the payout goes out. Plica detects the manipulation a human eye and a standard detector miss.</p>
+    <div class="uc-actions">
+      <a class="btn-primary btn-copper" href="https://api.plicaforensic.com/try" target="_blank" data-i18n="btn.tryfree">Try the API — free →</a>
+      <a class="btn-secondary" href="mailto:ruslanm@plicaforensic.com?subject=Insurance%20claims%20forensic%20check" data-i18n="ins.cta2">Send sample claims</a>
+    </div>
+  </div></section>
+  <section class="alt"><div class="container">
+    <div class="s-tag" data-i18n="label.faked">What gets faked</div>
+    <h2 class="s-title" data-i18n-html="ins.docs.title">The documents behind <em>claims fraud.</em></h2>
+    <div class="docs-grid">
+      <div class="doc-cell"><div class="doc-cell-name" data-i18n="ins.d1.n">Damage photos</div><div class="doc-cell-attack" data-i18n="ins.d1.a">Generative inpainting adds or removes damage — scratches, water, breakage — with no visible seam.</div></div>
+      <div class="doc-cell"><div class="doc-cell-name" data-i18n="ins.d2.n">Utility / proof bills</div><div class="doc-cell-attack" data-i18n="ins.d2.a">AI-built utility bills used as proof of residence or ownership in a claim.</div></div>
+      <div class="doc-cell"><div class="doc-cell-name" data-i18n="ins.d3.n">Invoices / receipts</div><div class="doc-cell-attack" data-i18n="ins.d3.a">Edited repair invoices where amounts or vendor details were altered after creation.</div></div>
+    </div>
+  </div></section>
+  <section><div class="container">
+    <div class="s-tag" data-i18n="label.breaks">What breaks today</div>
+    <h2 class="s-title" data-i18n-html="ins.break.title">A clean-looking image is <em>not a real one.</em></h2>
+    <div class="break-box"><p data-i18n-html="ins.break.body">The fraudster controls the layer you look at — the pixels. What they cannot control is the layer beneath: sensor noise, container fingerprints, compression history. When a photo is edited, the physical signature <strong>breaks</strong> where the edit happened. The adjuster's eye misses it. The forensic layer does not.</p></div>
+  </div></section>
+  <section class="alt"><div class="container">
+    <div class="s-tag" data-i18n="label.how">How Plica solves it</div>
+    <h2 class="s-title" data-i18n-html="ins.steps.title">Three steps to a <em>confident payout decision.</em></h2>
+    <div class="steps">
+      <div class="step"><div class="step-n">01</div><div class="step-name" data-i18n="step.upload">Upload</div><div class="step-desc" data-i18n="ins.s1">Send claim photos and documents via API or email — JPEG, PNG, HEIC, PDF. No integration required to start.</div></div>
+      <div class="step"><div class="step-n">02</div><div class="step-name" data-i18n="step.analyse">Analyse</div><div class="step-desc" data-i18n="ins.s2">Multi-layer forensics: inpainting artifacts, PRNU break, GAN fingerprints, container and metadata anomalies.</div></div>
+      <div class="step"><div class="step-n">03</div><div class="step-name" data-i18n="step.report">Report</div><div class="step-desc" data-i18n="ins.s3">A human-readable report showing which signals fired and where — defensible if the claimant disputes the decision.</div></div>
+    </div>
+  </div></section>
+</div>
+
+<!-- RENTAL -->
+<div class="uc" id="uc-rental">
+  <section class="hero-uc"><div class="container">
+    <div class="uc-tag" data-i18n="rent.tag">Car rental · vehicle return fraud</div>
+    <h1 class="uc-h1" data-i18n-html="rent.h1">Return photos look clean.<br><em>Then you find the scratches.</em></h1>
+    <p class="uc-sub" data-i18n="rent.sub">Customers photograph the damaged car, edit out the scratches with a mobile AI app, and submit through your portal. You release the deposit on a manipulated photo. Plica checks the image before the money goes out.</p>
+    <div class="uc-actions">
+      <a class="btn-primary btn-copper" href="https://api.plicaforensic.com/try" target="_blank" data-i18n="btn.tryfree">Try the API — free →</a>
+      <a class="btn-secondary" href="mailto:ruslanm@plicaforensic.com?subject=Car%20rental%20return%20check" data-i18n="rent.cta2">Send return photos</a>
+    </div>
+  </div></section>
+  <section class="alt"><div class="container">
+    <div class="s-tag" data-i18n="label.faked">What gets faked</div>
+    <h2 class="s-title" data-i18n-html="rent.docs.title">The images behind <em>deposit fraud.</em></h2>
+    <div class="docs-grid">
+      <div class="doc-cell"><div class="doc-cell-name" data-i18n="rent.d1.n">Return photos</div><div class="doc-cell-attack" data-i18n="rent.d1.a">Scratches, dents and damage erased with Snapseed, Firefly, or built-in phone AI erasers.</div></div>
+      <div class="doc-cell"><div class="doc-cell-name" data-i18n="rent.d2.n">Pre-rental photos</div><div class="doc-cell-attack" data-i18n="rent.d2.a">Damage added to "before" images to claim pre-existing condition that was not there.</div></div>
+      <div class="doc-cell"><div class="doc-cell-name" data-i18n="rent.d3.n">Fuel / odometer</div><div class="doc-cell-attack" data-i18n="rent.d3.a">Dashboard photos edited to dispute fuel or mileage charges.</div></div>
+    </div>
+  </div></section>
+  <section><div class="container">
+    <div class="s-tag" data-i18n="label.breaks">What breaks today</div>
+    <h2 class="s-title" data-i18n-html="rent.break.title">Editing is invisible to the eye — <em>not to the sensor.</em></h2>
+    <div class="break-box"><p data-i18n-html="rent.break.body">When pixels are replaced in an editor, the camera's continuous sensor noise (PRNU) <strong>breaks</strong> in the edited region. Compression history shifts. The edit is seamless to a person at the counter — but it leaves a structural trace the original capture never had. That trace is what Plica reads.</p></div>
+  </div></section>
+  <section class="alt"><div class="container">
+    <div class="s-tag" data-i18n="label.how">How Plica solves it</div>
+    <h2 class="s-title" data-i18n-html="rent.steps.title">Three steps before you <em>release the deposit.</em></h2>
+    <div class="steps">
+      <div class="step"><div class="step-n">01</div><div class="step-name" data-i18n="step.upload">Upload</div><div class="step-desc" data-i18n="rent.s1">Send return photos through the API or email — including any you suspect were manipulated.</div></div>
+      <div class="step"><div class="step-n">02</div><div class="step-name" data-i18n="step.analyse">Analyse</div><div class="step-desc" data-i18n="rent.s2">Forensic detection of inpainting, PRNU break, GAN texture and sterility — verdict in seconds.</div></div>
+      <div class="step"><div class="step-n">03</div><div class="step-name" data-i18n="step.report">Report</div><div class="step-desc" data-i18n="rent.s3">A clear verdict per photo — authentic, review, or manipulated — with evidence you can show the customer in a dispute.</div></div>
+    </div>
+  </div></section>
+</div>
+
+<!-- AGENTIC -->
+<div class="uc" id="uc-agentic">
+  <section class="hero-uc"><div class="container">
+    <div class="uc-tag" data-i18n="ag.tag">Agentic AI · autonomous file decisions</div>
+    <h1 class="uc-h1" data-i18n-html="ag.h1">Your agent reads the invoice.<br><em>Can it trust the file?</em></h1>
+    <p class="uc-sub" data-i18n="ag.sub">As AI agents process invoices, onboard vendors and trigger payments, the breaking point is no longer the payment rail — it is the object the agent trusted. Plica is the forensic layer that tells an agent whether a file can function as evidence before it acts.</p>
+    <div class="uc-actions">
+      <a class="btn-primary btn-copper" href="https://api.plicaforensic.com/try" target="_blank" data-i18n="btn.tryfree">Try the API — free →</a>
+      <a class="btn-secondary" href="mailto:ruslanm@plicaforensic.com?subject=Agentic%20evidence%20layer" data-i18n="ag.cta2">See the evidence packet</a>
+    </div>
+  </div></section>
+  <section class="alt"><div class="container">
+    <div class="s-tag" data-i18n="label.faked">What gets faked</div>
+    <h2 class="s-title" data-i18n-html="ag.docs.title">The artifacts behind <em>agentic fraud.</em></h2>
+    <div class="docs-grid">
+      <div class="doc-cell"><div class="doc-cell-name" data-i18n="ag.d1.n">Invoices</div><div class="doc-cell-attack" data-i18n="ag.d1.a">Template-farm or AI-built invoices that an agent reads and routes for payment without witnessing.</div></div>
+      <div class="doc-cell"><div class="doc-cell-name" data-i18n="ag.d2.n">Vendor documents</div><div class="doc-cell-attack" data-i18n="ag.d2.a">Synthetic KYB packs — certificates, registrations — submitted to onboard a fictitious vendor.</div></div>
+      <div class="doc-cell"><div class="doc-cell-name" data-i18n="ag.d3.n">Tax / identity forms</div><div class="doc-cell-attack" data-i18n="ag.d3.a">Generated tax forms and IDs in a global contractor pool, across trust boundaries.</div></div>
+    </div>
+  </div></section>
+  <section><div class="container">
+    <div class="s-tag" data-i18n="label.breaks">What breaks today</div>
+    <h2 class="s-title" data-i18n-html="ag.break.title">Reading a file is not the same as <em>witnessing it.</em></h2>
+    <div class="break-box"><p data-i18n-html="ag.break.body">Agent infrastructure is built for negotiation, extraction and spend. The forensic layer — the one that answers <strong>"can this file function as defensible evidence?"</strong> — is mostly absent. An agent that reads an invoice is useful. An agent that verifies the invoice is authentic before it pays closes the gap between automation and autonomy.</p></div>
+  </div></section>
+  <section class="alt"><div class="container">
+    <div class="s-tag" data-i18n="label.how">How Plica solves it</div>
+    <h2 class="s-title" data-i18n-html="ag.steps.title">A machine-consumable <em>trust outcome.</em></h2>
+    <div class="steps">
+      <div class="step"><div class="step-n">01</div><div class="step-name" data-i18n="step.verify">Verify</div><div class="step-desc" data-i18n="ag.s1">Forensic assessment at intake — metadata, container, sensor — before internal systems rewrite the object.</div></div>
+      <div class="step"><div class="step-n">02</div><div class="step-name" data-i18n="step.decide">Decide</div><div class="step-desc" data-i18n="ag.s2">One enforceable outcome for the agent: proceed, escalate to human, or reject — with Forensic Reason Codes.</div></div>
+      <div class="step"><div class="step-n">03</div><div class="step-name" data-i18n="step.record">Record</div><div class="step-desc" data-i18n="ag.s3">An evidence packet that survives audit — what the agent saw, which version, what policy applied.</div></div>
+    </div>
+  </div></section>
+</div>
+
+<div class="cta-band">
+  <h2 data-i18n-html="cta.h2">One layer. <em>Every file-based decision.</em></h2>
+  <p data-i18n="cta.p">Plugs into your stack — works alongside Sumsub, Onfido, Veriff. It does not replace them.</p>
+  <a class="btn-primary" href="https://api.plicaforensic.com/try" target="_blank" data-i18n="btn.tryfree">Try the API — free →</a>
+</div>
+
+<div class="foot">
+  <strong>Plica</strong> · <span data-i18n="foot.boutique">Independent Forensic Boutique · Larnaca, Cyprus</span> &nbsp;·&nbsp;
+  <a href="mailto:ruslanm@plicaforensic.com">ruslanm@plicaforensic.com</a> &nbsp;·&nbsp;
+  <a href="index.html" data-i18n="foot.home">← Back to home</a>
+</div>
+
+<script>
+function showUC(id, btn){
+  document.querySelectorAll('.uc').forEach(u=>u.classList.remove('active'));
+  document.getElementById('uc-'+id).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+const I18N={
+  en:{},
+  ru:{
+    'tab.emi':'EMI / FX онбординг','tab.insurance':'Страховые претензии','tab.rental':'Аренда авто','tab.agentic':'Агентные процессы',
+    'cta.try':'Попробовать API →','btn.tryfree':'Попробовать API — бесплатно →',
+    'label.faked':'Что подделывают','label.breaks':'Что ломается сегодня','label.how':'Как решает Plica',
+    'step.verify':'Проверка','step.policy':'Политика','step.evidence':'Доказательство','step.upload':'Загрузка','step.analyse':'Анализ','step.report':'Отчёт','step.decide':'Решение','step.record':'Запись',
+    'cta.h2':'Один слой. <em>Каждое решение по файлу.</em>','cta.p':'Встраивается в ваш стек и работает рядом с Sumsub, Onfido, Veriff. Не заменяет их.',
+    'foot.boutique':'Независимый форензик-бутик · Ларнака, Кипр','foot.home':'← На главную',
+
+    'emi.tag':'Регулируемый онбординг · CySEC / EMI / PSP',
+    'emi.h1':'Вендор сказал PASS.<br><em>А вы докажете, что он проверял?</em>',
+    'emi.sub':'Регулятор спрашивает: какой именно документ проверила система? Score от вендора на этот вопрос не отвечает. Plica даёт независимую форензическую запись — на уровне самого файла, ещё до того как его тронул ваш pipeline.',
+    'emi.cta2':'15-минутный audit-созвон',
+    'emi.docs.title':'Документы, на которых строят <em>фрод при онбординге.</em>',
+    'emi.d1.n':'ID / паспорт','emi.d1.a':'Документы, сгенерированные AI или собранные через face-swap. Базовый OCR и проверку шаблона они проходят.',
+    'emi.d2.n':'Подтверждение адреса','emi.d2.a':'Utility bill, собранный в редакторе. Вёрстка идеальная, но следов реальной съёмки нет.',
+    'emi.d3.n':'Источник средств','emi.d3.a':'Банковская выписка, где суммы или операции поправили уже после выгрузки.',
+    'emi.break.title':'Детектор смотрит на копию — <em>а не на оригинал.</em>',
+    'emi.break.body':'Между загрузкой и анализом ваш intake pipeline может изменить файл: пересжать его, обрезать метаданные, сделать производную вместо оригинала. Детектор оценивает уже не исходный файл. Следов, по которым можно доказать подлинность, к этому моменту часто уже нет — и восстановить, что именно проверяли, нельзя. Это и есть <strong>PIPL</strong>: потеря следов происхождения на стороне вашего же пайплайна.',
+    'emi.steps.title':'Три шага к <em>записи, которую примет регулятор.</em>',
+    'emi.s1':'Проверяем файл с трёх сторон: метаданные контейнера, сами пиксели, цепочку происхождения. На выходе — один вердикт с понятными причинами, а не оценка из чёрного ящика.',
+    'emi.s2':'Отдаём готовое действие для вашего процесса: одобрить, отправить на проверку или отклонить. Решение зависит от качества происхождения файла, а не от типа задачи.',
+    'emi.s3':'Собираем пакет, который связывает вердикт с исходным файлом. Когда AMLA или CySEC спросит через полгода — вы покажете, что именно проверяли.',
+
+    'ins.tag':'Страховые претензии · фрод с фото и документами',
+    'ins.h1':'Фото выглядит настоящим.<br><em>Но его поправили до выплаты?</em>',
+    'ins.sub':'Заявители редактируют фото повреждений и рисуют документы прямо в телефоне. Аджастер видит чистую картинку и одобряет выплату. Plica замечает то, что пропускают и глаз, и обычный детектор.',
+    'ins.cta2':'Прислать примеры претензий',
+    'ins.docs.title':'Документы, на которых строят <em>фрод с претензиями.</em>',
+    'ins.d1.n':'Фото повреждений','ins.d1.a':'AI дорисовывает или убирает повреждения — царапины, воду, поломку. Шва на фото не видно.',
+    'ins.d2.n':'Счета и квитанции','ins.d2.a':'Сгенерированный utility bill идёт как доказательство проживания или владения.',
+    'ins.d3.n':'Инвойсы','ins.d3.a':'В ремонтном инвойсе поправили сумму или данные подрядчика уже после создания.',
+    'ins.break.title':'Чистое фото — <em>ещё не настоящее.</em>',
+    'ins.break.body':'Мошенник управляет тем слоем, на который вы смотрите — пикселями. Но слой под ними он не контролирует: шум сенсора, отпечаток контейнера, историю сжатия. Когда фото редактируют, физическая подпись <strong>рвётся</strong> ровно там, где была правка. Глаз аджастера этого не видит. Forensic layer — видит.',
+    'ins.steps.title':'Три шага к <em>уверенной выплате.</em>',
+    'ins.s1':'Пришлите фото и документы через API или почтой — JPEG, PNG, HEIC, PDF. Чтобы начать, интеграция не нужна.',
+    'ins.s2':'Проверяем по нескольким слоям сразу: следы inpainting, разрыв PRNU, отпечаток GAN, аномалии контейнера и метаданных.',
+    'ins.s3':'Отдаём понятный отчёт: какие сигналы сработали и где. Если заявитель спорит — вам есть что показать.',
+
+    'rent.tag':'Аренда авто · фрод при возврате',
+    'rent.h1':'Фото возврата чистое.<br><em>А потом находишь царапины.</em>',
+    'rent.sub':'Клиент снимает повреждённую машину, стирает царапины в телефоне и грузит фото через портал. Вы возвращаете депозит по поправленному снимку. Plica проверяет фото до того, как уйдут деньги.',
+    'rent.cta2':'Прислать фото возврата',
+    'rent.docs.title':'Снимки, на которых строят <em>фрод с депозитом.</em>',
+    'rent.d1.n':'Фото возврата','rent.d1.a':'Царапины и вмятины стёрты через Snapseed, Firefly или встроенный AI-ластик телефона.',
+    'rent.d2.n':'Фото до аренды','rent.d2.a':'На снимок «до» дорисовали повреждение, чтобы списать его на прошлого арендатора.',
+    'rent.d3.n':'Топливо и пробег','rent.d3.a':'Фото панели поправили, чтобы оспорить плату за топливо или километраж.',
+    'rent.break.title':'Правку не видит глаз — <em>но видит сенсор.</em>',
+    'rent.break.body':'Когда пиксели меняют в редакторе, ровный шум сенсора камеры — PRNU — <strong>рвётся</strong> в этом месте. История сжатия сбивается. Для человека за стойкой правка незаметна. Но она оставляет след, которого у настоящего снимка не бывает. Этот след и читает Plica.',
+    'rent.steps.title':'Три шага до <em>возврата депозита.</em>',
+    'rent.s1':'Пришлите фото возврата через API или почтой — в том числе те, что кажутся подозрительными.',
+    'rent.s2':'Ищем следы inpainting, разрыв PRNU, текстуру GAN и стерильность. Вердикт — за секунды.',
+    'rent.s3':'По каждому фото — ясный ответ: подлинное, на проверку или правка. С доказательством, которое можно показать клиенту в споре.',
+
+    'ag.tag':'Агентный AI · автономные решения по файлам',
+    'ag.h1':'Агент читает инвойс.<br><em>Но может ли он доверять файлу?</em>',
+    'ag.sub':'Агенты уже обрабатывают инвойсы, онбордят вендоров и запускают платежи. Слабое место — не платёжная рельса, а файл, которому агент поверил. Plica — это forensic layer, который говорит агенту, можно ли считать файл доказательством, ещё до того как агент начнёт действовать.',
+    'ag.cta2':'Посмотреть evidence packet',
+    'ag.docs.title':'Файлы, на которых строят <em>агентный фрод.</em>',
+    'ag.d1.n':'Инвойсы','ag.d1.a':'Инвойс с template-фермы или собранный AI. Агент читает его и отправляет на оплату, не проверив.',
+    'ag.d2.n':'Документы вендора','ag.d2.a':'Поддельный KYB-пакет — сертификаты, регистрации — чтобы онбордить вендора, которого нет.',
+    'ag.d3.n':'Налоговые и ID формы','ag.d3.a':'Сгенерированные формы и документы в глобальном пуле подрядчиков, через чужие юрисдикции.',
+    'ag.break.title':'Прочитать файл — <em>не значит проверить его.</em>',
+    'ag.break.body':'Инфраструктуру для агентов строят под переговоры, извлечение данных и платежи. А слой, который отвечает на главный вопрос — <strong>может ли этот файл вообще служить доказательством?</strong> — почти всегда отсутствует. Агент, который читает инвойс, полезен. Агент, который проверяет инвойс до оплаты, закрывает разрыв между автоматизацией и автономией.',
+    'ag.steps.title':'Готовый <em>ответ о доверии для агента.</em>',
+    'ag.s1':'Проверяем файл на входе — метаданные, контейнер, сенсор — до того как внутренние системы его перепишут.',
+    'ag.s2':'Отдаём агенту одно решение: продолжить, передать человеку или отклонить. С понятными причинами — Forensic Reason Codes.',
+    'ag.s3':'Собираем пакет, который переживёт аудит: что агент видел, какую версию файла, какую политику применил.'
+  }
+};
+function setLang(lang){
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent.trim().toLowerCase()===lang));
+  document.documentElement.lang=lang;
+  const dict=I18N[lang]||{};
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.getAttribute('data-i18n');
+    if(lang==='en'){ if(el.dataset.en!==undefined) el.textContent=el.dataset.en; }
+    else if(dict[k]!==undefined){ if(el.dataset.en===undefined) el.dataset.en=el.textContent; el.textContent=dict[k]; }
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(el=>{
+    const k=el.getAttribute('data-i18n-html');
+    if(lang==='en'){ if(el.dataset.en!==undefined) el.innerHTML=el.dataset.en; }
+    else if(dict[k]!==undefined){ if(el.dataset.en===undefined) el.dataset.en=el.innerHTML; el.innerHTML=dict[k]; }
+  });
+}
+</script>
+</body>
+</html>
