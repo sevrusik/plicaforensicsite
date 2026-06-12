@@ -3,9 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Plica — independent forensic boutique for regulated file workflows. Document integrity, evidence trails, and KYC pipeline audits.">
 <title>Plica — Independent Forensic Boutique</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   /* Base — warm stone */
@@ -68,11 +71,20 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;
   color:var(--muted);letter-spacing:0.06em;transition:all 0.15s;}
 .lang-btn.active{background:var(--night);color:white;}
 .lang-btn:hover:not(.active){background:var(--cream-mid);color:var(--ink);}
+.nav-cta-sec{font-family:var(--mono);font-size:11px;font-weight:500;
+  color:var(--night);border:1px solid var(--night);
+  padding:8px 14px;text-decoration:none;letter-spacing:0.06em;
+  white-space:nowrap;transition:all 0.2s;}
+.nav-cta-sec:hover{background:var(--night);color:var(--white);}
 .nav-cta{font-family:var(--mono);font-size:11px;font-weight:500;
   color:var(--white);background:var(--night);
   padding:9px 20px;text-decoration:none;letter-spacing:0.08em;
-  transition:background 0.2s;}
+  white-space:nowrap;transition:background 0.2s;}
 .nav-cta:hover{background:var(--night-soft);}
+.nav-menu-btn{display:none;background:none;border:none;cursor:pointer;
+  padding:8px;flex-direction:column;gap:5px;margin-left:auto;margin-right:10px;}
+.nav-menu-btn span{display:block;width:22px;height:2px;background:var(--ink);border-radius:1px;}
+a:focus-visible,button:focus-visible{outline:2px solid var(--night);outline-offset:2px;}
 
 /* HERO */
 .hero{min-height:100vh;background:var(--white);
@@ -158,6 +170,16 @@ section{padding:88px 48px;}
   display:flex;flex-direction:column;gap:14px;transition:all 0.2s;
   border-top:3px solid transparent;}
 .prod-card:hover{background:var(--surface);border-top-color:var(--copper);}
+.prod-card-link{text-decoration:none;cursor:pointer;}
+.prod-card-link .prod-name{transition:color 0.2s;}
+.prod-card-link:hover .prod-name{color:var(--copper);}
+.prod-explore{text-align:center;margin-top:32px;font-family:var(--mono);font-size:12px;
+  color:var(--muted);letter-spacing:0.03em;}
+.prod-explore-label{margin-right:8px;}
+.prod-explore a{color:var(--night);text-decoration:none;border-bottom:1px solid var(--copper-border);
+  padding-bottom:1px;transition:color 0.2s;}
+.prod-explore a:hover{color:var(--copper);}
+.prod-explore-sep{margin:0 8px;color:var(--border);}
 .prod-num{font-family:var(--mono);font-size:10px;color:var(--muted);
   letter-spacing:0.16em;}
 .prod-name{font-family:var(--serif);font-size:21px;color:var(--night);
@@ -216,6 +238,8 @@ section{padding:88px 48px;}
 .art-desc{font-size:13px;color:var(--muted);line-height:1.6;}
 .art-arrow{font-size:20px;color:var(--border);transition:color 0.2s;}
 .art-card:hover .art-arrow{color:var(--night);}
+.art-list-loading,.art-list-error,.art-list-empty{font-size:13px;color:var(--muted);padding:28px 32px;background:var(--white);}
+.art-list-error a,.art-list-empty a{color:var(--night);}
 
 /* FAQ */
 #faq{background:var(--white);}
@@ -257,18 +281,29 @@ footer{background:var(--night-deep);border-top:1px solid rgba(255,255,255,0.06);
   color:rgba(255,255,255,0.25);}
 
 @media(max-width:900px){
-  nav{padding:0 20px;}
-  .nav-links{display:none;}
+  nav{padding:0 16px;}
+  .nav-menu-btn{display:flex;}
+  .nav-links{display:none;position:fixed;top:60px;left:0;right:0;
+    background:rgba(248,246,241,0.98);border-bottom:1px solid var(--border);
+    flex-direction:column;padding:8px 20px 20px;gap:0;z-index:99;
+    backdrop-filter:blur(12px);}
+  .nav-links.open{display:flex;}
+  .nav-links li{width:100%;}
+  .nav-links a{display:block;padding:14px 0;border-bottom:1px solid var(--border);font-size:14px;}
+  .nav-right{margin-left:auto;}
+  .nav-cta-sec{display:none;}
   section,#connect{padding:60px 24px;}
   .hero{padding:80px 24px 60px;}
   .hero-inner{grid-template-columns:1fr;}
-  .hero-visual{display:none;}
+  .hero-visual{display:flex;margin-top:36px;}
+  .hero-visual svg{width:100%;max-width:300px;height:auto;}
   .measure-grid,.who-grid,.faq-list,
   #connect .container{grid-template-columns:1fr;}
   .eng-row{grid-template-columns:1fr;}
   .eng-phase,.eng-right{border:none;padding:16px 24px;}
   .eng-body{padding:0 24px 24px;}
 }
+html.dark .nav-links.open{background:rgba(26,26,23,0.98);}
 
 /* Dark theme via JS class */
 html.dark{
@@ -319,8 +354,11 @@ html.dark .art-card{background:var(--surface);}
 
 <!-- NAV -->
 <nav>
-  <a class="nav-brand" href="#">PLICA</a>
-  <ul class="nav-links">
+  <a class="nav-brand" href="index.html">PLICA</a>
+  <button class="nav-menu-btn" id="navMenuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="navLinks">
     <li><a href="#products" data-i18n="nav.products">Products</a></li>
     <li><a href="use-cases.html" data-i18n="nav.usecases">Use cases</a></li>
     <li><a href="#problem" data-i18n="nav.problem">Problem</a></li>
@@ -331,11 +369,12 @@ html.dark .art-card{background:var(--surface);}
     <li><a href="#faq" data-i18n="nav.faq">FAQ</a></li>
   </ul>
   <div class="nav-right">
-    <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Toggle theme">☀️</button>
-    <div class="lang-switch">
-      <button class="lang-btn active" onclick="setLang('en')">EN</button>
-      <button class="lang-btn" onclick="setLang('ru')">RU</button>
+    <button class="theme-btn" type="button" onclick="toggleTheme()" id="themeBtn" aria-label="Toggle color theme">☀️</button>
+    <div class="lang-switch" role="group" aria-label="Language">
+      <button class="lang-btn active" type="button" onclick="setLang('en')" aria-pressed="true">EN</button>
+      <button class="lang-btn" type="button" onclick="setLang('ru')" aria-pressed="false">RU</button>
     </div>
+    <a class="nav-cta-sec" href="https://api.plicaforensic.com/try" target="_blank" rel="noopener noreferrer" data-i18n="nav.tryapi">Try API →</a>
     <a class="nav-cta" href="mailto:ruslanm@plicaforensic.com" data-i18n="nav.cta">Book Phase 0 →</a>
   </div>
 </nav>
@@ -350,7 +389,7 @@ html.dark .art-card{background:var(--surface);}
       <div class="hero-tagline" data-i18n="hero.tagline">Truth lives in the layers.</div>
       <p class="hero-philosophy" data-i18n-html="hero.philosophy">No single layer catches every fake. Plica checks the document from several sides — container metadata, embedded pixels, provenance chain — and returns <strong>one enforceable decision</strong> for your compliance workflow.</p>
       <div class="hero-actions">
-        <a class="btn-primary" href="https://api.plicaforensic.com/try" target="_blank" style="background:var(--copper);border-color:var(--copper);">Try the API — free →</a>
+        <a class="btn-primary" href="https://api.plicaforensic.com/try" target="_blank" rel="noopener noreferrer" style="background:var(--copper);border-color:var(--copper);">Try the API — free →</a>
         <a class="btn-primary" href="mailto:ruslanm@plicaforensic.com" data-i18n="hero.cta1">Book Phase 0 →</a>
         <a class="btn-secondary" href="#measure" data-i18n="hero.cta2">Read the methodology</a>
       </div>
@@ -456,30 +495,40 @@ html.dark .art-card{background:var(--surface);}
       <h2 class="s-title" data-i18n-html="products.title">Four ways to <em>establish trust.</em></h2>
     </div>
     <div class="prod-grid">
-      <div class="prod-card">
+      <a class="prod-card prod-card-link" href="document-forensic-check.html">
         <div class="prod-num">01</div>
         <div class="prod-name" data-i18n="products.p1.name">Document Forensic Check</div>
         <div class="prod-desc" data-i18n="products.p1.desc">Find out whether a file is AI-generated or edited — in seconds. Container, pixel, and sensor layers, one verdict.</div>
         <div class="prod-tag" data-i18n="products.p1.tag">API · image + PDF</div>
-      </div>
-      <div class="prod-card">
+      </a>
+      <a class="prod-card prod-card-link" href="compliance-policy-pack.html">
         <div class="prod-num">02</div>
         <div class="prod-name" data-i18n="products.p2.name">Compliance Policy Pack</div>
         <div class="prod-desc" data-i18n="products.p2.desc">Machine-readable actions for your agent: approve, hold for review, reject, request re-submission. Built for autonomous workflows.</div>
         <div class="prod-tag" data-i18n="products.p2.tag">policy actions · webhook</div>
-      </div>
-      <div class="prod-card">
+      </a>
+      <a class="prod-card prod-card-link" href="evidence-packet.html">
         <div class="prod-num">03</div>
         <div class="prod-name" data-i18n="products.p3.name">Evidence Packet</div>
         <div class="prod-desc" data-i18n="products.p3.desc">A defensible record for the regulator: what arrived at intake versus what the model decided on. Reproducible months later.</div>
         <div class="prod-tag" data-i18n="products.p3.tag">intake → decision record</div>
-      </div>
-      <div class="prod-card">
+      </a>
+      <a class="prod-card prod-card-link" href="https://github.com/sevrusik/SDB26" target="_blank" rel="noopener noreferrer">
         <div class="prod-num">04</div>
         <div class="prod-name" data-i18n="products.p4.name">SDB-26 Benchmark</div>
         <div class="prod-desc" data-i18n="products.p4.desc">Measure how often synthetic documents slip past your KYC stack. The open benchmark — your own metric, not your vendor's.</div>
         <div class="prod-tag" data-i18n="products.p4.tag">open standard · CC BY 4.0</div>
-      </div>
+      </a>
+    </div>
+    <div class="prod-explore">
+      <span class="prod-explore-label" data-i18n="products.explore">Explore the product pages:</span>
+      <a href="document-forensic-check.html" data-i18n="products.link.doc">Document Forensic Check</a>
+      <span class="prod-explore-sep">·</span>
+      <a href="ai-image-detection.html" data-i18n="products.link.img">AI Image Detection</a>
+      <span class="prod-explore-sep">·</span>
+      <a href="compliance-policy-pack.html" data-i18n="products.link.pol">Compliance Policy Pack</a>
+      <span class="prod-explore-sep">·</span>
+      <a href="evidence-packet.html" data-i18n="products.link.ev">Evidence Packet</a>
     </div>
     <div style="text-align:center;margin-top:20px;"><a href="use-cases.html" class="btn-secondary" data-i18n="products.seeusecases" style="display:inline-block;">See use cases by industry →</a></div>
     <div class="prod-footer" data-i18n="products.footer">Plugs into your KYC stack — works alongside Sumsub, Onfido, Veriff. <strong>It does not replace them.</strong></div>
@@ -543,20 +592,6 @@ html.dark .art-card{background:var(--surface);}
     <div class="eng-list">
       <div class="eng-row">
         <div class="eng-phase">
-          <div class="eng-phase-label" data-i18n="eng.e1.label">Phase 0</div>
-          <div class="eng-phase-name" data-i18n="eng.e1.name">Quick Scan</div>
-        </div>
-        <div class="eng-body">
-          <div class="eng-title" data-i18n="eng.e1.title">48-hour evidence review.</div>
-          <p class="eng-desc" data-i18n="eng.e1.desc">Send a ZIP of labelled document images. We return a signal-level breakdown of what your current stack catches, what it misses, and where provenance breaks. No infrastructure, no PII, no commitment.</p>
-        </div>
-        <div class="eng-right">
-          <div class="eng-scope" data-i18n="eng.e1.scope">≤ 100 files<br>48h turnaround<br>JPEG · PNG · WebP</div>
-          <div class="eng-price" data-i18n="eng.e1.price">Contact us</div>
-        </div>
-      </div>
-      <div class="eng-row">
-        <div class="eng-phase">
           <div class="eng-phase-label" data-i18n="eng.e0.label">Trial</div>
           <div class="eng-phase-name" data-i18n="eng.e0.name">API</div>
         </div>
@@ -568,7 +603,21 @@ html.dark .art-card{background:var(--surface);}
           <div class="eng-scope" data-i18n="eng.e0.scope">Any file
 Instant
 No signup</div>
-          <a href="https://api.plicaforensic.com/try" target="_blank" class="eng-price" style="color:var(--copper);text-decoration:none;" data-i18n="eng.e0.price">Free →</a>
+          <a href="https://api.plicaforensic.com/try" target="_blank" rel="noopener noreferrer" class="eng-price" style="color:var(--copper);text-decoration:none;" data-i18n="eng.e0.price">Free →</a>
+        </div>
+      </div>
+      <div class="eng-row">
+        <div class="eng-phase">
+          <div class="eng-phase-label" data-i18n="eng.e1.label">Phase 0</div>
+          <div class="eng-phase-name" data-i18n="eng.e1.name">Quick Scan</div>
+        </div>
+        <div class="eng-body">
+          <div class="eng-title" data-i18n="eng.e1.title">48-hour evidence review.</div>
+          <p class="eng-desc" data-i18n="eng.e1.desc">Send a ZIP of labelled document images. We return a signal-level breakdown of what your current stack catches, what it misses, and where provenance breaks. No infrastructure, no PII, no commitment.</p>
+        </div>
+        <div class="eng-right">
+          <div class="eng-scope" data-i18n="eng.e1.scope">≤ 100 files<br>48h turnaround<br>JPEG · PNG · WebP</div>
+          <div class="eng-price" data-i18n="eng.e1.price">Contact us</div>
         </div>
       </div>
 
@@ -656,48 +705,7 @@ No signup</div>
   <div class="container">
     <div class="s-tag" data-i18n="art.tag">Writing</div>
     <h2 class="s-title" data-i18n-html="art.title">From the field.<br><em>On Medium.</em></h2>
-    <div class="art-list">
-      <a class="art-card" href="https://medium.com/@sevrusik/the-synthetic-feedback-loop-bbb5c50da4bf" target="_blank" rel="noopener">
-        <div>
-          <div class="art-tag" data-i18n="art.a1.tag">May 2026 · Evidence Integrity</div>
-          <div class="art-title" data-i18n="art.a1.title">The Synthetic Feedback Loop: Why Text Audit Can't Catch What Physics Reveals</div>
-          <p class="art-desc" data-i18n="art.a1.desc">The EY case and the harder version of the problem: source documents that are text-valid but physics-invalid.</p>
-        </div>
-        <div class="art-arrow">→</div>
-      </a>
-      <a class="art-card" href="https://medium.com/@sevrusik/what-your-file-verification-data-is-not-telling-you-a-lesson-from-abraham-wald-72fbc88a39c2" target="_blank" rel="noopener">
-        <div>
-          <div class="art-tag" data-i18n="art.a2.tag">May 2026 · KYC · Compliance</div>
-          <div class="art-title" data-i18n="art.a2.title">What Your File Verification Data Is Not Telling You: A Lesson from Abraham Wald</div>
-          <p class="art-desc" data-i18n="art.a2.desc">Survivorship bias in document workflows — the three gaps standard KYC metrics systematically miss.</p>
-        </div>
-        <div class="art-arrow">→</div>
-      </a>
-      <a class="art-card" href="https://medium.com/@sevrusik" target="_blank" rel="noopener">
-        <div>
-          <div class="art-tag" data-i18n="art.a3.tag">May 2026 · Agent-to-Agent · KYC</div>
-          <div class="art-title" data-i18n="art.a3.title">What Is a VEBA — and Why Your AI Agents Need One</div>
-          <p class="art-desc" data-i18n="art.a3.desc">The file an agent receives is not evidence. It is a submission. Without provenance, it is a black box — and a black box is an attack surface.</p>
-        </div>
-        <div class="art-arrow">→</div>
-      </a>
-      <a class="art-card" href="https://medium.com/@sevrusik" target="_blank" rel="noopener">
-        <div>
-          <div class="art-tag" data-i18n="art.a4.tag">May 2026 · Pipeline · Forensics</div>
-          <div class="art-title" data-i18n="art.a4.title">What Transmission Channels Secretly Do to Your Documents</div>
-          <p class="art-desc" data-i18n="art.a4.desc">WhatsApp, email gateways, CDN — each one rewrites the file before your detector sees it. One passport. One iPhone. Two paths. Two different objects.</p>
-        </div>
-        <div class="art-arrow">→</div>
-      </a>
-      <a class="art-card" href="https://medium.com/@sevrusik" target="_blank" rel="noopener">
-        <div>
-          <div class="art-tag" data-i18n="art.a5.tag">May 2026 · Trust · Provenance</div>
-          <div class="art-title" data-i18n="art.a5.title">A Document Is Not Only Judged by What It Says</div>
-          <p class="art-desc" data-i18n="art.a5.desc">AI authorship changes how people perceive texts. AI mediation changes how institutions perceive documents. The deeper shift: authenticity is now about lineage, not content.</p>
-        </div>
-        <div class="art-arrow">→</div>
-      </a>
-    </div>
+    <div class="art-list" id="mediumArticles" aria-live="polite"></div>
   </div>
 </section>
 
@@ -734,6 +742,10 @@ No signup</div>
       <div class="faq-item">
         <div class="faq-q" data-i18n="faq.q6">What is SDB-26?</div>
         <p class="faq-a" data-i18n="faq.a6">An open benchmark framework for measuring synthetic document bypass rate. Published on GitHub under CC BY 4.0. P-L-I-C-A and FRC reason codes are formalised there. <a href="https://sdb26.com">sdb26.com →</a></p>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" data-i18n="faq.q8">Document Forensic Check vs AI Image Detection?</div>
+        <p class="faq-a" data-i18n="faq.a8">Document Forensic Check covers PDFs and KYC-style files — container physics, embedded pixels, metadata. AI Image Detection focuses on raster evidence: claims photos, social uploads, screenshots. Same engine, different intake context.</p>
       </div>
     </div>
   </div>
@@ -777,7 +789,7 @@ No signup</div>
 const i18n = {
   en: {
     'nav.problem':'Problem','nav.products':'Products','nav.usecases':'Use cases','nav.measure':'Methodology','nav.engagements':'Engagements',
-    'nav.who':"Who it's for",'nav.writing':'Writing','nav.faq':'FAQ','nav.cta':'Book Phase 0 →',
+    'nav.who':"Who it's for",'nav.writing':'Writing','nav.faq':'FAQ','nav.cta':'Book Phase 0 →','nav.tryapi':'Try API →',
     'hero.pre':'Independent Forensic Boutique · Larnaca, Cyprus',
     'hero.title':'AI makes decisions.<br><em>We make them defensible.</em>',
     'hero.body':'Plica is an independent forensic boutique for regulated file workflows. We audit the gap between the file your client submitted and the file your stack actually examined.',
@@ -789,6 +801,11 @@ const i18n = {
     'products.p2.name':'Compliance Policy Pack','products.p2.desc':'Machine-readable actions for your agent: approve, hold for review, reject, request re-submission. Built for autonomous workflows.','products.p2.tag':'policy actions · webhook',
     'products.p3.name':'Evidence Packet','products.p3.desc':'A defensible record for the regulator: what arrived at intake versus what the model decided on. Reproducible months later.','products.p3.tag':'intake → decision record',
     'products.p4.name':'SDB-26 Benchmark','products.p4.desc':"Measure how often synthetic documents slip past your KYC stack. The open benchmark — your own metric, not your vendor's.",'products.p4.tag':'open standard · CC BY 4.0',
+    'products.explore':'Explore the product pages:',
+    'products.link.doc':'Document Forensic Check',
+    'products.link.img':'AI Image Detection',
+    'products.link.pol':'Compliance Policy Pack',
+    'products.link.ev':'Evidence Packet',
     'products.seeusecases':'See use cases by industry →',
     'products.footer':'Plugs into your KYC stack — works alongside Sumsub, Onfido, Veriff. <strong>It does not replace them.</strong>',
     'problem.tag':'The problem',
@@ -825,22 +842,7 @@ const i18n = {
     'who.w4.q':'"We use AI in onboarding but have no idea what our pipeline does to documents before the model sees them."',
     'who.w4.a':'Trust Readiness Scan gives you a fast, fixed-scope answer: where provenance breaks, what signals are lost, and what to fix first. No enterprise contract required.',
     'who.w3.a':'We quantify the evidence gap — what fraction of past decisions can be reconstructed to original upload — and what it takes to close it.',
-    'art.tag':'Writing','art.title':'From the field.<br><em>Eight articles on Medium.</em>',
-    'art.a1.tag':'May 2026 · Evidence Integrity',
-    'art.a1.title':"The Synthetic Feedback Loop: Why Text Audit Can't Catch What Physics Reveals",
-    'art.a1.desc':'The EY case and the harder version of the problem: source documents that are text-valid but physics-invalid.',
-    'art.a2.tag':'May 2026 · KYC · Compliance',
-    'art.a2.title':'What Your File Verification Data Is Not Telling You: A Lesson from Abraham Wald',
-    'art.a3.tag':'May 2026 · Agent-to-Agent · KYC',
-    'art.a3.title':'What Is a VEBA — and Why Your AI Agents Need One',
-    'art.a3.desc':'The file an agent receives is not evidence. It is a submission. Without provenance, it is a black box — and a black box is an attack surface.',
-    'art.a4.tag':'May 2026 · Pipeline · Forensics',
-    'art.a4.title':'What Transmission Channels Secretly Do to Your Documents',
-    'art.a4.desc':'WhatsApp, email gateways, CDN — each one rewrites the file before your detector sees it. One passport. One iPhone. Two paths. Two different objects.',
-    'art.a5.tag':'May 2026 · Trust · Provenance',
-    'art.a5.title':'A Document Is Not Only Judged by What It Says',
-    'art.a5.desc':'AI authorship changes how people perceive texts. AI mediation changes how institutions perceive documents. The deeper shift: authenticity is now about lineage, not content.',
-    'art.a2.desc':'Survivorship bias in document workflows — the three gaps standard KYC metrics systematically miss.',
+    'art.tag':'Writing','art.title':'From the field.<br><em>On Medium.</em>',
     'faq.tag':'FAQ','faq.title':'Before you reach out.',
     'faq.q1':'Does Plica replace our KYC vendor?',
     'faq.a1':'No. Plica is an independent forensic layer — not a replacement for Sumsub, Onfido, or Veriff. We audit what they produce and the pipeline that feeds them.',
@@ -856,6 +858,8 @@ const i18n = {
     'faq.a7':'Phase 0 and the Trust Readiness Scan map your current workflow against Article 16 audit trail obligations — showing where evidence integrity gaps exist before a regulator asks. We assess the object layer: what the system examined, not just how the system was built.',
     'faq.q6':'What is SDB-26?',
     'faq.a6':'An open benchmark framework for measuring synthetic document bypass rate. Published on GitHub under CC BY 4.0. P-L-I-C-A and FRC reason codes are formalised there. <a href="https://sdb26.com">sdb26.com →</a>',
+    'faq.q8':'Document Forensic Check vs AI Image Detection?',
+    'faq.a8':'Document Forensic Check covers PDFs and KYC-style files — container physics, embedded pixels, metadata. AI Image Detection focuses on raster evidence: claims photos, social uploads, screenshots. Same engine, different intake context.',
     'connect.title':'If the question is<br><em>"can we prove it"</em> —',
     'connect.sub':'Start with Phase 0. 48-hour turnaround. Send a ZIP of labelled document images. We return a signal-level breakdown — what your stack catches, what it misses, where provenance breaks.',
     'connect.direct':"We'll be direct if we can help — and equally direct if we can't.",
@@ -864,7 +868,7 @@ const i18n = {
   },
   ru: {
     'nav.problem':'Проблема','nav.products':'Продукты','nav.usecases':'Применение','nav.measure':'Методология','nav.engagements':'Услуги',
-    'nav.who':'Для кого','nav.writing':'Статьи','nav.faq':'FAQ','nav.cta':'Начать Phase 0 →',
+    'nav.who':'Для кого','nav.writing':'Статьи','nav.faq':'FAQ','nav.cta':'Начать Phase 0 →','nav.tryapi':'Try API →',
     'hero.pre':'Независимая Forensic Boutique · Ларнака, Кипр',
     'hero.title':'ИИ принимает решения.<br><em>Мы делаем их защищаемыми.</em>',
     'hero.body':'Plica — независимая forensic boutique для регулируемых файловых процессов. Мы аудируем разрыв между файлом, который подал клиент, и файлом, который реально проверил ваш стек.',
@@ -876,6 +880,11 @@ const i18n = {
     'products.p2.name':'Compliance Policy Pack','products.p2.desc':'Machine-readable действия для вашего агента: одобрить, отправить на review, отклонить, запросить повторно. Для автономных процессов.','products.p2.tag':'policy actions · webhook',
     'products.p3.name':'Evidence Packet','products.p3.desc':'Защищаемая запись для регулятора: что пришло на входе против того, на чём модель приняла решение. Воспроизводимо спустя месяцы.','products.p3.tag':'intake → decision record',
     'products.p4.name':'SDB-26 Benchmark','products.p4.desc':'Измерьте, как часто синтетические документы проходят мимо вашего KYC. Открытый бенчмарк — ваш метрик, не вендорский.','products.p4.tag':'открытый стандарт · CC BY 4.0',
+    'products.explore':'Страницы продуктов:',
+    'products.link.doc':'Document Forensic Check',
+    'products.link.img':'Детекция AI-изображений',
+    'products.link.pol':'Compliance Policy Pack',
+    'products.link.ev':'Evidence Packet',
     'products.seeusecases':'Применение по индустриям →',
     'products.footer':'Встраивается в ваш KYC-стек — работает рядом с Sumsub, Onfido, Veriff. <strong>Не заменяет их.</strong>',
     'problem.tag':'Проблема',
@@ -914,21 +923,6 @@ const i18n = {
     'who.w3.q':'"Какова наша реальная экспозиция, если одобренный файл окажется синтетическим?"',
     'who.w3.a':'Мы количественно оцениваем evidence gap — какая доля прошлых решений может быть восстановлена до исходной загрузки — и что нужно для его устранения.',
     'art.tag':'Статьи','art.title':'Из практики.<br><em>На Medium.</em>',
-    'art.a1.tag':'Май 2026 · Доказательная целостность',
-    'art.a1.title':'Замкнутый круг синтетики: почему текстовый аудит не видит то, что видит физика',
-    'art.a1.desc':'Кейс EY и более сложная версия проблемы: исходные документы, которые текстово валидны, но физически невалидны.',
-    'art.a2.tag':'Май 2026 · KYC · Compliance',
-    'art.a2.title':'Что не говорят данные верификации файлов: урок Абрахама Вальда',
-    'art.a3.tag':'Май 2026 · Agent-to-Agent · KYC',
-    'art.a3.title':'Что такое VEBA — и почему вашим ИИ-агентам это нужно',
-    'art.a3.desc':'Файл который получает агент — не доказательство. Это submission. Без провенанса — чёрный ящик. А чёрный ящик — это вектор атаки.',
-    'art.a4.tag':'Май 2026 · Pipeline · Forensics',
-    'art.a4.title':'Что каналы передачи данных тайно делают с вашими документами',
-    'art.a4.desc':'WhatsApp, email-шлюзы, CDN — каждый переписывает файл до того как его увидит детектор. Один паспорт. Один iPhone. Два пути. Два разных объекта.',
-    'art.a5.tag':'Май 2026 · Доверие · Провенанс',
-    'art.a5.title':'Документ судят не только по тому что он говорит',
-    'art.a5.desc':'AI авторство меняет восприятие текстов. AI медиация меняет восприятие документов институтами. Более глубокий сдвиг: подлинность теперь про lineage, не про контент.',
-    'art.a2.desc':'Survivorship bias в документальных процессах — три пробела, которые стандартные KYC-метрики систематически пропускают.',
     'faq.tag':'FAQ','faq.title':'Прежде чем написать.',
     'faq.q1':'Plica заменяет ваш KYC-вендор?',
     'faq.a1':'Нет. Plica — независимый форензический слой, а не замена Sumsub, Onfido или Veriff. Мы аудируем то, что они производят, и pipeline, который их питает.',
@@ -944,6 +938,8 @@ const i18n = {
     'faq.a7':'Phase 0 и Trust Readiness Scan картируют ваш текущий workflow относительно обязательств по audit trail из Article 16 — показывая где есть gaps в доказательной целостности до того как спросит регулятор. Мы оцениваем объектный слой: что система реально проверяла, а не только как система была построена.',
     'faq.q6':'Что такое SDB-26?',
     'faq.a6':'Открытый benchmark-фреймворк для измерения bypass rate синтетических документов. Опубликован на GitHub под CC BY 4.0. P-L-I-C-A и FRC reason codes там формализованы. <a href="https://sdb26.com">sdb26.com →</a>',
+    'faq.q8':'Document Forensic Check vs AI Image Detection?',
+    'faq.a8':'Document Forensic Check — PDF и KYC-файлы: физика контейнера, встроенные пиксели, метаданные. AI Image Detection — растровые доказательства: фото претензий, соцсети, скриншоты. Тот же движок, другой контекст intake.',
     'connect.title':'Если вопрос —<br><em>«можем ли мы это доказать»</em> —',
     'connect.sub':'Начните с Phase 0. 48 часов. Пришлите ZIP с размеченными изображениями документов. Мы возвращаем разбивку по сигналам — что ловит ваш стек, что пропускает, где рвётся provenance.',
     'connect.direct':'Мы скажем прямо, если можем помочь — и столь же прямо, если не можем.',
@@ -957,7 +953,9 @@ let currentLang = 'en';
 function setLang(lang) {
   currentLang = lang;
   document.querySelectorAll('.lang-btn').forEach(b => {
-    b.classList.toggle('active', b.textContent === lang.toUpperCase());
+    const isActive = b.textContent.trim().toUpperCase() === lang.toUpperCase();
+    b.classList.toggle('active', isActive);
+    b.setAttribute('aria-pressed', isActive);
   });
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
@@ -968,45 +966,12 @@ function setLang(lang) {
     if (i18n[lang][key] !== undefined) el.innerHTML = i18n[lang][key];
   });
   document.documentElement.lang = lang;
+  if (typeof window.plicaRefreshArticleTitle === 'function') window.plicaRefreshArticleTitle();
 }
 
-// Theme toggle
-function toggleTheme() {
-  const html = document.documentElement;
-  const btn = document.getElementById('themeBtn');
-  const isDark = html.classList.contains('dark');
-  if (isDark) {
-    html.classList.remove('dark');
-    html.classList.add('light');
-    btn.textContent = '☀️';
-    localStorage.setItem('plica-theme', 'light');
-  } else {
-    html.classList.remove('light');
-    html.classList.add('dark');
-    btn.textContent = '🌙';
-    localStorage.setItem('plica-theme', 'dark');
-  }
-}
-
-// Init theme from localStorage or system preference
-(function() {
-  const saved = localStorage.getItem('plica-theme');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  const html = document.documentElement;
-  if (saved === 'dark' || (!saved && prefersDark)) {
-    html.classList.add('dark');
-    html.classList.remove('light');
-  } else if (saved === 'light') {
-    html.classList.add('light');
-    html.classList.remove('dark');
-  }
-  // Update button after DOM ready
-  document.addEventListener('DOMContentLoaded', function() {
-    const btn = document.getElementById('themeBtn');
-    if (btn) btn.textContent = html.classList.contains('dark') ? '🌙' : '☀️';
-  });
-})();
 </script>
+<script src="plica-medium-feed.js"></script>
+<script src="plica-shell.js"></script>
 
 </body>
 </html>
