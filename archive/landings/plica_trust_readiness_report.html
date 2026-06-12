@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plica · Trust Readiness Scan · TRS-2026-XX-XX</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --night:#1A3A3A;--night-soft:#244F4F;--night-deep:#122929;
+  --bg:#F8F6F1;--white:#FFFFFF;--surface:#F0EDE6;--cream:#E8E4DA;
+  --ink:#1C1C1A;--muted:#6B6B63;--border:#D0CBBF;
+  --copper:#8B5E3C;--copper-bg:#F9F0E8;
+  --red:#B83232;--red-bg:#FEF6F6;--red-bd:#F5C6C6;
+  --amber:#8A5A00;--amber-bg:#FFFBF0;--amber-bd:#E8C870;
+  --green:#1A5C32;--green-bg:#F0FAF4;--green-bd:#A8D8B8;
+  --serif:'DM Serif Display',Georgia,serif;
+  --mono:'DM Mono',monospace;--sans:'DM Sans',system-ui,sans-serif;
+}
+html{background:var(--bg);}
+body{font-family:var(--sans);color:var(--ink);max-width:860px;
+  margin:0 auto;padding:48px 0 80px;-webkit-font-smoothing:antialiased;}
+
+/* HEADER */
+.hdr{display:flex;justify-content:space-between;align-items:flex-start;
+  padding-bottom:24px;border-bottom:2px solid var(--ink);margin-bottom:36px;}
+.brand{font-family:var(--mono);font-size:12px;font-weight:500;
+  color:var(--night);letter-spacing:0.18em;margin-bottom:16px;}
+.title{font-family:var(--serif);font-size:28px;color:var(--ink);
+  line-height:1.1;margin-bottom:4px;}
+.title em{font-style:italic;color:var(--night);}
+.subtitle{font-size:13px;color:var(--muted);}
+.hdr-r{text-align:right;}
+.report-id{font-family:var(--mono);font-size:11px;color:var(--muted);
+  letter-spacing:0.1em;margin-bottom:8px;}
+.conf{font-family:var(--mono);font-size:9px;
+  border:1px solid var(--red);color:var(--red);
+  padding:3px 10px;letter-spacing:0.1em;display:inline-block;margin-bottom:10px;}
+.meta{font-family:var(--mono);font-size:10px;color:var(--muted);
+  line-height:1.9;text-align:right;}
+
+/* SECTION */
+.sec{margin-bottom:36px;}
+.sec-title{font-family:var(--mono);font-size:10px;color:var(--muted);
+  letter-spacing:0.16em;text-transform:uppercase;
+  padding-bottom:10px;border-bottom:1px solid var(--border);
+  margin-bottom:20px;display:flex;align-items:center;gap:10px;}
+.sec-title::before{font-family:var(--serif);font-size:16px;color:var(--border);}
+.s01::before{content:'01'}.s02::before{content:'02'}
+.s03::before{content:'03'}.s04::before{content:'04'}
+.s05::before{content:'05'}
+
+/* EXEC SUMMARY */
+.verdict-box{background:var(--red-bg);border-left:4px solid var(--red);
+  padding:18px 24px;margin-bottom:20px;}
+.verdict-box.warn{background:var(--amber-bg);border-left-color:var(--amber);}
+.verdict-box.ok{background:var(--green-bg);border-left-color:var(--green);}
+.verdict-label{font-family:var(--mono);font-size:9px;letter-spacing:0.14em;
+  text-transform:uppercase;margin-bottom:6px;color:var(--red);}
+.verdict-box.warn .verdict-label{color:var(--amber);}
+.verdict-box.ok .verdict-label{color:var(--green);}
+.verdict-text{font-size:14px;color:var(--ink);line-height:1.7;}
+.exec-body{font-size:14px;color:var(--muted);line-height:1.75;}
+.exec-body p{margin-bottom:12px;}
+.exec-body strong{color:var(--ink);}
+
+/* WORKFLOW MAP */
+.wf-map{display:flex;align-items:stretch;gap:0;margin-bottom:16px;overflow-x:auto;}
+.wf-step{flex:1;min-width:100px;border:1px solid var(--border);
+  padding:12px 10px;position:relative;background:var(--white);}
+.wf-step.risk{background:var(--red-bg);border-color:var(--red-bd);}
+.wf-step.warn{background:var(--amber-bg);border-color:var(--amber-bd);}
+.wf-step.ok{background:var(--green-bg);border-color:var(--green-bd);}
+.wf-step+.wf-step::before{content:'→';position:absolute;left:-12px;top:50%;
+  transform:translateY(-50%);color:var(--border);font-size:14px;z-index:1;}
+.wf-name{font-family:var(--mono);font-size:9px;font-weight:500;
+  letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+.wf-step.risk .wf-name{color:var(--red);}
+.wf-step.warn .wf-name{color:var(--amber);}
+.wf-step.ok .wf-name{color:var(--green);}
+.wf-desc{font-size:11px;color:var(--ink);line-height:1.4;}
+.wf-tag{font-family:var(--mono);font-size:8px;margin-top:6px;display:block;
+  color:var(--muted);}
+
+/* GAP REGISTER */
+.gap-table{width:100%;border-collapse:collapse;}
+.gap-table thead tr{background:var(--night);}
+.gap-table th{font-family:var(--mono);font-size:8.5px;color:rgba(255,255,255,0.7);
+  letter-spacing:0.1em;text-transform:uppercase;padding:10px 12px;text-align:left;}
+.gap-table td{padding:11px 12px;border-bottom:1px solid var(--border);
+  font-size:13px;vertical-align:top;line-height:1.5;}
+.gap-table tr:nth-child(even) td{background:var(--surface);}
+.gap-table tr:last-child td{border-bottom:none;}
+.sev{font-family:var(--mono);font-size:9px;padding:2px 7px;
+  display:inline-block;letter-spacing:0.06em;white-space:nowrap;}
+.sev.critical{background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd);}
+.sev.high{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-bd);}
+.sev.medium{background:var(--surface);color:var(--muted);border:1px solid var(--border);}
+.art-ref{font-family:var(--mono);font-size:9px;color:var(--night);}
+
+/* PIPL ASSESSMENT */
+.pipl-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;margin-bottom:16px;}
+.pipl-card{padding:16px;background:var(--white);border:1px solid var(--border);}
+.pipl-card.risk{background:var(--red-bg);border-color:var(--red-bd);}
+.pipl-card.warn{background:var(--amber-bg);border-color:var(--amber-bd);}
+.pipl-card.ok{background:var(--green-bg);border-color:var(--green-bd);}
+.pipl-label{font-family:var(--mono);font-size:9px;color:var(--muted);
+  letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;}
+.pipl-value{font-family:var(--mono);font-size:22px;font-weight:500;
+  line-height:1;margin-bottom:4px;}
+.pipl-card.risk .pipl-value{color:var(--red);}
+.pipl-card.warn .pipl-value{color:var(--amber);}
+.pipl-card.ok .pipl-value{color:var(--green);}
+.pipl-desc{font-size:12px;color:var(--muted);line-height:1.5;}
+
+.tier-bar{display:flex;gap:2px;margin-bottom:16px;height:32px;}
+.tier-seg{display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:10px;font-weight:500;color:white;}
+.tier-seg.cr{background:var(--green);}
+.tier-seg.wk{background:var(--amber);}
+.tier-seg.st{background:var(--red);}
+
+/* REMEDIATION */
+.remed-list{display:flex;flex-direction:column;gap:2px;}
+.remed{display:grid;grid-template-columns:28px 1fr auto;gap:14px;
+  align-items:start;padding:16px;background:var(--white);
+  border:1px solid var(--border);}
+.remed-n{font-family:var(--serif);font-size:22px;color:var(--border);line-height:1.1;}
+.remed-title{font-size:14px;font-weight:500;color:var(--ink);margin-bottom:4px;}
+.remed-desc{font-size:13px;color:var(--muted);line-height:1.6;}
+.remed-meta{text-align:right;}
+.remed-effort{font-family:var(--mono);font-size:10px;color:var(--night);
+  border:1px solid var(--border);padding:2px 8px;display:inline-block;
+  margin-bottom:4px;white-space:nowrap;}
+.remed-pri{font-family:var(--mono);font-size:9px;color:var(--muted);}
+
+/* NEXT STEPS */
+.next-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;}
+.next-card{padding:18px;background:var(--surface);}
+.next-card.cta{background:var(--night);color:white;}
+.next-label{font-family:var(--mono);font-size:9px;color:var(--muted);
+  letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px;}
+.next-card.cta .next-label{color:rgba(255,255,255,0.4);}
+.next-title{font-size:14px;font-weight:500;color:var(--ink);margin-bottom:6px;}
+.next-card.cta .next-title{color:white;}
+.next-desc{font-size:13px;color:var(--muted);line-height:1.6;}
+.next-card.cta .next-desc{color:rgba(255,255,255,0.6);}
+.next-price{font-family:var(--mono);font-size:12px;color:var(--night);
+  margin-top:10px;font-weight:500;}
+.next-card.cta .next-price{color:#C4963A;}
+
+/* FOOTER */
+.footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:flex-end;}
+.fl{font-size:12px;color:var(--muted);line-height:1.7;}
+.fl strong{color:var(--ink);font-size:13px;}
+.fr{text-align:right;font-family:var(--mono);font-size:9px;
+  color:var(--muted);line-height:1.8;}
+.fr em{font-family:var(--serif);font-style:italic;font-size:12px;
+  color:var(--muted);display:block;margin-top:4px;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div>
+    <div class="brand">PLICA</div>
+    <div class="title">Trust Readiness<br><em>Scan Report</em></div>
+    <div class="subtitle">AI-Enabled Workflow · Evidence Integrity · EU AI Act Alignment</div>
+  </div>
+  <div class="hdr-r">
+    <div class="conf">Confidential</div>
+    <div class="report-id">TRS-2026-XX-XX-01</div>
+    <div class="meta">
+      Date: [Date]<br>
+      Client: [Company] · [Type] · [Location]<br>
+      Workflow: [e.g. KYC Document Onboarding]<br>
+      Standard: SDB-26 v1.1
+    </div>
+  </div>
+</div>
+
+<!-- 01 EXECUTIVE SUMMARY -->
+<div class="sec">
+  <div class="sec-title s01">Executive Summary</div>
+
+  <div class="verdict-box">
+    <div class="verdict-label">Overall Verdict</div>
+    <div class="verdict-text"><strong>[Critical / High / Medium]</strong> — [1–2 sentence summary of the main finding. E.g.: "The intake pipeline systematically destroys forensic signals before the AI model runs. Decisions cannot be reproduced to the original submission. Article 16(b) audit trail obligations are not met."]</div>
+  </div>
+
+  <div class="exec-body">
+    <p>Between [date range], Plica conducted a Trust Readiness Scan of [Client]'s [workflow name] — covering the document intake path from client submission to AI-assisted decision.</p>
+    <p>The scan assessed four layers: <strong>workflow & decision map</strong>, <strong>object-level trust</strong> (provenance and PIPL risk), <strong>evidence trail</strong> (hash chain, transform log, audit reproducibility), and <strong>governance maturity</strong> (policy vs. architecture).</p>
+    <p><strong>[X] gaps were identified</strong>, of which [Y] are critical under EU AI Act Article 16 obligations effective 2 August 2026.</p>
+  </div>
+</div>
+
+<!-- 02 WORKFLOW MAP -->
+<div class="sec">
+  <div class="sec-title s02">Workflow Map · Where Evidence Breaks</div>
+
+  <div class="wf-map">
+    <div class="wf-step ok">
+      <div class="wf-name">Client Upload</div>
+      <div class="wf-desc">Customer submits document via [channel]</div>
+      <span class="wf-tag">✓ Original exists here</span>
+    </div>
+    <div class="wf-step warn">
+      <div class="wf-name">Mobile SDK</div>
+      <div class="wf-desc">Image normalised, EXIF partially stripped</div>
+      <span class="wf-tag">⚠ Metadata loss begins</span>
+    </div>
+    <div class="wf-step risk">
+      <div class="wf-name">Pipeline</div>
+      <div class="wf-desc">Resize + JPEG recompress + AV scan</div>
+      <span class="wf-tag">✗ Hash chain broken here</span>
+    </div>
+    <div class="wf-step risk">
+      <div class="wf-name">AI Model</div>
+      <div class="wf-desc">Vendor scores derived artifact</div>
+      <span class="wf-tag">✗ Not the original</span>
+    </div>
+    <div class="wf-step warn">
+      <div class="wf-name">Decision Log</div>
+      <div class="wf-desc">PASS/FAIL recorded, no object ref</div>
+      <span class="wf-tag">⚠ Not reproducible</span>
+    </div>
+  </div>
+
+  <p style="font-size:13px;color:var(--muted);line-height:1.7;">
+    <strong>Key finding:</strong> [Describe where exactly the evidence chain breaks and what the consequence is. E.g.: "The pipeline step at S3 ingestion applies JPEG recompression at quality 72. This destroys PRNU sensor noise and DCT statistics before the model runs. No transform log is maintained. The SHA-256 at decision time does not match the SHA-256 at intake."]
+  </p>
+</div>
+
+<!-- 03 GAP REGISTER -->
+<div class="sec">
+  <div class="sec-title s03">Gap Register</div>
+  <table class="gap-table">
+    <thead>
+      <tr>
+        <th style="width:28px">#</th>
+        <th style="width:180px">Gap</th>
+        <th style="width:70px">Severity</th>
+        <th style="width:110px">Article</th>
+        <th>Finding</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="font-family:var(--mono);font-size:11px;color:var(--muted);">G-01</td>
+        <td style="font-weight:500;">No hash at intake</td>
+        <td><span class="sev critical">Critical</span></td>
+        <td><span class="art-ref">Article 16(b)</span></td>
+        <td style="font-size:12px;color:var(--muted);">SHA-256 is not captured at upload. No way to prove which file was submitted vs. which was analysed.</td>
+      </tr>
+      <tr>
+        <td style="font-family:var(--mono);font-size:11px;color:var(--muted);">G-02</td>
+        <td style="font-weight:500;">Transform log absent</td>
+        <td><span class="sev critical">Critical</span></td>
+        <td><span class="art-ref">Article 16(b)</span></td>
+        <td style="font-size:12px;color:var(--muted);">Pipeline transforms (resize, recompress, AV) are not logged. The delta between intake and analysis is unknown.</td>
+      </tr>
+      <tr>
+        <td style="font-family:var(--mono);font-size:11px;color:var(--muted);">G-03</td>
+        <td style="font-weight:500;">Decision not reproducible</td>
+        <td><span class="sev critical">Critical</span></td>
+        <td><span class="art-ref">Article 14 / 16(b)</span></td>
+        <td style="font-size:12px;color:var(--muted);">90-day reproducibility test: original submission cannot be linked to analysis artifact. Regulatory request cannot be answered.</td>
+      </tr>
+      <tr>
+        <td style="font-family:var(--mono);font-size:11px;color:var(--muted);">G-04</td>
+        <td style="font-weight:500;">Bypass rate unknown</td>
+        <td><span class="sev high">High</span></td>
+        <td><span class="art-ref">Article 9</span></td>
+        <td style="font-size:12px;color:var(--muted);">No measurement of synthetic document bypass rate against realistic corpus. Risk management documentation is incomplete.</td>
+      </tr>
+      <tr>
+        <td style="font-family:var(--mono);font-size:11px;color:var(--muted);">G-05</td>
+        <td style="font-weight:500;">[Custom gap]</td>
+        <td><span class="sev medium">Medium</span></td>
+        <td><span class="art-ref">[Article]</span></td>
+        <td style="font-size:12px;color:var(--muted);">[Finding specific to this client's workflow]</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 04 PIPL ASSESSMENT -->
+<div class="sec">
+  <div class="sec-title s04">Object-Level Trust · PIPL Assessment</div>
+
+  <div class="pipl-grid">
+    <div class="pipl-card risk">
+      <div class="pipl-label">PIPL Risk Level</div>
+      <div class="pipl-value">[High]</div>
+      <div class="pipl-desc">Forensic signals systematically destroyed before model inference.</div>
+    </div>
+    <div class="pipl-card risk">
+      <div class="pipl-label">Evidence Reproducibility</div>
+      <div class="pipl-value">[0%]</div>
+      <div class="pipl-desc">Zero decisions can be linked back to original intake object.</div>
+    </div>
+    <div class="pipl-card warn">
+      <div class="pipl-label">Metadata Sterility</div>
+      <div class="pipl-value">[0.87]</div>
+      <div class="pipl-desc">87% of forensic metadata tags absent at analysis point.</div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:8px;font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;">Estimated Provenance Tier Mix</div>
+  <div class="tier-bar">
+    <div class="tier-seg cr" style="flex:[X];">[X]% camera_rich</div>
+    <div class="tier-seg wk" style="flex:[Y];">[Y]% weak</div>
+    <div class="tier-seg st" style="flex:[Z];">[Z]% sterile</div>
+  </div>
+  <p style="font-size:12px;color:var(--muted);line-height:1.6;">
+    Tier mix estimated from sample of [N] files. camera_rich = intact physical capture context. weak = partially degraded provenance. sterile = no reliable forensic origin signal — highest false positive / bypass risk.
+  </p>
+</div>
+
+<!-- 05 REMEDIATION ROADMAP -->
+<div class="sec">
+  <div class="sec-title s05">Remediation Roadmap · Three Steps · One Sprint</div>
+  <div class="remed-list">
+    <div class="remed">
+      <div class="remed-n">1</div>
+      <div>
+        <div class="remed-title">Hash at intake — before any transform</div>
+        <div class="remed-desc">Capture SHA-256 on every submitted file at the first point of contact — before format conversion, antivirus, or CDN. Single change. Preserves the audit trail foundation. Closes G-01.</div>
+      </div>
+      <div class="remed-meta">
+        <div class="remed-effort">Immediate</div>
+        <div class="remed-pri">Closes G-01</div>
+      </div>
+    </div>
+    <div class="remed">
+      <div class="remed-n">2</div>
+      <div>
+        <div class="remed-title">Emit transform event log on each pipeline step</div>
+        <div class="remed-desc">Each file-modifying operation emits a structured JSON event: hash before, hash after, transform type, agent, timestamp. Restores Lineage layer. Closes G-02 and partially G-03.</div>
+      </div>
+      <div class="remed-meta">
+        <div class="remed-effort">Sprint 1</div>
+        <div class="remed-pri">Closes G-02, G-03</div>
+      </div>
+    </div>
+    <div class="remed">
+      <div class="remed-n">3</div>
+      <div>
+        <div class="remed-title">Deploy async forensic witness before inference</div>
+        <div class="remed-desc">Non-blocking hook that captures EXIF snapshot and sterility score at intake, verifies continuity before model runs, and packages into Evidence Packet. &lt;1% storage overhead. Closes G-03 and G-04.</div>
+      </div>
+      <div class="remed-meta">
+        <div class="remed-effort">Sprint 1</div>
+        <div class="remed-pri">Closes G-03, G-04</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NEXT STEPS -->
+<div class="sec">
+  <div style="font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:0.16em;text-transform:uppercase;border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:16px;">Next Steps</div>
+  <div class="next-grid">
+    <div class="next-card">
+      <div class="next-label">If you stop here</div>
+      <div class="next-title">Implement the roadmap</div>
+      <div class="next-desc">Three steps, one engineering sprint. Closes critical gaps before the 2 August 2026 deadline. Plica can provide technical specification for each step on request.</div>
+    </div>
+    <div class="next-card cta">
+      <div class="next-label">If you want to go deeper</div>
+      <div class="next-title">Forensic Gap Analysis</div>
+      <div class="next-desc">Full pipeline audit across multiple workflows. Bypass rate measurement against SDB-26 corpus. Evidence architecture design. Workshop with compliance, ops, and engineering.</div>
+      <div class="next-price">From €4,000 · 10–14 days · DPA required</div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="fl">
+    <strong>Ruslan Mishyn</strong> · Founder · Plica · Independent Forensic Boutique<br>
+    ruslanm@plicaforensic.com · plicaforensic.com · sdb26.com
+  </div>
+  <div class="fr">
+    TRS-2026-XX-XX-01 · SDB-26 v1.1 · [Date] · Confidential<br>
+    Not legal advice · Classification decisions require qualified legal counsel
+    <em>Truth lives in the layers.</em>
+  </div>
+</div>
+
+</body>
+</html>

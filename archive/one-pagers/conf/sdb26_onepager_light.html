@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SDB-26 — Synthetic Document Benchmark 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --surface: #f8f8fb;
+    --border: #e0e0ec;
+    --accent: #1d4ed8;
+    --accent2: #dc2626;
+    --text: #111118;
+    --muted: #6b6b7e;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  html, body {
+    width: 210mm;
+    min-height: 297mm;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 10pt;
+    line-height: 1.5;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 13mm 13mm 11mm;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 9px;
+    border-bottom: 2px solid var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .logo-area h1 {
+    font-family: var(--mono);
+    font-size: 22pt;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  .logo-area .tagline {
+    font-family: var(--mono);
+    font-size: 7.5pt;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .header-right { display: flex; align-items: flex-start; gap: 12px; }
+
+  .header-meta { text-align: right; }
+  .header-meta .label {
+    font-family: var(--mono);
+    font-size: 7pt;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .header-meta .version {
+    font-family: var(--mono);
+    font-size: 9pt;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .qr-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .qr-wrap img {
+    width: 48px;
+    height: 48px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+  }
+
+  .qr-wrap .qr-label {
+    font-family: var(--mono);
+    font-size: 5.5pt;
+    color: var(--muted);
+    letter-spacing: 0.03em;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .hero {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-left: 3px solid var(--accent2);
+    padding: 9px 13px;
+    margin-bottom: 11px;
+    border-radius: 2px;
+  }
+
+  .hero p { font-size: 9.5pt; color: #1e293b; font-weight: 300; line-height: 1.5; }
+  .hero strong { color: var(--text); font-weight: 600; }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+    margin-bottom: 7px;
+  }
+
+  .section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 8px 10px;
+  }
+
+  .section-title {
+    font-family: var(--mono);
+    font-size: 6.5pt;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .section-title::before {
+    content: '';
+    display: inline-block;
+    width: 9px;
+    height: 1px;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  ul { list-style: none; display: flex; flex-direction: column; gap: 3px; }
+
+  ul li {
+    font-size: 8pt;
+    color: #374151;
+    padding-left: 11px;
+    position: relative;
+    line-height: 1.35;
+  }
+
+  ul li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .levels {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-bottom: 7px;
+  }
+
+  .level-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 8px 9px;
+  }
+
+  .level-badge {
+    font-family: var(--mono);
+    font-size: 9.5pt;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  .level-badge span { color: var(--accent); }
+  .level-name { font-size: 7pt; color: #374151; font-weight: 500; margin-bottom: 3px; }
+  .level-desc { font-size: 6.5pt; color: var(--muted); line-height: 1.3; }
+
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    margin-bottom: 7px;
+  }
+
+  .metric-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--accent);
+    border-radius: 2px;
+    padding: 7px 9px;
+  }
+
+  .metric-abbr {
+    font-family: var(--mono);
+    font-size: 13pt;
+    font-weight: 600;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  .metric-name {
+    font-family: var(--mono);
+    font-size: 6pt;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 3px;
+  }
+
+  .metric-desc { font-size: 7pt; color: #4b5563; line-height: 1.3; }
+
+  .tags { margin-bottom: 8px; }
+
+  .tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 6pt;
+    background: #eff6ff;
+    color: var(--accent);
+    border: 1px solid #bfdbfe;
+    border-radius: 2px;
+    padding: 1px 5px;
+    margin-right: 3px;
+    margin-bottom: 3px;
+  }
+
+  .cta {
+    background: var(--accent);
+    border-radius: 2px;
+    padding: 9px 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .cta-text { font-size: 8.5pt; color: #fff; font-weight: 400; line-height: 1.4; }
+  .cta-text strong { font-weight: 600; display: block; font-size: 9.5pt; margin-bottom: 2px; }
+
+  .cta-link {
+    font-family: var(--mono);
+    font-size: 7.5pt;
+    color: #fff;
+    text-align: right;
+    opacity: 0.9;
+    line-height: 1.7;
+    white-space: nowrap;
+    margin-left: 14px;
+  }
+
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 7px;
+    border-top: 1px solid var(--border);
+    margin-top: auto;
+  }
+
+  .footer div {
+    font-family: var(--mono);
+    font-size: 7pt;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .sec-label {
+    font-family: var(--mono);
+    font-size: 6.5pt;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 5px;
+  }
+
+  .sec-label::before {
+    content: '';
+    display: inline-block;
+    width: 9px;
+    height: 1px;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  @media print {
+    html, body { width: 210mm; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="logo-area">
+      <h1>SDB-26</h1>
+      <div class="tagline">Synthetic Document Benchmark 2026</div>
+    </div>
+    <div class="header-right">
+      <div class="qr-wrap">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAIAAAAG+WgKAAAEH0lEQVR4nO3dwW0cORBAUdvYCHxz/sH55hS0ATSwSxCfxR7jvbOmRxp9ECiwp/n96+vrG3R+3P4F+NtIipikiEmKmKSISYqYpIhJipikiEmKmKSI/bPyQz9//jr9e/yHP39+/+/PrPyGK9dZufLedaorv/9/YZUiJilikiImKWKSIrY08T1VU8/TykRTTT3n5sRJd/8XT1YpYpIiJilikiImKWKbE9/T3nSwN608X1XNgHu7bG/bm5v8XzxZpYhJipikiEmKmKSIZRPf26zMLyuT4/Nn9l614twdpJOsUsQkRUxSxCRFTFLEPnLiq+78nJynzs2Jb2OVIiYpYpIiJilikiKWTXx3p6cVzwlrZebau0OyelV11+skqxQxSRGTFDFJEZMUsc2J7+4TI/cmtWqaq97r7nR5jlWKmKSISYqYpIhJitj3v+ME9mrmOvdeez7xPk+rFDFJEZMUMUkRkxSxzfP4Jve59p7Bcs7efDf5PM/qaaJ7n6pVipikiEmKmKSISYrY0h7f5EQzOSc+3d2/O/eXTr7KKkVMUsQkRUxSxCRFLDuBvTrX4O5JB+fmuxXnvtk3+XdZpYhJipikiEmKmKSIve7JLefu86zmoMnp6dy9oOf2Sa1SxCRFTFLEJEVMUsRGz+Ob3Hs6NwdVV15x7n5ad3XyMSRFTFLEJEVMUsSyuzqfzs1ce686t6tVPTfm7jkL1fRtlSImKWKSIiYpYpIilt3VufKtvZXrPE1Oauf2wiY/sbvn+lmliEmKmKSISYqYpIhd3uO7O+M83d2tm3wK6N51VliliEmKmKSISYqYpIhlJ7C/7Y7Ep2oCXXH3KTGTT615skoRkxQxSRGTFDFJEduc+O6eoVBdZ3IG3PP+kxCfrFLEJEVMUsQkRUxSxJbu6jy3Q3T3/Lunc7tjK++196rJqXCFVYqYpIhJipikiEmK2Oge3+RO3CeekTfJeXx8DEkRkxQxSRGTFLGDe3x3T6BbedXk+YB37Z1Zv8cqRUxSxCRFTFLEJEUse3LLpMlvpVWT7MqVn859q/HcnahWKWKSIiYpYpIiJilim3t8k+6eW/e2J8BMnhi4xypFTFLEJEVMUsQkRezgeXx7qpPsJvfvVqanyfMR9rirk5eSFDFJEZMUMUkR25z4niafV/m26enunZ8rJs+8sEoRkxQxSRGTFDFJEcsmvknVM1jOPQW0mjfPPRf03J26VilikiImKWKSIiYpYh858e3NXNWzXKpvwJ3bGazea+/vskoRkxQxSRGTFDFJEcsmvnPTyuR73T2v4dwp9pPfarRKEZMUMUkRkxQxSRHbnPjuPr1z8kz2c3uF1Wc4OYH6Hh8XSIqYpIhJipikiH3keXy8mVWKmKSISYqYpIhJipikiEmKmKSISYqYpIhJiti/I68zrfrdWIgAAAAASUVORK5CYII=" alt="QR code — github.com/sevrusik/SDB26">
+        <div class="qr-label">github.com/<br>sevrusik/SDB26</div>
+      </div>
+      <div class="header-meta">
+        <div class="label">Open Standard</div>
+        <div class="version">v1.0.7</div>
+        <div class="label" style="margin-top:3px;">CC BY 4.0</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero">
+    <p>
+      <strong>Open benchmark for measuring document fraud resilience</strong> — not vendor marketing accuracy.
+      Most KYC accuracy claims use undisclosed corpora and unknown generator versions.
+      SDB-26 defines <strong>what to measure, how to measure it, and how to report it</strong> —
+      reproducibly and comparably across stacks and vendors.
+    </p>
+  </div>
+
+  <div class="grid-2">
+    <div class="section">
+      <div class="section-title">The Problem</div>
+      <ul>
+        <li>KYC accuracy claims use undisclosed corpora — results are not comparable</li>
+        <li>No standard measure of bypass risk across generators and attack levels</li>
+        <li>Agent-mediated onboarding increases attack throughput without changing detection</li>
+        <li>Synthetic document quality improves 4× faster than verification stacks update</li>
+        <li>"Works in demo" becomes "fails in production" without measurable baselines</li>
+      </ul>
+    </div>
+    <div class="section">
+      <div class="section-title">What SDB-26 Provides</div>
+      <ul>
+        <li>Public measurement framework for synthetic document risk</li>
+        <li>Standardized attack levels (L1 / L2 / L3)</li>
+        <li>Reproducible reporting format with machine-validatable JSON schema</li>
+        <li>Explainable output layer via Forensic Reason Codes (FRC)</li>
+        <li>FRC A2A Extension for agentic onboarding contexts</li>
+        <li>Open corpus methodology — independently verifiable</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sec-label">Attack Levels</div>
+  <div class="levels">
+    <div class="level-card">
+      <div class="level-badge"><span>L1</span> Standard Generation</div>
+      <div class="level-name">Direct API / Web Output</div>
+      <div class="level-desc">DALL-E 3, Midjourney v7, Stable Diffusion XL, Flux 2, ChatGPT Image 2, Kling O1. Direct generation output.</div>
+    </div>
+    <div class="level-card">
+      <div class="level-badge"><span>L2</span> Advanced Diffusion</div>
+      <div class="level-name">Specialised Pipelines</div>
+      <div class="level-desc">LoRA fine-tuned on document datasets. Targeted manipulation of genuine documents. Metadata-aware generation.</div>
+    </div>
+    <div class="level-card">
+      <div class="level-badge"><span>L3</span> Screenshot Attack</div>
+      <div class="level-name">Screen Recapture</div>
+      <div class="level-desc">Document displayed on screen (FHD / 2K / 4K) and photographed. Produces genuine camera EXIF. Moiré-dependent detection.</div>
+    </div>
+  </div>
+
+  <div class="sec-label">What Is Measured</div>
+  <div class="metrics">
+    <div class="metric-card">
+      <div class="metric-abbr">BR</div>
+      <div class="metric-name">Bypass Rate</div>
+      <div class="metric-desc">% of synthetic documents incorrectly trusted by the stack.</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-abbr">CG</div>
+      <div class="metric-name">Confidence Gap</div>
+      <div class="metric-desc">Mean confidence on incorrect approvals. Measures calibration.</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-abbr">GS</div>
+      <div class="metric-name">Generator Sensitivity</div>
+      <div class="metric-desc">BR stratified by generator family. Shows which models bypass.</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-abbr">FPR</div>
+      <div class="metric-name">False Positive Rate</div>
+      <div class="metric-desc">Impact on genuine users. Required companion to BR.</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="section">
+      <div class="section-title">Why It Matters Now</div>
+      <ul>
+        <li>Synthetic quality improving 4× faster than detection update cycles</li>
+        <li>Anthropic and OpenAI now ship production KYC agent templates</li>
+        <li>Agent-submitted documents require a separate forensic layer (FRC A2A)</li>
+        <li>Regulators moving from feature lists to effectiveness evidence</li>
+        <li>Enterprise buyers requiring independent bypass measurement</li>
+      </ul>
+    </div>
+    <div class="section">
+      <div class="section-title">Typical Outcomes</div>
+      <ul>
+        <li>Comparable baseline across vendors on the same corpus</li>
+        <li>Clear failure points by attack type and generator family</li>
+        <li>Measurable improvement roadmap instead of subjective tuning</li>
+        <li>Audit-ready FRC output for regulatory and legal review</li>
+        <li>Schema-valid results publishable to the open SDB-26 registry</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tags">
+    <span class="tag">KYC / AML</span>
+    <span class="tag">Document Forensics</span>
+    <span class="tag">Synthetic Identity</span>
+    <span class="tag">Agentic Onboarding</span>
+    <span class="tag">FRC A2A Extension</span>
+    <span class="tag">Open Standard</span>
+    <span class="tag">CC BY 4.0</span>
+  </div>
+
+  <div class="cta">
+    <div class="cta-text">
+      <strong>Run a baseline SDB-26 evaluation. Publish schema-valid results.</strong>
+      Open standard · Machine-validatable schema · Independent benchmark · Free to implement
+    </div>
+    <div class="cta-link">
+      github.com/sevrusik/SDB26<br>
+      sdb26.com
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>Ruslan Mishyn · AI PM & Forensic Researcher · sevrusik@gmail.com</div>
+    <div style="text-align:right;">SDB-26 · FRC · FRC A2A · DocLens · linkedin.com/in/mishyn-ruslan</div>
+  </div>
+
+</div>
+</body>
+</html>

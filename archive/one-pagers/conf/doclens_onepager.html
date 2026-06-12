@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DocLens — Forensic Document Authenticity Engine</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#ffffff;--surface:#f8f9fc;--surface2:#f1f4f9;
+    --border:#dde3ee;--accent:#1d4ed8;--accent2:#dc2626;
+    --green:#15803d;--green-bg:#f0fdf4;--green-border:#bbf7d0;
+    --text:#0f1729;--muted:#5a6480;
+    --mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;
+  }
+  html,body{
+    width:210mm;min-height:297mm;
+    background:var(--bg);color:var(--text);
+    font-family:var(--sans);font-size:10pt;line-height:1.5;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;
+  }
+  .page{width:210mm;min-height:297mm;padding:12mm 13mm 11mm;display:flex;flex-direction:column;}
+
+  /* HEADER */
+  .header{display:flex;justify-content:space-between;align-items:flex-start;
+    padding-bottom:9px;border-bottom:2px solid var(--accent);margin-bottom:12px;}
+  .logo h1{font-family:var(--mono);font-size:21pt;font-weight:600;color:var(--accent);
+    letter-spacing:-0.02em;line-height:1;}
+  .logo .sub{font-family:var(--mono);font-size:7pt;color:var(--muted);
+    letter-spacing:0.06em;text-transform:uppercase;margin-top:4px;}
+  .header-right{display:flex;align-items:flex-start;gap:10px;}
+  .qr-wrap{display:flex;flex-direction:column;align-items:center;gap:2px;}
+  .qr-wrap img{width:46px;height:46px;border:1px solid var(--border);border-radius:2px;}
+  .qr-wrap .ql{font-family:var(--mono);font-size:5.5pt;color:var(--muted);
+    text-align:center;line-height:1.3;}
+  .header-meta{text-align:right;}
+  .header-meta .lbl{font-family:var(--mono);font-size:7pt;color:var(--muted);
+    letter-spacing:0.05em;text-transform:uppercase;}
+  .header-meta .val{font-family:var(--mono);font-size:9pt;color:var(--accent);font-weight:600;}
+
+  /* HERO */
+  .hero{background:#eff6ff;border:1px solid #bfdbfe;border-left:3px solid var(--accent2);
+    padding:9px 13px;margin-bottom:11px;border-radius:2px;}
+  .hero p{font-size:9.5pt;color:#1e293b;font-weight:300;line-height:1.5;}
+  .hero strong{color:var(--text);font-weight:600;}
+
+  /* GRIDS */
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:7px;}
+  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:7px;}
+  .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:7px;}
+
+  /* SECTION */
+  .section{background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:8px 10px;}
+  .sec-title{font-family:var(--mono);font-size:6.5pt;font-weight:600;color:var(--accent);
+    letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;
+    display:flex;align-items:center;gap:5px;}
+  .sec-title::before{content:'';display:inline-block;width:9px;height:1px;
+    background:var(--accent);flex-shrink:0;}
+
+  ul{list-style:none;display:flex;flex-direction:column;gap:3px;}
+  ul li{font-size:8pt;color:#374151;padding-left:11px;position:relative;line-height:1.35;}
+  ul li::before{content:'›';position:absolute;left:0;color:var(--accent);font-weight:700;}
+
+  .sec-label{font-family:var(--mono);font-size:6.5pt;font-weight:600;color:var(--accent);
+    letter-spacing:0.1em;text-transform:uppercase;
+    display:flex;align-items:center;gap:5px;margin-bottom:5px;}
+  .sec-label::before{content:'';display:inline-block;width:9px;height:1px;
+    background:var(--accent);flex-shrink:0;}
+
+  /* SIGNAL CARDS */
+  .signal-card{background:var(--surface2);border:1px solid var(--border);
+    border-top:2px solid var(--accent);border-radius:2px;padding:7px 9px;}
+  .signal-icon{font-family:var(--mono);font-size:9pt;font-weight:600;
+    color:var(--accent);margin-bottom:2px;}
+  .signal-name{font-size:7pt;color:var(--muted);font-weight:500;
+    text-transform:uppercase;letter-spacing:0.04em;margin-bottom:3px;}
+  .signal-desc{font-size:7pt;color:#4b5563;line-height:1.3;}
+
+  /* OUTPUT CARDS */
+  .output-card{background:var(--surface);border:1px solid var(--border);
+    border-radius:2px;padding:7px 9px;}
+  .output-label{font-family:var(--mono);font-size:6.5pt;color:var(--accent);
+    text-transform:uppercase;letter-spacing:0.06em;margin-bottom:3px;}
+  .output-val{font-size:8pt;color:var(--text);font-weight:500;line-height:1.3;}
+
+  /* IMPACT */
+  .impact-card{background:var(--green-bg);border:1px solid var(--green-border);
+    border-radius:2px;padding:7px 9px;}
+  .impact-num{font-family:var(--mono);font-size:12pt;font-weight:600;
+    color:var(--green);line-height:1;}
+  .impact-label{font-size:7pt;color:#166534;margin-top:2px;line-height:1.3;}
+
+  /* WHERE IT FITS */
+  .fit-card{background:var(--surface);border:1px solid var(--border);
+    border-left:2px solid var(--accent);border-radius:2px;padding:7px 9px;}
+  .fit-title{font-family:var(--mono);font-size:7pt;font-weight:600;
+    color:var(--accent);margin-bottom:3px;}
+  .fit-desc{font-size:7.5pt;color:#4b5563;line-height:1.3;}
+
+  /* TAGS */
+  .tags{margin-bottom:7px;}
+  .tag{display:inline-block;font-family:var(--mono);font-size:6pt;
+    background:#eff6ff;color:var(--accent);border:1px solid #bfdbfe;
+    border-radius:2px;padding:1px 5px;margin-right:3px;margin-bottom:3px;}
+
+  /* CTA */
+  .cta{background:var(--accent);border-radius:2px;padding:9px 13px;
+    display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+  .cta-text{font-size:8.5pt;color:#fff;font-weight:400;line-height:1.4;}
+  .cta-text strong{font-weight:600;display:block;font-size:9.5pt;margin-bottom:2px;}
+  .cta-link{font-family:var(--mono);font-size:7.5pt;color:#fff;
+    text-align:right;opacity:0.9;line-height:1.7;white-space:nowrap;margin-left:14px;}
+
+  /* FOOTER */
+  .footer{display:flex;justify-content:space-between;align-items:center;
+    padding-top:7px;border-top:1px solid var(--border);margin-top:auto;}
+  .footer div{font-family:var(--mono);font-size:7pt;color:var(--muted);line-height:1.5;}
+
+  @media print{html,body{width:210mm;}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">
+      <h1>DocLens</h1>
+      <div class="sub">Forensic Document Authenticity Engine</div>
+    </div>
+    <div class="header-right">
+      <div class="qr-wrap">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAIAAAAgbqG5AAADOUlEQVR4nO3dQW7UMABA0RZxDrYch7NyHLZcpGz+ikiV5dpOqr63RNOZCfqy4ozjvL69vb3Ay8u3u78ATyEFIgUiBSIFIgUiBSIFIgUiBSIF8n3kRT9+/dn9Pd7x9/fP//7l+n2ur7la9VcjRr7zSSNHalQgUiBSIFIgUiBDM4irkTPSOXNn2vvOz0/OMlaZ+z5GBSIFIgUiBSIFMjmDuLr3LHrfef7I+6w6inv/D40KRApECkQKRApk2QzipFVrhFbNBfbNKU4yKhApECkQKRApkE85gxg5Yz85O7j3HodVjApECkQKRApECmTZDOLkVfe5+cLIef71r0aO6+RarH2MCkQKRApECkQKZHIGce9V91W/QYwcxb7fO572y4VRgUiBSIFIgUiBvH6dJ8qd3JfVfRB8YlIgUiBSIFIgQzOI519j37cb0qojXfXEin37NRkViBSIFIgUiBTI0CqmVet29q01GvG03Vzn1lCNmPs+RgUiBSIFIgUiBbJxL6Z959Vz73NybrJq7dPJp28bFYgUiBSIFIgUyNEnys3tdDT3WSPu/b3j3mO/MioQKRApECkQKZDJGcS965GevxvSyfsXruY+y6hApECkQKRApEAm76Se8/wdiu490pNrlq6MCkQKRApECkQK5OgzqU9eh9/36XPvc/JXEvdB8CFSIFIgUiBSIMtWMc3Zd9X95FMb7t2HatUcx6hApECkQKRApECWPQ9i3zMRRt5n1Uqeke+z7/6Oq5MzI6MCkQKRApECkQKZfB7E3GtWfdbT7pu+eto+SyOMCkQKRApECkQKZGgGce+Z7b7Zwck7u1f9SuJ5EGwnBSIFIgUiBXLzfRBXJ3dDmluhtO/Mf86q/zGjApECkQKRApECOfpEuat9a5/2rXRa9ZpV3EnNYlIgUiBSIFIgR3dz3WduvnDyaQsn7/WeY1QgUiBSIFIgUiCfcgYxctX95AqlEU+71/vKqECkQKRApECkQJbNIO593vTJXU9P7u96cudYowKRApECkQKRApmcQdx7tfzk7GDVX51c++Q+CD5ECkQKRApECmToiXJ8BUYFIgUiBSIFIgUiBSIFIgUiBSIFIgXyD2ridlCsCvgBAAAAAElFTkSuQmCC" alt="QR sdb26.com">
+        <div class="ql">sdb26.com</div>
+      </div>
+      <div class="header-meta">
+        <div class="lbl">Powered by</div>
+        <div class="val">SDB-26</div>
+        <div class="lbl" style="margin-top:3px;">FRC v1.0.7</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <p>
+      <strong>Physics-first document verification for regulated onboarding workflows.</strong>
+      Content checks prove that a document looks correct.
+      DocLens proves that a document <strong>is physically real</strong> —
+      by analysing the signal layer beneath the content, where synthetic artifacts always leave a trace.
+    </p>
+  </div>
+
+  <!-- PROBLEM + WHAT IT DOES -->
+  <div class="grid-2">
+    <div class="section">
+      <div class="sec-title">The Problem</div>
+      <ul>
+        <li>Content checks alone do not prove authenticity — they verify plausibility</li>
+        <li>Synthetic, edited, or screen-recaptured artifacts can pass policy checks</li>
+        <li>AI-generated documents bypass visual classifiers trained on last year's models</li>
+        <li>Analysts spend time on manual triage with weak forensic context</li>
+        <li>No structured audit trail when escalation is challenged post-incident</li>
+      </ul>
+    </div>
+    <div class="section">
+      <div class="sec-title">What DocLens Does</div>
+      <ul>
+        <li>Analyses document authenticity using layered forensic signals</li>
+        <li>Physics-level examination — not pattern matching against known fakes</li>
+        <li>Produces structured reason codes — human and machine readable</li>
+        <li>Generates audit-ready decision artifacts for compliance operations</li>
+        <li>Integrates into existing review queues without workflow disruption</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SIGNAL LAYERS -->
+  <div class="sec-label">Forensic Signal Layers</div>
+  <div class="grid-4" style="margin-bottom:7px;">
+    <div class="signal-card">
+      <div class="signal-icon">L0</div>
+      <div class="signal-name">Provenance</div>
+      <div class="signal-desc">Submission context, agent identity, temporal anomalies, velocity patterns.</div>
+    </div>
+    <div class="signal-card">
+      <div class="signal-icon">L1</div>
+      <div class="signal-name">Synthetic</div>
+      <div class="signal-desc">FFT spectral artifacts, GAN fingerprint, diffusion model signatures, PRNU absence.</div>
+    </div>
+    <div class="signal-card">
+      <div class="signal-icon">L2</div>
+      <div class="signal-name">Manipulation</div>
+      <div class="signal-desc">ELA divergence, metadata wipe, double JPEG compression, font inconsistency.</div>
+    </div>
+    <div class="signal-card">
+      <div class="signal-icon">L3</div>
+      <div class="signal-name">Recapture</div>
+      <div class="signal-desc">Moiré interference, screen grid, subpixel patterns — display density aware (FHD / 2K / 4K).</div>
+    </div>
+  </div>
+
+  <!-- OUTPUT -->
+  <div class="sec-label">Output for Operations</div>
+  <div class="grid-4" style="margin-bottom:7px;">
+    <div class="output-card">
+      <div class="output-label">Verdict</div>
+      <div class="output-val">GENUINE · SYNTHETIC · EDITED · SCREENSHOT · INSUFFICIENT</div>
+    </div>
+    <div class="output-card">
+      <div class="output-label">Reason Codes</div>
+      <div class="output-val">Structured FRC codes per signal layer. Human + machine readable.</div>
+    </div>
+    <div class="output-card">
+      <div class="output-label">Required Action</div>
+      <div class="output-val">APPROVE · REVIEW · ESCALATE · BLOCK — policy-mapped, not manual.</div>
+    </div>
+    <div class="output-card">
+      <div class="output-label">Audit Trace</div>
+      <div class="output-val">Reproducible decision record for QA, compliance, and model governance.</div>
+    </div>
+  </div>
+
+  <!-- IMPACT + WHERE IT FITS -->
+  <div class="grid-2" style="margin-bottom:7px;">
+    <div class="section">
+      <div class="sec-title">Business Impact</div>
+      <ul>
+        <li>Lower synthetic bypass risk — physics signals are generator-agnostic</li>
+        <li>Better analyst productivity — less manual triage, structured context</li>
+        <li>Faster and more defensible escalation decisions</li>
+        <li>Stronger audit posture in high-risk onboarding flows</li>
+        <li>Measurable performance via SDB-26 BR / CG / GS metrics</li>
+      </ul>
+    </div>
+    <div class="section">
+      <div class="sec-title">Where It Fits</div>
+      <div style="display:flex;flex-direction:column;gap:4px;">
+        <div class="fit-card">
+          <div class="fit-title">Pre-approval verification layer</div>
+          <div class="fit-desc">Runs before content-only trust decisions. Blocks synthetic artifacts at intake.</div>
+        </div>
+        <div class="fit-card">
+          <div class="fit-title">Case review enrichment</div>
+          <div class="fit-desc">Adds forensic context to disputed or flagged cases post-submission.</div>
+        </div>
+        <div class="fit-card">
+          <div class="fit-title">Vendor benchmark loop</div>
+          <div class="fit-desc">SDB-26 evaluation of current KYC stack — measurable Bypass Rate baseline.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAGS -->
+  <div class="tags">
+    <span class="tag">Physics-First Forensics</span>
+    <span class="tag">FRC Reason Codes</span>
+    <span class="tag">KYC / AML</span>
+    <span class="tag">Agent Onboarding</span>
+    <span class="tag">Audit-Ready Output</span>
+    <span class="tag">SDB-26 Compliant</span>
+    <span class="tag">Generator-Agnostic</span>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta">
+    <div class="cta-text">
+      <strong>Deploy DocLens as authenticity layer before content-only trust decisions.</strong>
+      Physics signals are generator-agnostic — works on models released today and tomorrow.
+    </div>
+    <div class="cta-link">
+      sdb26.com<br>
+      github.com/sevrusik/SDB26<br>
+      sevrusik@gmail.com
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div>Ruslan Mishyn · AI PM & Forensic Researcher · DocLens · FraudLens</div>
+    <div style="text-align:right;">SDB-26 v1.0.7 · FRC A2A Extension · linkedin.com/in/mishyn-ruslan</div>
+  </div>
+
+</div>
+</body>
+</html>

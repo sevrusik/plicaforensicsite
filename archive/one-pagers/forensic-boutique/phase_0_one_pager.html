@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Phase 0 Quick Scan — DocLens</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Instrument+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap');
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--bg:#fafaf8;--surface:#f2f0eb;--surface2:#e8e5de;--border:#d0ccc3;--accent:#1a3a5c;--accent2:#c0392b;--green:#145a32;--green-bg:#e8f5e0;--green-border:#b8dba8;--text:#1a1a18;--muted:#7a7770;--display:'Space Mono',monospace;--body:'Instrument Sans',sans-serif;}
+  html,body{width:210mm;min-height:297mm;background:var(--bg);color:var(--text);font-family:var(--body);font-size:10pt;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .page{width:210mm;min-height:297mm;display:flex;flex-direction:column;}
+  .header{background:var(--accent);padding:10mm 14mm 9mm;position:relative;overflow:hidden;}
+  .header::after{content:'';position:absolute;right:-20px;top:-20px;width:110px;height:110px;border:2px solid rgba(255,255,255,0.07);border-radius:50%;}
+  .offer-tag{font-family:var(--display);font-size:7pt;color:rgba(255,255,255,0.5);letter-spacing:0.15em;margin-bottom:7px;}
+  .title{font-family:var(--display);font-size:18pt;color:#fff;line-height:1.05;font-weight:700;max-width:330px;}
+  .subtitle{font-size:8.5pt;color:rgba(255,255,255,0.76);margin-top:7px;max-width:380px;line-height:1.5;font-weight:300;}
+  .promise{background:var(--accent2);padding:8px 14mm;}
+  .promise p{font-family:var(--display);font-size:9pt;color:#fff;letter-spacing:0.05em;line-height:1.3;}
+  .body{padding:8mm 14mm;flex:1;display:flex;flex-direction:column;gap:7px;}
+  .sec-label{font-family:var(--display);font-size:6.5pt;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:4px;}
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+  .compare-before{background:var(--surface2);border:1px solid var(--border);padding:8px 10px;border-radius:2px;}
+  .compare-after{background:var(--green-bg);border:1px solid var(--green-border);padding:8px 10px;border-radius:2px;}
+  .compare-tag{font-family:var(--display);font-size:6.5pt;font-weight:700;letter-spacing:0.1em;margin-bottom:4px;}
+  .compare-before .compare-tag{color:var(--accent2);}
+  .compare-after .compare-tag{color:var(--green);}
+  .compare-text{font-size:7.5pt;line-height:1.45;color:var(--text);}
+  .deliverables{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+  .deliv-card{background:var(--surface);border:1px solid var(--border);border-top:2px solid var(--accent);padding:8px 9px;}
+  .deliv-name{font-size:8pt;font-weight:500;color:var(--text);margin-bottom:3px;}
+  .deliv-desc{font-size:7pt;color:var(--muted);line-height:1.35;}
+  .scope-block{background:var(--surface);border:1px solid var(--border);padding:7px 11px;display:flex;gap:0;align-items:stretch;}
+  .scope-col{flex:1;padding:0 7px;display:flex;flex-direction:column;gap:2px;}
+  .scope-col:first-child{padding-left:0;}
+  .scope-sep{width:1px;background:var(--border);flex-shrink:0;margin:0 3px;}
+  .scope-label{font-size:5.5pt;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;}
+  .scope-val{font-size:7pt;color:var(--text);line-height:1.3;}
+  .proof-block{background:var(--surface);border:1px solid var(--border);padding:6px 11px;display:flex;flex-wrap:wrap;gap:4px 14px;}
+  .proof-item{font-size:7pt;color:var(--muted);display:flex;align-items:center;gap:4px;}
+  .proof-dot{color:var(--accent);font-size:8pt;}
+  .killer{background:var(--accent);padding:8px 12px;border-radius:2px;}
+  .killer-label{font-family:var(--display);font-size:6.5pt;color:rgba(255,255,255,0.6);letter-spacing:0.12em;margin-bottom:4px;}
+  .killer-q{font-size:8.5pt;color:#fff;font-style:italic;line-height:1.5;}
+  .footer{padding:5mm 14mm 7mm;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:12px;}
+  .footer-left{font-size:7pt;color:var(--muted);line-height:1.6;}
+  .footer-left strong{color:var(--text);}
+  .cta-footer{background:var(--accent);padding:5px 12px;border-radius:2px;text-align:center;}
+  .cta-footer .cta-main{font-family:'Space Mono',monospace;font-size:8.5pt;color:#fff;font-weight:700;}
+  .cta-footer .cta-sub{font-size:6.5pt;color:rgba(255,255,255,0.8);margin-top:1px;}
+  .footer-right{font-family:var(--display);font-size:8pt;color:var(--accent);text-align:right;line-height:1.7;}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div class="offer-tag">PHASE 0 — QUICK SCAN</div>
+    <div class="title">BASELINE RISK SCAN<br>IN 48 HOURS</div>
+    <div class="subtitle">Low-friction start: no integration, no architecture changes, no procurement cycle. We test a labelled sample and return a decision-ready baseline for compliance and fraud operations.</div>
+  </div>
+  <div class="promise"><p>START SMALL. GET BASELINE EVIDENCE FAST.</p></div>
+  <div class="body">
+    <div class="sec-label">What changes in 48h</div>
+    <div class="compare">
+      <div class="compare-before"><div class="compare-tag">BEFORE</div><div class="compare-text">"Our vendor says it is fine" without local baseline, false positive profile, or disputed-case trace.</div></div>
+      <div class="compare-after"><div class="compare-tag">AFTER</div><div class="compare-text">One shared baseline: where current controls pass, where they fail, and what to triage first next week.</div></div>
+    </div>
+
+    <div class="sec-label">Scope & timeline</div>
+    <div class="scope-block">
+      <div class="scope-col"><div class="scope-label">INPUT</div><div class="scope-val">Up to 100 files (labelled by client)</div></div>
+      <div class="scope-sep"></div>
+      <div class="scope-col"><div class="scope-label">TIMELINE</div><div class="scope-val">48 calendar hours</div></div>
+      <div class="scope-sep"></div>
+      <div class="scope-col"><div class="scope-label">FORMAT</div><div class="scope-val">ZIP + minimal metadata sheet</div></div>
+      <div class="scope-sep"></div>
+      <div class="scope-col"><div class="scope-label">OUTPUT</div><div class="scope-val">PDF summary + CSV + 1 sample FRC file</div></div>
+    </div>
+
+    <div class="sec-label">Deliverables</div>
+    <div class="deliverables">
+      <div class="deliv-card"><div class="deliv-name">Baseline scorecard</div><div class="deliv-desc">Pass / review / block distribution with top failure clusters.</div></div>
+      <div class="deliv-card"><div class="deliv-name">Top-10 evidence signals</div><div class="deliv-desc">Which signal families triggered most and where controls are weak.</div></div>
+      <div class="deliv-card"><div class="deliv-name">Next-step map</div><div class="deliv-desc">Recommended path: stop at scan, or proceed to 14-day pilot.</div></div>
+    </div>
+
+    <div class="proof-block">
+      <div class="proof-item"><span class="proof-dot">●</span> Built on SDB-26 + FRC schema</div>
+      <div class="proof-item"><span class="proof-dot">●</span> No production integration required</div>
+      <div class="proof-item"><span class="proof-dot">●</span> Designed as conference/board pre-read artifact</div>
+      <div class="proof-item"><span class="proof-dot">●</span> Optional follow-up: 14-day pilot</div>
+    </div>
+
+    <div class="killer">
+      <div class="killer-label">KILLER QUESTION</div>
+      <div class="killer-q">"If we send 100 known files today, can we get an evidence-based baseline by Friday without touching production?"</div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="footer-left"><strong>Ruslan Mishyn</strong> — AI PM &amp; Forensic Researcher<br>sevrusik@gmail.com · sdb26.com · linkedin.com/in/mishyn-ruslan</div>
+    <div class="cta-footer"><div class="cta-main">REQUEST PHASE 0</div><div class="cta-sub">2-day baseline scan</div></div>
+    <div class="footer-right">DocLens<br>Forensic Boutique</div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Vendor Assurance Layer — DocLens</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap');
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#f9f7f4;--surface:#f0ece5;--surface2:#e6e1d8;
+    --border:#d0cbc0;--accent:#1a3a5c;--accent2:#c0392b;--amber:#b8860b;
+    --text:#1a1814;--muted:#7a7570;
+    --display:'Bebas Neue',sans-serif;--body:'DM Sans',sans-serif;
+  }
+  html,body{width:210mm;min-height:297mm;background:var(--bg);color:var(--text);
+    font-family:var(--body);font-size:10pt;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .page{width:210mm;min-height:297mm;display:flex;flex-direction:column;}
+  .topbar{height:5px;background:linear-gradient(90deg,var(--accent) 0%,var(--amber) 60%,var(--accent2) 100%);}
+  .header{padding:10mm 14mm 8mm;display:flex;justify-content:space-between;
+    align-items:flex-start;border-bottom:1px solid var(--border);}
+  .offer-tag{font-family:var(--display);font-size:8pt;color:var(--amber);letter-spacing:0.18em;margin-bottom:6px;}
+  .title{font-family:var(--display);font-size:32pt;color:var(--accent);line-height:0.92;letter-spacing:0.01em;}
+  .title span{color:var(--accent2);}
+  .subtitle{font-size:8.5pt;color:var(--muted);margin-top:8px;max-width:290px;line-height:1.55;font-weight:300;}
+  .header-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px;}
+  .qr-box{border:1px solid var(--border);padding:3px;background:#fff;border-radius:2px;}
+  .qr-box img{width:44px;height:44px;display:block;}
+  .qr-label{font-size:5.5pt;color:var(--muted);text-align:right;margin-top:2px;}
+  .promise{background:var(--accent);padding:8px 14mm;}
+  .promise p{font-family:var(--display);font-size:13pt;color:#fff;letter-spacing:0.06em;line-height:1.2;}
+  .body{padding:8mm 14mm;flex:1;display:flex;flex-direction:column;gap:7px;}
+  .sec-label{font-family:var(--display);font-size:7.5pt;color:var(--accent);letter-spacing:0.15em;margin-bottom:4px;}
+  .problem-block{background:var(--surface2);border:1px solid var(--border);
+    border-left:3px solid var(--accent2);padding:8px 12px;}
+  .problem-block p{font-size:8.5pt;color:var(--text);line-height:1.5;}
+  .problem-block strong{color:var(--accent2);}
+  .three-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+  .col-card{background:var(--surface);border:1px solid var(--border);
+    border-top:2px solid var(--accent);padding:8px 10px;}
+  .col-num{font-family:var(--display);font-size:18pt;color:var(--amber);line-height:1;margin-bottom:3px;}
+  .col-title{font-size:7.5pt;font-weight:500;color:var(--text);margin-bottom:3px;line-height:1.3;}
+  .col-desc{font-size:7pt;color:var(--muted);line-height:1.4;}
+  .angles{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+  .angle-item{display:flex;gap:7px;align-items:flex-start;
+    background:var(--surface);border:1px solid var(--border);padding:6px 9px;}
+  .angle-marker{font-family:var(--display);font-size:11pt;color:var(--accent2);flex-shrink:0;line-height:1.2;}
+  .angle-text{font-size:7.5pt;color:var(--text);line-height:1.4;}
+  .angle-text strong{color:var(--accent);font-weight:500;}
+  .reg-strip{background:var(--surface);border:1px solid var(--border);
+    padding:6px 11px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+  .reg-item{font-size:7pt;color:var(--muted);}
+  .reg-item strong{color:var(--accent);font-weight:500;}
+  .reg-sep{width:1px;height:11px;background:var(--border);flex-shrink:0;}
+  /* SHARED */
+  .proof-block{background:var(--surface);border:1px solid var(--border);
+    padding:6px 11px;display:flex;flex-wrap:wrap;gap:4px 14px;}
+  .proof-item{font-size:7pt;color:var(--muted);display:flex;align-items:center;gap:4px;}
+  .proof-dot{color:var(--accent);font-size:8pt;}
+  .scope-block{background:var(--surface);border:1px solid var(--border);
+    padding:7px 11px;display:flex;gap:0;align-items:stretch;}
+  .scope-col{flex:1;padding:0 7px;display:flex;flex-direction:column;gap:2px;}
+  .scope-col:first-child{padding-left:0;}
+  .scope-sep{width:1px;background:var(--border);flex-shrink:0;margin:0 3px;}
+  .scope-label{font-size:5.5pt;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;}
+  .scope-val{font-size:7pt;color:var(--text);line-height:1.3;}
+  .killer{background:var(--accent);padding:9px 13px;}
+  .killer-label{font-family:var(--display);font-size:7.5pt;color:rgba(255,255,255,0.6);letter-spacing:0.15em;margin-bottom:4px;}
+  .killer-q{font-size:8.5pt;color:#fff;font-style:italic;line-height:1.5;}
+  .footer{padding:5mm 14mm 7mm;border-top:1px solid var(--border);
+    display:flex;justify-content:space-between;align-items:center;gap:12px;}
+  .footer-left{font-size:7pt;color:var(--muted);line-height:1.6;}
+  .footer-left strong{color:var(--text);font-weight:500;}
+  .cta-footer{background:var(--amber);padding:5px 12px;border-radius:2px;text-align:center;}
+  .cta-footer .cta-main{font-family:'Bebas Neue',sans-serif;font-size:10pt;color:#fff;letter-spacing:0.08em;}
+  .cta-footer .cta-sub{font-size:6.5pt;color:rgba(255,255,255,0.85);margin-top:1px;}
+  .footer-right{font-family:var(--display);font-size:9pt;color:var(--accent);text-align:right;line-height:1.6;white-space:nowrap;}
+  @media print{html,body{width:210mm;}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="topbar"></div>
+  <div class="header">
+    <div>
+      <div class="offer-tag">OFFER 01 — VENDOR ASSURANCE</div>
+      <div class="title">VENDOR<br>ASSURANCE<br><span>LAYER</span></div>
+      <div class="subtitle">Independent control overlay for agentic AML/KYC stacks. Not a replacement — a verification layer your vendor cannot provide for itself.</div>
+    </div>
+    <div class="header-right">
+      <div class="qr-box"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAIAAAAgbqG5AAADNElEQVR4nO3dQW7bMAAAwaToC/z/N+YLyWVPFVAQDEkpyMyxcGyrWBCiTFHvn5+fb/D29ufuL8BTSIFIgUiBSIFIgUiBSIFIgUiBSIH8HXnR6/Xa/T3+4+Pj459/uX6f62uuVv3ViJHvfNLIkRoViBSIFIgUiBTI0AziauSMdM7cmfa+8/OTs4xV5r6PUYFIgUiBSIFIgUzOIK7uPYved54/8j6rjuLe/0OjApECkQKRApECWTaDOGnVGqFVc4F9c4qTjApECkQKRApECuRHziBGzthPzg7uvcdhFaMCkQKRApECkQJZNoM4edV9br4wcp5//auR4zq5FmsfowKRApECkQKRApmcQdx71X3VbxAjR7Hv946n/XJhVCBSIFIgUiBSIO+/54lyJ/dldR8EP5gUiBSIFIgUyNAM4vnX2PfthrTqSFc9sWLffk1GBSIFIgUiBSIFMrSKadW6nX1rjUY8bTfXuTVUI+a+j1GBSIFIgUiBSIFs3Itp33n13PucnJusWvt08unbRgUiBSIFIgUiBXL0iXJzOx3NfdaIe3/vuPfYr4wKRApECkQKRApkcgZx73qk5++GdPL+hau5zzIqECkQKRApECmQyTup5zx/h6J7j/TkmqUrowKRApECkQKRAjn6TOqT1+H3ffrc+5z8lcR9EHyLFIgUiBSIFMiyVUxz9l11P/nUhnv3oVo1xzEqECkQKRApECmQZc+D2PdMhJH3WbWSZ+T77Lu/4+rkzMioQKRApECkQKRAJp8HMfeaVZ/1tPumr562z9IIowKRApECkQKRAhmaQdx7ZrtvdnDyzu5Vv5J4HgTbSYFIgUiBSIHcfB/E1cndkOZWKO0785+z6n/MqECkQKRApECkQI4+Ue5q39qnfSudVr1mFXdSs5gUiBSIFIgUyNHdXPeZmy+cfNrCyXu95xgViBSIFIgUiBTIj5xBjFx1P7lCacTT7vW+MioQKRApECkQKZBlM4h7nzd9ctfTk/u7ntw51qhApECkQKRApEAmZxD3Xi0/OTtY9Vcn1z65D4JvkQKRApECkQIZeqIcv4FRgUiBSIFIgUiBSIFIgUiBSIFIgUiBfAEWoHMg2/EbjwAAAABJRU5ErkJggg==" alt="QR"></div>
+      <div class="qr-label">sdb26.com</div>
+    </div>
+  </div>
+  <div class="promise"><p>KEEP YOUR CURRENT STACK. ADD INDEPENDENT ACCOUNTABILITY.</p></div>
+  <div class="body">
+    <div class="problem-block">
+      <p>A vendor <strong>cannot independently certify their own decisions</strong>. When a regulator asks "why was this approved?" — the answer cannot come from the system that made the approval. That is not oversight. That is confirmation bias with an API.</p>
+    </div>
+    <div class="sec-label">WHAT THE CLIENT GETS</div>
+    <div class="three-cols">
+      <div class="col-card">
+        <div class="col-num">01</div>
+        <div class="col-title">Vendor speed preserved</div>
+        <div class="col-desc">No changes to your KYC stack. Assurance layer runs alongside — not instead of — your current vendor.</div>
+      </div>
+      <div class="col-card">
+        <div class="col-num">02</div>
+        <div class="col-title">Independent control layer</div>
+        <div class="col-desc">Physics-level forensic signals your vendor does not produce. Reproducible reason codes. Auditable decision record.</div>
+      </div>
+      <div class="col-card">
+        <div class="col-num">03</div>
+        <div class="col-title">No single-vendor truth</div>
+        <div class="col-desc">One vendor = one truth = one point of failure. Assurance layer breaks that dependency for high-stakes decisions.</div>
+      </div>
+    </div>
+    <div class="sec-label">SCOPE &amp; TIMELINE</div>
+    <div class="scope-block">
+      <div class="scope-col"><div class="scope-label">SCOPE</div><div class="scope-val">20–30 historical disputed cases</div></div>
+      <div class="scope-sep"></div>
+      <div class="scope-col"><div class="scope-label">TIMELINE</div><div class="scope-val">10 business days</div></div>
+      <div class="scope-sep"></div>
+      <div class="scope-col"><div class="scope-label">OUTPUTS</div><div class="scope-val">RAG scorecard · top gaps · quick wins</div></div>
+      <div class="scope-sep"></div>
+      <div class="scope-col"><div class="scope-label">OUTCOME</div><div class="scope-val">Targeted reduction in disputed-case resolution time</div></div>
+    </div>
+    <div class="angles">
+      <div class="angle-item">
+        <div class="angle-marker">→</div>
+        <div class="angle-text">Not a new product — a <strong>control overlay</strong> on existing architecture</div>
+      </div>
+      <div class="angle-item">
+        <div class="angle-marker">→</div>
+        <div class="angle-text">Not a rebuild — a <strong>layer above</strong> what is already deployed</div>
+      </div>
+      <div class="angle-item">
+        <div class="angle-marker">→</div>
+        <div class="angle-text">Not "we're better" — <strong>"we close what they structurally cannot"</strong></div>
+      </div>
+      <div class="angle-item">
+        <div class="angle-marker">→</div>
+        <div class="angle-text">FCA, EU AI Act, AMLA: <strong>accountability stays with the firm</strong> — not the vendor</div>
+      </div>
+    </div>
+    <div class="reg-strip">
+      <div class="reg-item"><strong>FCA April 2026:</strong> aligned with individual accountability expectations</div>
+      <div class="reg-sep"></div>
+      <div class="reg-item"><strong>EU AI Act Art. 13:</strong> transparency for high-risk AI systems</div>
+      <div class="reg-sep"></div>
+      <div class="reg-item"><strong>AMLA / AMLR:</strong> aligned with CDD traceability expectations</div>
+    </div>
+    <div class="proof-block">
+      <div class="proof-item"><span class="proof-dot">●</span> Built on SDB-26 v1.0.10 · FRC A2A v0.5.2</div>
+      <div class="proof-item"><span class="proof-dot">●</span> Schema-valid outputs · machine-readable JSON</div>
+      <div class="proof-item"><span class="proof-dot">●</span> Sample deliverables available on request</div>
+      <div class="proof-item"><span class="proof-dot">●</span> Complementary to insured vendors — not a replacement</div>
+    </div>
+    <div class="killer">
+      <div class="killer-label">KILLER QUESTION FOR THE CALL</div>
+      <div class="killer-q">"If tomorrow there is a disputed case — who independently confirms the decision was correct, other than the vendor who made it?"</div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="footer-left">
+      <strong>Ruslan Mishyn</strong> — AI PM &amp; Forensic Researcher<br>
+      sevrusik@gmail.com · sdb26.com · linkedin.com/in/mishyn-ruslan
+    </div>
+    <div class="cta-footer">
+      <div class="cta-main">BOOK A 20-MIN SCOPING CALL</div>
+      <div class="cta-sub">Founding pilot · 3 slots · sevrusik@gmail.com</div>
+    </div>
+    <div class="footer-right">DocLens<br>Forensic Boutique</div>
+  </div>
+</div>
+</body>
+</html>

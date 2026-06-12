@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Phase 0 Quick Scan — Plica</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#fff;--surface:#f5f4f1;--border:#dddad4;--blue:#1a3a5c;--red:#c0392b;
+  --green:#145a32;--green-bg:#f0fdf4;--text:#111;--muted:#888;
+  --mono:'Space Mono',monospace;--sans:'Space Grotesk',sans-serif;}
+html,body{width:210mm;min-height:297mm;background:var(--bg);color:var(--text);
+  font-family:var(--sans);-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+.page{width:210mm;min-height:297mm;display:flex;flex-direction:column;}
+.bar{height:5px;background:var(--green);}
+.header{padding:9mm 13mm 7mm;border-bottom:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:flex-start;}
+.brand{font-family:var(--mono);font-size:7.5pt;color:var(--blue);
+  letter-spacing:0.12em;text-transform:uppercase;margin-bottom:5px;}
+.h-title{font-size:26pt;font-weight:700;color:var(--text);line-height:1;letter-spacing:-0.02em;}
+.h-title span{color:var(--green);}
+.h-sub{font-size:9.5pt;color:var(--muted);margin-top:6px;max-width:260px;line-height:1.5;}
+.qr{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.qr img{width:48px;height:48px;border:1px solid var(--border);padding:2px;}
+.qr span{font-family:var(--mono);font-size:6pt;color:var(--muted);}
+
+.body{padding:8mm 13mm;flex:1;display:flex;flex-direction:column;gap:7px;}
+
+/* HOOK */
+.hook{background:var(--blue);padding:10px 13px;}
+.hook p{font-family:var(--mono);font-size:10pt;color:#fff;line-height:1.4;}
+.hook span{color:#f0d060;font-weight:700;}
+
+/* THREE STEPS */
+.steps{display:flex;flex-direction:column;gap:5px;}
+.step{display:flex;gap:0;}
+.step-num{background:var(--text);color:#fff;font-family:var(--mono);
+  font-size:18pt;font-weight:700;min-width:44px;display:flex;
+  align-items:center;justify-content:center;flex-shrink:0;}
+.step-body{background:var(--surface);border:1px solid var(--border);
+  border-left:none;padding:10px 13px;flex:1;}
+.step-title{font-size:10pt;font-weight:700;color:var(--text);margin-bottom:4px;}
+.step-desc{font-size:8.5pt;color:var(--muted);line-height:1.55;text-align:justify;}
+.step-note{font-family:var(--mono);font-size:8pt;color:var(--green);
+  margin-top:5px;font-weight:700;}
+
+/* SCOPE BOX */
+.scope{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+  background:var(--border);}
+.sc{background:var(--surface);padding:8px 10px;}
+.sc-l{font-family:var(--mono);font-size:6pt;color:var(--muted);
+  letter-spacing:0.1em;text-transform:uppercase;margin-bottom:3px;}
+.sc-v{font-family:var(--mono);font-size:10pt;font-weight:700;color:var(--blue);}
+
+/* INCLUDED / NOT */
+.inout{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.inc{background:var(--green-bg);border:1px solid #bbf7d0;border-top:2px solid var(--green);padding:9px 11px;}
+.exc{background:#fef2f2;border:1px solid #fecaca;border-top:2px solid var(--red);padding:9px 11px;}
+.io-tag{font-family:var(--mono);font-size:7pt;font-weight:700;
+  letter-spacing:0.1em;text-transform:uppercase;margin-bottom:5px;}
+.inc .io-tag{color:var(--green);}
+.exc .io-tag{color:var(--red);}
+.io-item{font-size:8pt;color:var(--text);padding:2px 0;
+  border-bottom:1px solid rgba(0,0,0,0.06);}
+.io-item:last-child{border-bottom:none;}
+
+/* NOTE */
+.note{background:var(--surface);border:1px solid var(--border);
+  border-left:3px solid var(--green);padding:8px 11px;}
+.note p{font-size:8.5pt;color:var(--text);line-height:1.55;text-align:justify;}
+.note strong{color:var(--green);}
+
+/* KILLER */
+.killer{background:var(--text);padding:9px 13px;margin-top:auto;}
+.killer-l{font-family:var(--mono);font-size:6.5pt;color:rgba(255,255,255,0.4);
+  letter-spacing:0.12em;text-transform:uppercase;margin-bottom:4px;}
+.killer-q{font-size:9.5pt;color:#fff;font-style:italic;line-height:1.5;}
+
+.footer{padding:5mm 13mm 7mm;border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;}
+.footer-l{font-family:var(--mono);font-size:7pt;color:var(--muted);line-height:1.6;}
+.footer-l strong{color:var(--text);}
+.cta{background:var(--green);padding:5px 13px;text-align:center;}
+.cta-m{font-family:var(--mono);font-size:9pt;font-weight:700;color:#fff;letter-spacing:0.04em;}
+.cta-s{font-family:var(--mono);font-size:6.5pt;color:rgba(255,255,255,0.85);margin-top:1px;}
+@media print{html,body{width:210mm;}}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="bar"></div>
+<div class="header">
+  <div>
+    <div class="brand">Plica · Independent Forensic Boutique · Phase 0</div>
+    <div class="h-title">Quick Scan.<br><span>48 Hours.</span><br>No Infrastructure.</div>
+    <div class="h-sub">Send a ZIP. Get a forensic report. No deployment, no VPC, no commitment.</div>
+  </div>
+  <div class="qr">
+    
+    <span>sdb26.com · plicaforensic.com</span>
+  </div>
+</div>
+
+<div class="body">
+
+  <div class="hook">
+    <p>Before you decide if forensic document analysis adds value —<br>
+    <span>see what it finds on your own files. Free. In 48 hours.</span></p>
+  </div>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">You send a ZIP</div>
+        <div class="step-desc">Up to 100 images — JPEG, PNG, or WebP. Mix of genuine (real camera captures) and AI-generated. Label each file or include a simple manifest: genuine / synthetic. No PII, no client data, no documents with personal information at this stage.</div>
+        <div class="step-note">→ No infrastructure on your side. Just a file.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">We run the forensic pipeline</div>
+        <div class="step-desc">SHA-256 chain of custody at intake. Full metadata audit. Physics-level signal extraction: PRNU sensor noise, DCT coefficient statistics, FFT grid artifacts, ELA zone analysis, GAN/diffusion fingerprint. FRC reason codes and sterility score per file. No file content is read or retained after analysis.</div>
+        <div class="step-note">→ Processing on our side. Your files stay confidential.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">You receive a forensic report</div>
+        <div class="step-desc">Within 48 calendar hours: signal breakdown per file, detection summary, precision and recall against your labels, gap analysis, and three prioritised recommendations. Metrics computed against the labels you supply — so results reflect your corpus, not a generic benchmark.</div>
+        <div class="step-note">→ Structured report + JSON results file.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scope">
+    <div class="sc"><div class="sc-l">Files</div><div class="sc-v">≤ 100</div></div>
+    <div class="sc"><div class="sc-l">Formats</div><div class="sc-v">JPG PNG WebP</div></div>
+    <div class="sc"><div class="sc-l">Turnaround</div><div class="sc-v">48h calendar</div></div>
+    <div class="sc"><div class="sc-l">Cost</div><div class="sc-v">Free</div></div>
+  </div>
+
+  <div class="inout">
+    <div class="inc">
+      <div class="io-tag">Included</div>
+      <div class="io-item">Physics-level signal breakdown per file</div>
+      <div class="io-item">FRC reason codes for flagged files</div>
+      <div class="io-item">Precision / recall vs your labels</div>
+      <div class="io-item">Top 3 gap findings + recommendations</div>
+      <div class="io-item">Schema-valid JSON results file</div>
+    </div>
+    <div class="exc">
+      <div class="io-tag">Not included at Phase 0</div>
+      <div class="io-item">PDF, video, or audio files</div>
+      <div class="io-item">Batches over 100 files</div>
+      <div class="io-item">Real PII or live KYC material</div>
+      <div class="io-item">DPA / data processing agreement</div>
+      <div class="io-item">On-site or integration work</div>
+    </div>
+  </div>
+
+  <div class="note">
+    <p><strong>Phase 0 answers one question:</strong> does physics-level forensics add signal that your current verification process does not have? If the answer is yes — a structured 14-day pilot follows. If not — you have a free gap analysis and nothing wasted.</p>
+  </div>
+
+  <div class="killer">
+    <div class="killer-l">To start</div>
+    <div class="killer-q">Send a ZIP with up to 100 labelled images to ruslanm@plicaforensic.com — subject line "Phase 0 · [your organisation]". Report within 48 calendar hours.</div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <div class="footer-l"><strong>Ruslan Mishyn</strong> · ruslanm@plicaforensic.com<br><em style="font-size:6.5pt;color:#aaa;">Truth lives in the layers.</em> · sdb26.com · plicaforensic.com</div>
+  <div class="cta"><div class="cta-m">START PHASE 0</div><div class="cta-s">No commitment · Free · 48h</div></div>
+  </div>
+</div>
+</div>
+</div>
+</body>
+</html>

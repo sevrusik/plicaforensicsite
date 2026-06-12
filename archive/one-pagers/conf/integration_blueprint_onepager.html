@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Integration Blueprint — From Detection to Defensible Decisions</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#ffffff;--surface:#f8f9fc;--surface2:#f1f4f9;
+    --border:#dde3ee;
+    --accent:#1d4ed8;--accent2:#dc2626;
+    --green:#15803d;--green-bg:#f0fdf4;--green-border:#bbf7d0;
+    --amber:#92400e;--amber-bg:#fffbeb;--amber-border:#fde68a;
+    --red-bg:#fef2f2;--red-border:#fecaca;
+    --blue-bg:#eff6ff;--blue-border:#bfdbfe;
+    --purple:#6d28d9;--purple-bg:#f5f3ff;--purple-border:#ddd6fe;
+    --text:#0f1729;--muted:#5a6480;
+    --mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;
+  }
+  html,body{
+    width:210mm;min-height:297mm;background:var(--bg);color:var(--text);
+    font-family:var(--sans);font-size:10pt;line-height:1.5;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;
+  }
+  .page{width:210mm;min-height:297mm;padding:12mm 13mm 11mm;display:flex;flex-direction:column;}
+
+  /* HEADER */
+  .header{display:flex;justify-content:space-between;align-items:flex-start;
+    padding-bottom:9px;border-bottom:2px solid var(--accent);margin-bottom:11px;}
+  .logo h1{font-family:var(--mono);font-size:16pt;font-weight:600;color:var(--accent);
+    letter-spacing:-0.01em;line-height:1.1;}
+  .logo .sub{font-family:var(--mono);font-size:7pt;color:var(--muted);
+    letter-spacing:0.06em;text-transform:uppercase;margin-top:4px;}
+  .header-right{display:flex;align-items:flex-start;gap:10px;}
+  .qr-wrap{display:flex;flex-direction:column;align-items:center;gap:2px;}
+  .qr-wrap img{width:46px;height:46px;border:1px solid var(--border);border-radius:2px;}
+  .qr-wrap .ql{font-family:var(--mono);font-size:5.5pt;color:var(--muted);text-align:center;line-height:1.3;}
+  .header-meta{text-align:right;}
+  .header-meta .lbl{font-family:var(--mono);font-size:7pt;color:var(--muted);letter-spacing:0.05em;text-transform:uppercase;}
+  .header-meta .val{font-family:var(--mono);font-size:9pt;color:var(--accent);font-weight:600;}
+
+  /* HERO */
+  .hero{background:var(--blue-bg);border:1px solid var(--blue-border);
+    border-left:3px solid var(--accent2);padding:8px 13px;margin-bottom:10px;border-radius:2px;}
+  .hero p{font-size:9pt;color:#1e293b;font-weight:300;line-height:1.5;}
+  .hero strong{color:var(--text);font-weight:600;}
+
+  /* FLOW */
+  .flow{display:flex;align-items:stretch;gap:0;margin-bottom:10px;}
+  .flow-step{flex:1;background:var(--surface);border:1px solid var(--border);
+    padding:7px 8px;position:relative;}
+  .flow-step:not(:last-child){border-right:none;}
+  .flow-step:first-child{border-radius:2px 0 0 2px;}
+  .flow-step:last-child{border-radius:0 2px 2px 0;}
+  .step-num{font-family:var(--mono);font-size:7pt;font-weight:600;
+    color:var(--accent);margin-bottom:3px;}
+  .step-title{font-size:7.5pt;font-weight:600;color:var(--text);margin-bottom:2px;line-height:1.3;}
+  .step-desc{font-size:6.5pt;color:var(--muted);line-height:1.3;}
+  .step-tag{display:inline-block;font-family:var(--mono);font-size:5.5pt;
+    background:var(--blue-bg);color:var(--accent);border:1px solid var(--blue-border);
+    border-radius:1px;padding:0 3px;margin-top:3px;}
+  .flow-arrow{display:flex;align-items:center;justify-content:center;
+    width:14px;flex-shrink:0;color:var(--accent);font-size:10pt;font-weight:700;}
+
+  /* LAYERS */
+  .layers{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px;}
+  .layer-card{border:1px solid var(--border);border-radius:2px;padding:8px 9px;}
+  .layer-1{background:var(--green-bg);border-color:var(--green-border);}
+  .layer-2{background:var(--blue-bg);border-color:var(--blue-border);}
+  .layer-3{background:var(--purple-bg);border-color:var(--purple-border);}
+  .layer-num{font-family:var(--mono);font-size:7pt;font-weight:600;margin-bottom:3px;}
+  .layer-1 .layer-num{color:var(--green);}
+  .layer-2 .layer-num{color:var(--accent);}
+  .layer-3 .layer-num{color:var(--purple);}
+  .layer-title{font-size:8pt;font-weight:600;color:var(--text);margin-bottom:3px;}
+  .layer-desc{font-size:7pt;color:#374151;line-height:1.35;}
+  .layer-tools{font-family:var(--mono);font-size:6pt;margin-top:4px;line-height:1.5;}
+  .layer-1 .layer-tools{color:var(--green);}
+  .layer-2 .layer-tools{color:var(--accent);}
+  .layer-3 .layer-tools{color:var(--purple);}
+
+  /* KPIs */
+  .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px;}
+  .kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:7px 8px;}
+  .kpi-layer{font-family:var(--mono);font-size:6pt;color:var(--muted);
+    text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px;}
+  .kpi-metrics{display:flex;flex-wrap:wrap;gap:3px;}
+  .kpi-tag{font-family:var(--mono);font-size:7pt;font-weight:600;
+    background:var(--blue-bg);color:var(--accent);
+    border:1px solid var(--blue-border);border-radius:2px;padding:1px 5px;}
+
+  /* VERDICT STRIP */
+  .verdict-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:8px;}
+  .v-card{border-radius:2px;padding:6px 8px;text-align:center;}
+  .v-trusted{background:var(--green-bg);border:1px solid var(--green-border);}
+  .v-review{background:var(--blue-bg);border:1px solid var(--blue-border);}
+  .v-escalate{background:var(--amber-bg);border:1px solid var(--amber-border);}
+  .v-block{background:var(--red-bg);border:1px solid var(--red-border);}
+  .v-label{font-family:var(--mono);font-size:8.5pt;font-weight:600;margin-bottom:2px;}
+  .v-trusted .v-label{color:var(--green);}
+  .v-review .v-label{color:var(--accent);}
+  .v-escalate .v-label{color:var(--amber);}
+  .v-block .v-label{color:#991b1b;}
+  .v-cond{font-size:6.5pt;color:#374151;line-height:1.3;}
+
+  /* LEADERSHIP + PILOT */
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px;}
+  .section{background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:8px 10px;}
+  .sec-title{font-family:var(--mono);font-size:6.5pt;font-weight:600;color:var(--accent);
+    letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;
+    display:flex;align-items:center;gap:5px;}
+  .sec-title::before{content:'';display:inline-block;width:9px;height:1px;
+    background:var(--accent);flex-shrink:0;}
+  ul{list-style:none;display:flex;flex-direction:column;gap:3px;}
+  ul li{font-size:8pt;color:#374151;padding-left:11px;position:relative;line-height:1.35;}
+  ul li::before{content:'›';position:absolute;left:0;color:var(--accent);font-weight:700;}
+
+  .pilot-weeks{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:0;}
+  .week-card{background:var(--surface2);border:1px solid var(--border);
+    border-radius:2px;padding:6px 8px;}
+  .week-label{font-family:var(--mono);font-size:7pt;font-weight:600;
+    color:var(--accent);margin-bottom:3px;}
+  .week-items{font-size:7.5pt;color:#374151;line-height:1.5;}
+
+  /* TAGS */
+  .tags{margin-bottom:7px;}
+  .tag{display:inline-block;font-family:var(--mono);font-size:6pt;
+    background:var(--blue-bg);color:var(--accent);border:1px solid var(--blue-border);
+    border-radius:2px;padding:1px 5px;margin-right:3px;margin-bottom:3px;}
+
+  /* CTA */
+  .cta{background:var(--accent);border-radius:2px;padding:9px 13px;
+    display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;}
+  .cta-text{font-size:8.5pt;color:#fff;font-weight:400;line-height:1.4;}
+  .cta-text strong{font-weight:600;display:block;font-size:9.5pt;margin-bottom:2px;}
+  .cta-link{font-family:var(--mono);font-size:7.5pt;color:#fff;
+    text-align:right;opacity:0.9;line-height:1.7;white-space:nowrap;margin-left:14px;}
+
+  /* FOOTER */
+  .footer{display:flex;justify-content:space-between;align-items:center;
+    padding-top:6px;border-top:1px solid var(--border);margin-top:auto;}
+  .footer div{font-family:var(--mono);font-size:7pt;color:var(--muted);line-height:1.5;}
+
+  .sec-label{font-family:var(--mono);font-size:6.5pt;font-weight:600;color:var(--accent);
+    letter-spacing:0.1em;text-transform:uppercase;display:flex;align-items:center;
+    gap:5px;margin-bottom:5px;}
+  .sec-label::before{content:'';display:inline-block;width:9px;height:1px;
+    background:var(--accent);flex-shrink:0;}
+
+  @media print{html,body{width:210mm;}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">
+      <h1>Integration Blueprint</h1>
+      <div class="sub">From Detection to Defensible Decisions · SDB-26 + DocLens + FRC A2A</div>
+    </div>
+    <div class="header-right">
+      <div class="qr-wrap">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAIAAAAgbqG5AAADOUlEQVR4nO3dQW7UMABA0RZxDrYch7NyHLZcpGz+ikiV5dpOqr63RNOZCfqy4ozjvL69vb3Ay8u3u78ATyEFIgUiBSIFIgUiBSIFIgUiBSIF8n3kRT9+/dn9Pd7x9/fP//7l+n2ur7la9VcjRr7zSSNHalQgUiBSIFIgUiBDM4irkTPSOXNn2vvOz0/OMlaZ+z5GBSIFIgUiBSIFMjmDuLr3LHrfef7I+6w6inv/D40KRApECkQKRApk2QzipFVrhFbNBfbNKU4yKhApECkQKRApkE85gxg5Yz85O7j3HodVjApECkQKRApECmTZDOLkVfe5+cLIef71r0aO6+RarH2MCkQKRApECkQKZHIGce9V91W/QYwcxb7fO572y4VRgUiBSIFIgUiBvH6dJ8qd3JfVfRB8YlIgUiBSIFIgQzOI519j37cb0qojXfXEin37NRkViBSIFIgUiBTI0CqmVet29q01GvG03Vzn1lCNmPs+RgUiBSIFIgUiBbJxL6Z959Vz73NybrJq7dPJp28bFYgUiBSIFIgUyNEnys3tdDT3WSPu/b3j3mO/MioQKRApECkQKZDJGcS965GevxvSyfsXruY+y6hApECkQKRApEAm76Se8/wdiu490pNrlq6MCkQKRApECkQK5OgzqU9eh9/36XPvc/JXEvdB8CFSIFIgUiBSIMtWMc3Zd9X95FMb7t2HatUcx6hApECkQKRApECWPQ9i3zMRRt5n1Uqeke+z7/6Oq5MzI6MCkQKRApECkQKZfB7E3GtWfdbT7pu+eto+SyOMCkQKRApECkQKZGgGce+Z7b7Zwck7u1f9SuJ5EGwnBSIFIgUiBXLzfRBXJ3dDmluhtO/Mf86q/zGjApECkQKRApECOfpEuat9a5/2rXRa9ZpV3EnNYlIgUiBSIFIgR3dz3WduvnDyaQsn7/WeY1QgUiBSIFIgUiCfcgYxctX95AqlEU+71/vKqECkQKRApECkQJbNIO593vTJXU9P7u96cudYowKRApECkQKRApmcQdx7tfzk7GDVX51c++Q+CD5ECkQKRApECmToiXJ8BUYFIgUiBSIFIgUiBSIFIgUiBSIFIgXyD2ridlCsCvgBAAAAAElFTkSuQmCC" alt="QR sdb26.com">
+        <div class="ql">sdb26.com</div>
+      </div>
+      <div class="header-meta">
+        <div class="lbl">Pilot Format</div>
+        <div class="val">2 weeks</div>
+        <div class="lbl" style="margin-top:3px;">CC BY 4.0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <p>
+      <strong>How SDB-26 + DocLens + FRC A2A work together in production.</strong>
+      Three complementary layers — document authenticity, agent provenance, and decision traceability —
+      that together close the gap between <strong>operational compliance and defensible audit evidence</strong>.
+    </p>
+  </div>
+
+  <!-- FLOW -->
+  <div class="sec-label">Architecture in One Flow</div>
+  <div class="flow" style="margin-bottom:10px;">
+    <div class="flow-step">
+      <div class="step-num">01</div>
+      <div class="step-title">Input Evidence</div>
+      <div class="step-desc">Human or agent-mediated submission. Mode A or Mode B detected.</div>
+      <span class="step-tag">Mode A / B</span>
+    </div>
+    <div class="flow-arrow">›</div>
+    <div class="flow-step">
+      <div class="step-num">02</div>
+      <div class="step-title">DocLens Analysis</div>
+      <div class="step-desc">Physics-first forensic layer. L0 / L1 / L2 / L3 signals evaluated.</div>
+      <span class="step-tag">FraudLens</span>
+    </div>
+    <div class="flow-arrow">›</div>
+    <div class="flow-step">
+      <div class="step-num">03</div>
+      <div class="step-title">FRC / A2A Output</div>
+      <div class="step-desc">Reason codes + instrumentation trace + agent verdict.</div>
+      <span class="step-tag">SDB-26 Schema</span>
+    </div>
+    <div class="flow-arrow">›</div>
+    <div class="flow-step">
+      <div class="step-num">04</div>
+      <div class="step-title">Operational Routing</div>
+      <div class="step-desc">Policy-mapped compound verdict drives queue assignment.</div>
+      <span class="step-tag">Compound Verdict</span>
+    </div>
+    <div class="flow-arrow">›</div>
+    <div class="flow-step">
+      <div class="step-num">05</div>
+      <div class="step-title">Benchmark Feedback</div>
+      <div class="step-desc">SDB-26 metrics feed continuous control improvement loop.</div>
+      <span class="step-tag">BR / ABR / TCR</span>
+    </div>
+  </div>
+
+  <!-- CONTROL LAYERS -->
+  <div class="sec-label">Control Layers</div>
+  <div class="layers">
+    <div class="layer-card layer-1">
+      <div class="layer-num">Layer 1 — Authenticity</div>
+      <div class="layer-title">Is the document genuine?</div>
+      <div class="layer-desc">Physics-level forensic signals: FFT, PRNU, ELA, moiré, double-compression. Generator-agnostic — works on models released today and tomorrow.</div>
+      <div class="layer-tools">DocLens · FRC L1/L2/L3 codes<br>Metrics: BR · FPR · GS</div>
+    </div>
+    <div class="layer-card layer-2">
+      <div class="layer-num">Layer 2 — Agent Provenance</div>
+      <div class="layer-title">Is submission context trustworthy?</div>
+      <div class="layer-desc">Agent attestation, delegation chain integrity, tool call attribution, connector allowlist compliance, HITL assertion presence.</div>
+      <div class="layer-tools">FRC A2A · L0/L0-D codes<br>Metrics: ABR · CDR · TCR · HAR</div>
+    </div>
+    <div class="layer-card layer-3">
+      <div class="layer-num">Layer 3 — Decision Traceability</div>
+      <div class="layer-title">Can we reproduce and audit this?</div>
+      <div class="layer-desc">Structured reason codes per signal. instrumentation_trace for every tool call. Reproducible audit record for regulators, QA, and model governance.</div>
+      <div class="layer-tools">FRC schema · audit_trail<br>Metrics: TCR · HAR · escalation SLA</div>
+    </div>
+  </div>
+
+  <!-- VERDICT STRIP -->
+  <div class="sec-label">Compound Verdict Outcomes</div>
+  <div class="verdict-strip">
+    <div class="v-card v-trusted">
+      <div class="v-label">TRUSTED</div>
+      <div class="v-cond">GENUINE + ATTESTED + trace present</div>
+    </div>
+    <div class="v-card v-review">
+      <div class="v-label">REVIEW</div>
+      <div class="v-cond">INSUFFICIENT + ATTESTED or low-risk L0</div>
+    </div>
+    <div class="v-card v-escalate">
+      <div class="v-label">ESCALATE</div>
+      <div class="v-cond">GENUINE + UNATTESTED or trace gap</div>
+    </div>
+    <div class="v-card v-block">
+      <div class="v-label">BLOCK</div>
+      <div class="v-cond">SYNTHETIC / EDITED / SCREENSHOT — any agent state</div>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="sec-label">Operating KPIs by Layer</div>
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-layer">Document layer</div>
+      <div class="kpi-metrics">
+        <span class="kpi-tag">BR</span>
+        <span class="kpi-tag">FPR</span>
+        <span class="kpi-tag">GS</span>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-layer">Agent layer</div>
+      <div class="kpi-metrics">
+        <span class="kpi-tag">ABR</span>
+        <span class="kpi-tag">CDR</span>
+        <span class="kpi-tag">ACG</span>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-layer">Trace layer</div>
+      <div class="kpi-metrics">
+        <span class="kpi-tag">TCR</span>
+        <span class="kpi-tag">HAR</span>
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-layer">Ops layer</div>
+      <div class="kpi-metrics">
+        <span class="kpi-tag">Review SLA</span>
+        <span class="kpi-tag">Escalation rate</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEADERSHIP + PILOT -->
+  <div class="grid-2">
+    <div class="section">
+      <div class="sec-title">What Leadership Gets</div>
+      <ul>
+        <li>Less bypass risk under AI-driven attack pressure — physics signals are generator-agnostic</li>
+        <li>Better compliance efficiency without blind automation</li>
+        <li>Audit-ready decision evidence for regulators and enterprise partners</li>
+        <li>Clear, measurable roadmap for control maturity (BR → ABR → TCR → HAR)</li>
+        <li>No vendor lock-in — open standard, portable metrics</li>
+      </ul>
+    </div>
+    <div class="section">
+      <div class="sec-title">2-Week Pilot Format</div>
+      <div class="pilot-weeks">
+        <div class="week-card">
+          <div class="week-label">Week 1</div>
+          <div class="week-items">
+            · Baseline measurement<br>
+            · Data-path mapping<br>
+            · Current BR / FPR snapshot<br>
+            · Submission mode audit
+          </div>
+        </div>
+        <div class="week-card">
+          <div class="week-label">Week 2</div>
+          <div class="week-items">
+            · Control tuning<br>
+            · Reporting package<br>
+            · FRC schema validation<br>
+            · Rollout plan + KPI targets
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAGS -->
+  <div class="tags">
+    <span class="tag">SDB-26</span>
+    <span class="tag">DocLens / FraudLens</span>
+    <span class="tag">FRC A2A Extension</span>
+    <span class="tag">Compound Verdict</span>
+    <span class="tag">Physics-First Forensics</span>
+    <span class="tag">2-Week Pilot</span>
+    <span class="tag">Open Standard</span>
+    <span class="tag">CC BY 4.0</span>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta">
+    <div class="cta-text">
+      <strong>Run a 2-week baseline. Get a defensible control map for document + agent risk.</strong>
+      Baseline measurement · Control gap analysis · Schema-valid reporting · Rollout plan
+    </div>
+    <div class="cta-link">
+      sdb26.com<br>
+      github.com/sevrusik/SDB26<br>
+      sevrusik@gmail.com
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div>Ruslan Mishyn · AI PM & Forensic Researcher · DocLens · FraudLens · SDB-26</div>
+    <div style="text-align:right;">SDB-26 v1.0.7 · FRC A2A v0.5 · linkedin.com/in/mishyn-ruslan</div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plica — Independent Forensic Boutique</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --night: #272E4A;
+  --night-deep: #1a1f33;
+  --night-soft: #3a4466;
+  --cream: #F7F5F0;
+  --cream-dark: #EDE9E0;
+  --ink: #1a1a1a;
+  --muted: #6b7280;
+  --red: #B83232;
+  --gold: #C4963A;
+  --border: #D8D3C8;
+  --serif: 'DM Serif Display', Georgia, serif;
+  --mono: 'DM Mono', monospace;
+  --sans: 'DM Sans', system-ui, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+body { font-family: var(--sans); background: var(--cream); color: var(--ink); overflow-x: hidden; }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(247,245,240,0.95); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 48px; height: 64px;
+}
+.nav-brand { font-family: var(--mono); font-size: 13px; font-weight: 500; color: var(--night); letter-spacing: 0.18em; text-decoration: none; }
+.nav-links { display: flex; gap: 36px; list-style: none; }
+.nav-links a { font-size: 13px; color: var(--muted); text-decoration: none; letter-spacing: 0.04em; transition: color 0.2s; }
+.nav-links a:hover { color: var(--ink); }
+.nav-cta { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--night); border: 1.5px solid var(--night); padding: 8px 18px; text-decoration: none; letter-spacing: 0.06em; transition: all 0.2s; }
+.nav-cta:hover { background: var(--night); color: var(--cream); }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  background: var(--cream);
+  display: flex; align-items: center;
+  padding: 80px 48px;
+}
+.hero-inner {
+  max-width: 1200px; margin: 0 auto; width: 100%;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 80px; align-items: center;
+}
+.hero-left { display: flex; flex-direction: column; justify-content: center; }
+.hero-tag { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 24px; }
+.hero-title { font-family: var(--serif); font-size: clamp(42px, 5vw, 64px); line-height: 1.08; color: var(--ink); margin-bottom: 24px; }
+.hero-title em { font-style: italic; color: var(--night); }
+.hero-sub { font-size: 16px; color: var(--muted); line-height: 1.75; margin-bottom: 40px; }
+.hero-cta { display: inline-flex; align-items: center; gap: 12px; background: var(--night); color: var(--cream); font-family: var(--mono); font-size: 12px; font-weight: 500; letter-spacing: 0.1em; padding: 14px 28px; text-decoration: none; transition: all 0.2s; width: fit-content; }
+.hero-cta:hover { background: var(--night-soft); }
+.hero-cta span { opacity: 0.5; }
+.hero-right {
+  background: var(--night-deep);
+  padding: 48px 40px;
+  display: flex; flex-direction: column; gap: 24px;
+}
+.hero-slogan { font-family: var(--mono); font-size: 10px; color: rgba(247,245,240,0.4); letter-spacing: 0.16em; text-transform: uppercase; }
+.hero-question { font-family: var(--serif); font-size: clamp(20px, 2vw, 26px); line-height: 1.4; color: var(--cream); }
+.hero-question em { color: var(--gold); font-style: normal; }
+.hero-answer { font-size: 14px; color: rgba(247,245,240,0.55); line-height: 1.75; }
+
+/* ── SECTION BASE ── */
+section { padding: 96px 48px; }
+.container { max-width: 1200px; margin: 0 auto; }
+.section-tag { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 16px; }
+.section-title { font-family: var(--serif); font-size: clamp(32px, 3.5vw, 48px); line-height: 1.15; color: var(--ink); margin-bottom: 48px; }
+.section-title em { font-style: italic; color: var(--night); }
+
+/* ── PROBLEM ── */
+#problem { background: var(--night-deep); }
+#problem .section-tag { color: rgba(247,245,240,0.4); }
+#problem .section-title { color: var(--cream); }
+.problem-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+.prob-card { background: rgba(255,255,255,0.04); padding: 40px 32px; border-top: 2px solid rgba(255,255,255,0.1); }
+.prob-n { font-family: var(--mono); font-size: 11px; color: rgba(255,255,255,0.25); letter-spacing: 0.1em; margin-bottom: 20px; }
+.prob-title { font-family: var(--serif); font-size: 20px; color: var(--cream); margin-bottom: 12px; line-height: 1.3; }
+.prob-text { font-size: 14px; color: rgba(247,245,240,0.55); line-height: 1.7; }
+.prob-frc { font-family: var(--mono); font-size: 10px; color: var(--red); margin-top: 20px; letter-spacing: 0.06em; }
+
+/* ── ENGAGEMENTS ── */
+#engagements { background: var(--cream); }
+.eng-ladder { display: flex; flex-direction: column; gap: 2px; }
+.eng-card { display: grid; grid-template-columns: 80px 1fr auto; gap: 40px; align-items: start; padding: 32px 40px; background: var(--cream-dark); border-left: 3px solid transparent; transition: all 0.25s; cursor: default; }
+.eng-card:hover { background: white; border-left-color: var(--night); }
+.eng-step { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; padding-top: 4px; }
+.eng-body {}
+.eng-title { font-family: var(--serif); font-size: 22px; color: var(--ink); margin-bottom: 8px; }
+.eng-desc { font-size: 14px; color: var(--muted); line-height: 1.7; max-width: 540px; }
+.eng-meta { text-align: right; }
+.eng-scope { font-family: var(--mono); font-size: 11px; color: var(--muted); line-height: 1.8; }
+.eng-price { font-family: var(--mono); font-size: 12px; color: var(--night); font-weight: 500; margin-top: 8px; }
+
+/* ── FRAMEWORK ── */
+#framework { background: var(--night); }
+#framework .section-tag { color: rgba(247,245,240,0.4); }
+#framework .section-title { color: var(--cream); }
+.plica-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; }
+.plica-card { padding: 32px 24px; background: rgba(255,255,255,0.04); border-top: 2px solid rgba(255,255,255,0.08); }
+.plica-letter { font-family: var(--serif); font-size: 52px; color: var(--gold); line-height: 1; margin-bottom: 12px; }
+.plica-word { font-family: var(--mono); font-size: 10px; color: rgba(247,245,240,0.5); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 12px; }
+.plica-def { font-size: 13px; color: rgba(247,245,240,0.6); line-height: 1.65; }
+.framework-note { margin-top: 40px; padding: 24px 32px; background: rgba(255,255,255,0.04); border-left: 3px solid var(--gold); }
+.framework-note p { font-size: 14px; color: rgba(247,245,240,0.6); line-height: 1.7; }
+.framework-note a { color: var(--gold); text-decoration: none; font-family: var(--mono); font-size: 12px; }
+
+/* ── FINDINGS ── */
+#findings { background: var(--cream); }
+.findings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+.finding-card { padding: 36px 32px; background: var(--cream-dark); }
+.finding-card.dark { background: var(--night-deep); }
+.finding-tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 16px; }
+.finding-card:not(.dark) .finding-tag { color: var(--muted); }
+.finding-card.dark .finding-tag { color: rgba(247,245,240,0.4); }
+.finding-title { font-family: var(--serif); font-size: 20px; margin-bottom: 12px; line-height: 1.3; }
+.finding-card:not(.dark) .finding-title { color: var(--ink); }
+.finding-card.dark .finding-title { color: var(--cream); }
+.finding-text { font-size: 14px; line-height: 1.7; }
+.finding-card:not(.dark) .finding-text { color: var(--muted); }
+.finding-card.dark .finding-text { color: rgba(247,245,240,0.55); }
+.finding-frc { font-family: var(--mono); font-size: 10px; margin-top: 16px; color: var(--red); letter-spacing: 0.06em; }
+
+/* ── ABOUT ── */
+#about { background: var(--cream-dark); }
+.about-grid { display: grid; grid-template-columns: 2fr 3fr; gap: 80px; align-items: start; }
+.about-label { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 8px; }
+.about-name { font-family: var(--serif); font-size: 32px; color: var(--ink); margin-bottom: 8px; }
+.about-role { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.1em; margin-bottom: 32px; }
+.about-credentials { display: flex; flex-direction: column; gap: 10px; }
+.cred { display: flex; align-items: baseline; gap: 12px; font-size: 13px; color: var(--muted); }
+.cred-dot { width: 4px; height: 4px; background: var(--night); border-radius: 50%; flex-shrink: 0; margin-top: 7px; }
+.about-body { font-size: 15px; color: var(--muted); line-height: 1.8; }
+.about-body p { margin-bottom: 20px; }
+.about-body strong { color: var(--ink); }
+
+/* ── FAQ ── */
+#faq { background: var(--cream); }
+.faq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+.faq-item { padding: 32px; background: var(--cream-dark); }
+.faq-q { font-family: var(--serif); font-size: 17px; color: var(--ink); margin-bottom: 12px; line-height: 1.35; }
+.faq-a { font-size: 14px; color: var(--muted); line-height: 1.7; }
+.faq-a a { color: var(--night); }
+
+/* ── CONNECT ── */
+#connect { background: var(--night-deep); padding: 80px 48px; }
+#connect .container { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+.connect-left {}
+.connect-title { font-family: var(--serif); font-size: clamp(32px, 3.5vw, 48px); color: var(--cream); line-height: 1.15; margin-bottom: 20px; }
+.connect-title em { font-style: italic; color: var(--gold); }
+.connect-sub { font-size: 15px; color: rgba(247,245,240,0.5); line-height: 1.7; }
+.connect-right { display: flex; flex-direction: column; gap: 16px; }
+.connect-link { display: flex; align-items: center; gap: 16px; padding: 20px 24px; background: rgba(255,255,255,0.04); text-decoration: none; border: 1px solid rgba(255,255,255,0.08); transition: all 0.2s; }
+.connect-link:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.16); }
+.cl-icon { font-family: var(--mono); font-size: 11px; color: var(--gold); letter-spacing: 0.1em; min-width: 52px; }
+.cl-text { font-size: 14px; color: var(--cream); }
+.cl-sub { font-family: var(--mono); font-size: 11px; color: rgba(247,245,240,0.35); margin-top: 2px; }
+.connect-note { font-family: var(--serif); font-style: italic; font-size: 14px; color: rgba(247,245,240,0.3); margin-top: 8px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08); }
+
+/* ── FOOTER ── */
+footer { background: var(--night-deep); border-top: 1px solid rgba(255,255,255,0.06); padding: 24px 48px; display: flex; justify-content: space-between; align-items: center; }
+.footer-l { font-family: var(--mono); font-size: 11px; color: rgba(247,245,240,0.3); }
+.footer-r { font-family: var(--mono); font-size: 11px; color: rgba(247,245,240,0.3); }
+
+@media (max-width: 900px) {
+  .hero-inner, #connect .container, .about-grid { grid-template-columns: 1fr; }
+  .hero-right { padding: 32px 24px; }
+  .problem-grid, .plica-grid { grid-template-columns: 1fr; }
+  .findings-grid, .faq-grid { grid-template-columns: 1fr; }
+  nav { padding: 0 24px; }
+  .nav-links { display: none; }
+  section { padding: 64px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="#">PLICA</a>
+  <ul class="nav-links">
+    <li><a href="#problem">The problem</a></li>
+    <li><a href="#engagements">Engagements</a></li>
+    <li><a href="#framework">Framework</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <a class="nav-cta" href="mailto:sevrusik@gmail.com">Book Phase 0 <span>→</span></a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-tag">Independent Forensic Boutique · Larnaca, Cyprus</div>
+      <h1 class="hero-title">Evidence integrity<br>for <em>regulated</em><br>file workflows.</h1>
+      <p class="hero-sub">KYC teams believe they verify the customer's file. Reviewers often see a pipeline copy — already resized, recompressed, normalised. When that decision is challenged, a vendor pass is not defensible evidence.</p>
+      <a class="hero-cta" href="mailto:sevrusik@gmail.com">Book Phase 0 diagnostic <span>· free · 48h</span></a>
+    </div>
+    <div class="hero-right">
+      <div class="hero-slogan">Truth lives in the layers.</div>
+      <div class="hero-question">"Show me exactly what you examined in that document — <em>and prove it.</em>"</div>
+      <p class="hero-answer">Most KYC stacks can't answer this. A confidence score is not a forensic record. We build the evidence layer that makes the answer possible — signal by signal, layer by layer.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="container">
+    <div class="section-tag">The problem</div>
+    <h2 class="section-title">Three things that break<br><em>before</em> your detector runs.</h2>
+    <div class="problem-grid">
+      <div class="prob-card">
+        <div class="prob-n">01 ·</div>
+        <div class="prob-title">The pipeline rewrites the file</div>
+        <p class="prob-text">Resize, JPEG recompress, format convert, antivirus sanitise, S3 optimise. Each operation changes the forensic evidence in the file — without logging what changed. The detector evaluates a derivative, not the original.</p>
+        <div class="prob-frc">FRC-L-RESIZE-DETECTED · FRC-L-DOUBLE-COMPRESSION</div>
+      </div>
+      <div class="prob-card">
+        <div class="prob-n">02 ·</div>
+        <div class="prob-title">The audit trail is broken at intake</div>
+        <p class="prob-text">SHA-256 at decision ≠ SHA-256 at intake. The file your detector examined is not the file your client submitted. When a regulator asks for the original, it no longer exists in verifiable form.</p>
+        <div class="prob-frc">FRC-L-HASH-CHAIN-BROKEN · FRC-L-PIPELINE-TRANSFORM-UNDOCUMENTED</div>
+      </div>
+      <div class="prob-card">
+        <div class="prob-n">03 ·</div>
+        <div class="prob-title">Vendor drift goes unmeasured</div>
+        <p class="prob-text">Your KYC vendor updated their model. You received an email. Nobody measured what changed in your false positive rate and bypass rate — before and after. Drift is invisible until it's a regulatory finding.</p>
+        <div class="prob-frc">FRC-C-METADATA-PHYSICAL-MISMATCH · drift_delta: unmeasured</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ENGAGEMENTS -->
+<section id="engagements">
+  <div class="container">
+    <div class="section-tag">How we engage</div>
+    <h2 class="section-title">Three entry points.<br><em>One audit ladder.</em></h2>
+    <div class="eng-ladder">
+      <div class="eng-card">
+        <div class="eng-step">Phase 0</div>
+        <div class="eng-body">
+          <div class="eng-title">Quick Scan Diagnostic</div>
+          <p class="eng-desc">Send a ZIP of up to 100 labelled document images. We run physics-level forensic analysis and return a signal breakdown: what your current stack catches, what it misses, and where the gaps are. No infrastructure, no commitment.</p>
+        </div>
+        <div class="eng-meta">
+          <div class="eng-scope">≤ 100 files<br>48h turnaround<br>JPEG · PNG · WebP</div>
+          <div class="eng-price">Free</div>
+        </div>
+      </div>
+      <div class="eng-card">
+        <div class="eng-step">Phase 1</div>
+        <div class="eng-body">
+          <div class="eng-title">Evidence Pipeline Audit</div>
+          <p class="eng-desc">We map your document intake workflow end to end — upload to decision — and show where the file stops being what your client submitted. Pipeline transform log design, hash chain repair, audit trail gap report. Three deliverables: ops, audit, board.</p>
+        </div>
+        <div class="eng-meta">
+          <div class="eng-scope">10–14 days<br>50–150 files<br>DPA required</div>
+          <div class="eng-price">From €4,000</div>
+        </div>
+      </div>
+      <div class="eng-card">
+        <div class="eng-step">Ongoing</div>
+        <div class="eng-body">
+          <div class="eng-title">Quarterly Forensic Baseline Review</div>
+          <p class="eng-desc">Vendor model drift, generator sensitivity changes, FPR delta — measured every quarter against your corpus. When your KYC vendor updates their model, you'll know what changed in your stack within the same week.</p>
+        </div>
+        <div class="eng-meta">
+          <div class="eng-scope">Quarterly cadence<br>Your corpus + SDB-26<br>Alert same week</div>
+          <div class="eng-price">From €3,000 / quarter</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FRAMEWORK -->
+<section id="framework">
+  <div class="container">
+    <div class="section-tag">The methodology</div>
+    <h2 class="section-title">P · L · I · C · A</h2>
+    <div class="plica-grid">
+      <div class="plica-card">
+        <div class="plica-letter">P</div>
+        <div class="plica-word">Provenance</div>
+        <p class="plica-def">Where did this file come from? Does its digital biography match what was claimed? Metadata sterility, temporal consistency, channel attestation.</p>
+      </div>
+      <div class="plica-card">
+        <div class="plica-letter">L</div>
+        <div class="plica-word">Lineage</div>
+        <p class="plica-def">What happened to this file inside your own pipeline? Every resize, recompress, format conversion — logged as a structured transform event with before/after hash.</p>
+      </div>
+      <div class="plica-card">
+        <div class="plica-letter">I</div>
+        <div class="plica-word">Integrity</div>
+        <p class="plica-def">How much physical signal survived? PRNU sensor noise, DCT coefficient statistics, FFT frequency artifacts, ELA zone analysis. The signals that distinguish a camera from a generator.</p>
+      </div>
+      <div class="plica-card">
+        <div class="plica-letter">C</div>
+        <div class="plica-word">Consistency</div>
+        <p class="plica-def">Are signals from different layers logically compatible? Metadata claims vs. physical sensor signals vs. compression history. Regional forgery leaves inconsistencies global scores miss.</p>
+      </div>
+      <div class="plica-card">
+        <div class="plica-letter">A</div>
+        <div class="plica-word">Authenticity</div>
+        <p class="plica-def">Final compound verdict: GENUINE · SYNTHETIC · EDITED · SCREENSHOT · INSUFFICIENT. Schema-valid, hash-linked, reproducible by an independent reviewer 90 days later.</p>
+      </div>
+    </div>
+    <div class="framework-note">
+      <p>The P-L-I-C-A methodology is formalised in <strong>SDB-26</strong> — the first open benchmark for measuring synthetic document bypass rate in identity verification systems. Published under CC BY 4.0. <a href="https://github.com/sevrusik/SDB26" target="_blank">github.com/sevrusik/SDB26 →</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- TYPICAL FINDINGS -->
+<section id="findings">
+  <div class="container">
+    <div class="section-tag">Typical findings</div>
+    <h2 class="section-title">What we find<br><em>in most stacks.</em></h2>
+    <div class="findings-grid">
+      <div class="finding-card">
+        <div class="finding-tag">Finding · Pipeline</div>
+        <div class="finding-title">Hash chain broken at antivirus scan</div>
+        <p class="finding-text">The file byte-modified by the scanner. SHA-256 at intake ≠ SHA-256 at detector. The decision log references a hash that matches no stored file. 90-day replay fails. Observed in: every stack with file sanitisation and no transform event log.</p>
+        <div class="finding-frc">FRC-L-HASH-CHAIN-BROKEN</div>
+      </div>
+      <div class="finding-card dark">
+        <div class="finding-tag">Finding · Signal</div>
+        <div class="finding-title">PRNU dropped to near-zero after resize</div>
+        <p class="finding-text">Genuine client documents — real camera captures — showing PRNU correlation near zero after resize to 1200px. Same reading as AI-generated images. Detector cannot distinguish pipeline-degraded genuine from synthetic. False positive rate elevated 2–4% with no apparent cause.</p>
+        <div class="finding-frc">FRC-L1-PRNU-ABSENT · FRC-L-RESIZE-DETECTED</div>
+      </div>
+      <div class="finding-card dark">
+        <div class="finding-tag">Finding · Drift</div>
+        <div class="finding-title">FPR shifted 3.2% after vendor model update</div>
+        <p class="finding-text">KYC vendor pushed model update v3.1 → v3.2. No changelog shared. False positive rate moved from 2.1% to 5.4% over six weeks. Detected by quarterly baseline measurement. Without measurement: invisible until a compliance review surfaced the queue growth.</p>
+        <div class="finding-frc">vendor_drift_delta: +3.2% FPR undetected 6 weeks</div>
+      </div>
+      <div class="finding-card">
+        <div class="finding-tag">Finding · Audit</div>
+        <div class="finding-title">Decision unreproducible at 90 days</div>
+        <p class="finding-text">Regulator requested evidence of due diligence for 15 onboarding decisions. Stack could produce timestamps and verdicts. Could not produce: which signals were examined, what threshold applied, or whether the verdict would be the same today. Pipeline transforms had altered every file.</p>
+        <div class="finding-frc">reproducible: false · pipeline_transforms_logged: false</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div>
+        <div class="about-label">Founder</div>
+        <div class="about-name">Ruslan Mishyn</div>
+        <div class="about-role">Forensic Researcher · AI PM · Larnaca, Cyprus</div>
+        <div class="about-credentials">
+          <div class="cred"><div class="cred-dot"></div><span>Author of SDB-26 — first open benchmark for synthetic document detection</span></div>
+          <div class="cred"><div class="cred-dot"></div><span>Formal response submitted to AMLA CDD RTS consultation</span></div>
+          <div class="cred"><div class="cred-dot"></div><span>10+ years fintech PM, CySEC-regulated EMI environment</span></div>
+          <div class="cred"><div class="cred-dot"></div><span>P-L-I-C-A methodology · FRC schema · Pipeline-Induced Provenance Loss</span></div>
+        </div>
+      </div>
+      <div class="about-body">
+        <p>Plica is a <strong>one-person forensic boutique</strong>. That is not a limitation — it is the model. No committees. No approval chains. No scope creep. When you engage Plica, you work directly with the person who built the methodology.</p>
+        <p>The work started with a simple observation: KYC teams were measuring vendor performance in isolation, ignoring the pipeline that transforms files before detection. The gap between "vendor says PASS" and "we can prove this decision" was structural — and nobody was measuring it.</p>
+        <p>SDB-26, P-L-I-C-A, and the Evidence Pipeline Audit are the result of that observation. <strong>We'll be direct if we can help — and equally direct if we can't.</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="container">
+    <div class="section-tag">Common questions</div>
+    <h2 class="section-title">Before you reach out.</h2>
+    <div class="faq-grid">
+      <div class="faq-item">
+        <div class="faq-q">Does Plica replace our KYC vendor?</div>
+        <p class="faq-a">No. Plica is an independent forensic layer on top of your existing stack. We do not replace Sumsub, Onfido, Veriff, or any other vendor. We audit what they produce and the pipeline that feeds them — independently.</p>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What document types does Phase 0 cover?</div>
+        <p class="faq-a">Phase 0 covers JPEG, PNG, and WebP image files — passports, ID cards, utility bills, bank statements submitted as images. PDF and video analysis is available from Phase 1. No real PII at Phase 0 — use anonymised or synthetic labelled samples.</p>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Do you sign NDA before Phase 1?</div>
+        <p class="faq-a">Yes. Phase 1 involving real client material requires a mutual NDA, a Data Processing Agreement, agreed retention limits, and subprocessor disclosure before any data transfer. We prepare standard templates. Phase 0 requires no NDA.</p>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Who is the right contact at our company?</div>
+        <p class="faq-a">MLRO, Head of Compliance, Head of Fraud, or Chief Risk Officer. The conversation is most productive with someone who owns the KYC decision process and has visibility into vendor contracts and audit obligations.</p>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Is this relevant if we already have a KYC vendor?</div>
+        <p class="faq-a">Especially then. The gap Plica addresses is not in the vendor — it is in the pipeline before the vendor, and in the evidence record after. Most vendors do not provide signal-level audit trails. That is not their product. It is ours.</p>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What is SDB-26?</div>
+        <p class="faq-a">The first open benchmark for measuring synthetic document bypass rate in identity verification systems. Published on GitHub under CC BY 4.0. The P-L-I-C-A methodology and FRC reason codes used in all Plica engagements are formalised there. <a href="https://github.com/sevrusik/SDB26">sdb26.com →</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONNECT -->
+<section id="connect">
+  <div class="container">
+    <div class="connect-left">
+      <h2 class="connect-title">If you're rethinking<br>file handling or<br><em>audit readiness</em> —</h2>
+      <p class="connect-sub">Start with Phase 0. Send a ZIP of labelled document images. We'll tell you what your current stack catches, what it misses, and whether it's worth going further. No commitment, no infrastructure, 48 hours.</p>
+    </div>
+    <div class="connect-right">
+      <a class="connect-link" href="mailto:sevrusik@gmail.com">
+        <div class="cl-icon">EMAIL</div>
+        <div>
+          <div class="cl-text">sevrusik@gmail.com</div>
+          <div class="cl-sub">Phase 0 · scoping call · any question</div>
+        </div>
+      </a>
+      <a class="connect-link" href="https://plicaforensic.com" target="_blank">
+        <div class="cl-icon">WEB</div>
+        <div>
+          <div class="cl-text">plicaforensic.com</div>
+          <div class="cl-sub">Documentation · engagements · SDB-26</div>
+        </div>
+      </a>
+      <a class="connect-link" href="https://github.com/sevrusik/SDB26" target="_blank">
+        <div class="cl-icon">GITHUB</div>
+        <div>
+          <div class="cl-text">SDB-26 Open Standard</div>
+          <div class="cl-sub">CC BY 4.0 · github.com/sevrusik/SDB26</div>
+        </div>
+      </a>
+      <a class="connect-link" href="https://linkedin.com/in/mishyn-ruslan" target="_blank">
+        <div class="cl-icon">LI</div>
+        <div>
+          <div class="cl-text">Ruslan Mishyn</div>
+          <div class="cl-sub">linkedin.com/in/mishyn-ruslan</div>
+        </div>
+      </a>
+      <div class="connect-note">We'll be direct if we can help — and equally direct if we can't.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-l">Plica · Independent Forensic Boutique · Larnaca, Cyprus · sevrusik@gmail.com</div>
+  <div class="footer-r">SDB-26 v1.0.12 · plicaforensic.com · Truth lives in the layers.</div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plica · Car Return Photo Fraud</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --night:#1A3A3A;--white:#F8F6F1;--surface:#EFEDE6;
+  --ink:#1C1C1A;--muted:#6B6B63;--border:#CEC9BC;
+  --copper:#8B5E3C;--copper-bg:#F5EDE4;
+  --red:#B83232;--red-bg:#FEF6F6;--red-bd:#F0C0C0;
+  --amber:#8A5A00;--amber-bg:#FFFBF0;--amber-bd:#E8C870;
+  --green:#1A5C32;--green-bg:#F0FAF4;--green-bd:#A8D8B8;
+  --serif:'DM Serif Display',Georgia,serif;
+  --mono:'DM Mono',monospace;--sans:'DM Sans',system-ui,sans-serif;
+}
+html,body{width:210mm;min-height:297mm;background:var(--white);
+  font-family:var(--sans);color:var(--ink);
+  -webkit-print-color-adjust:exact;print-color-adjust:exact;
+  -webkit-font-smoothing:antialiased;}
+.page{width:210mm;min-height:297mm;padding:12mm 14mm 10mm;
+  display:flex;flex-direction:column;gap:5mm;}
+
+/* HEADER */
+.hdr{display:flex;justify-content:space-between;align-items:flex-end;
+  padding-bottom:4mm;border-bottom:2px solid var(--ink);}
+.brand{font-family:var(--mono);font-size:11pt;font-weight:500;
+  color:var(--night);letter-spacing:0.18em;margin-bottom:2mm;}
+.title{font-family:var(--serif);font-size:20pt;color:var(--ink);
+  line-height:1.05;margin-bottom:1mm;}
+.title em{font-style:italic;color:var(--night);}
+.sub{font-size:8pt;color:var(--muted);}
+.hdr-r{text-align:right;font-family:var(--mono);font-size:7pt;
+  color:var(--muted);line-height:1.9;}
+
+/* HOOK */
+.hook{background:var(--surface);border-left:4px solid var(--red);padding:5mm 7mm;}
+.hook-q{font-family:var(--serif);font-size:13pt;color:var(--ink);
+  line-height:1.4;margin-bottom:3mm;}
+.hook-q em{color:var(--red);font-style:normal;font-weight:500;}
+.hook-how{font-size:8.5pt;color:var(--muted);line-height:1.7;}
+.hook-how strong{color:var(--ink);}
+
+/* SECTION */
+.sec{font-family:var(--mono);font-size:7pt;color:var(--muted);
+  letter-spacing:0.16em;text-transform:uppercase;
+  border-bottom:1px solid var(--border);padding-bottom:2px;margin-bottom:3mm;}
+
+/* BODY GRID */
+.body-grid{display:grid;grid-template-columns:1fr 1fr;gap:4mm;flex:1;}
+
+/* SCENARIO */
+.scenario{display:flex;flex-direction:column;gap:2px;margin-bottom:3mm;}
+.sc-step{display:grid;grid-template-columns:18px 1fr;gap:8px;
+  padding:6px 8px;align-items:start;}
+.sc-step.client{background:var(--red-bg);}
+.sc-step.portal{background:var(--amber-bg);}
+.sc-step.result{background:var(--green-bg);}
+.sc-n{font-family:var(--mono);font-size:8pt;font-weight:500;line-height:1.4;}
+.sc-step.client .sc-n{color:var(--red);}
+.sc-step.portal .sc-n{color:var(--amber);}
+.sc-step.result .sc-n{color:var(--green);}
+.sc-text{font-size:8pt;color:var(--ink);line-height:1.5;}
+.sc-sub{font-size:7pt;color:var(--muted);margin-top:1px;}
+
+/* SIGNALS TABLE */
+.sig-table{width:100%;border-collapse:collapse;}
+.sig-table thead tr{background:var(--night);}
+.sig-table th{font-family:var(--mono);font-size:7pt;color:rgba(255,255,255,0.7);
+  letter-spacing:0.08em;text-transform:uppercase;
+  padding:5px 8px;text-align:left;}
+.sig-table td{padding:6px 8px;border-bottom:1px solid var(--border);
+  font-size:7.5pt;vertical-align:top;line-height:1.5;color:var(--ink);}
+.sig-table tr:nth-child(even) td{background:var(--surface);}
+.sig-table tr:last-child td{border-bottom:none;}
+.sig-tag{font-family:var(--mono);font-size:7pt;padding:1px 5px;
+  display:inline-block;}
+.sig-tag.catch{background:var(--green-bg);color:var(--green);
+  border:1px solid var(--green-bd);}
+.sig-tag.miss{background:var(--red-bg);color:var(--red);
+  border:1px solid var(--red-bd);}
+
+/* WHAT WE DO */
+.what-steps{display:flex;flex-direction:column;gap:2px;}
+.ws{display:grid;grid-template-columns:22px 1fr;gap:8px;
+  padding:7px 8px;background:var(--surface);align-items:start;}
+.ws-n{font-family:var(--serif);font-size:16pt;color:var(--border);line-height:1;}
+.ws-title{font-size:8pt;font-weight:500;color:var(--ink);margin-bottom:2px;}
+.ws-desc{font-size:7.5pt;color:var(--muted);line-height:1.5;}
+.ws-tag{font-family:var(--mono);font-size:6.5pt;color:var(--night);
+  border:1px solid var(--border);padding:1px 5px;display:inline-block;margin-top:2px;}
+
+/* VERDICT */
+.verdict-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;
+  margin-bottom:3mm;}
+.vd{padding:7px 9px;}
+.vd.ok{background:var(--green-bg);border-left:3px solid var(--green);}
+.vd.warn{background:var(--amber-bg);border-left:3px solid var(--amber);}
+.vd.risk{background:var(--red-bg);border-left:3px solid var(--red);}
+.vd-label{font-family:var(--mono);font-size:7pt;font-weight:500;margin-bottom:3px;}
+.vd.ok .vd-label{color:var(--green);}
+.vd.warn .vd-label{color:var(--amber);}
+.vd.risk .vd-label{color:var(--red);}
+.vd-text{font-size:7.5pt;color:var(--ink);line-height:1.4;}
+
+/* CTA */
+.cta{background:var(--white);border:1px solid var(--border);
+  border-left:4px solid var(--copper);padding:5mm 6mm;}
+.cta-title{font-family:var(--serif);font-size:11pt;color:var(--ink);
+  margin-bottom:2mm;}
+.cta-title em{color:var(--copper);font-style:italic;}
+.cta-desc{font-size:7.5pt;color:var(--muted);line-height:1.6;margin-bottom:2mm;}
+.cta-contact{font-family:var(--mono);font-size:7pt;color:var(--night);
+  border-top:1px solid var(--border);padding-top:2mm;line-height:1.8;}
+
+/* FOOTER */
+.footer{padding-top:3mm;border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:flex-end;}
+.fl{font-size:7pt;color:var(--muted);line-height:1.7;}
+.fl strong{color:var(--ink);}
+.fr{text-align:right;font-family:var(--mono);font-size:7pt;
+  color:var(--muted);line-height:1.8;}
+.fr em{font-family:var(--serif);font-style:italic;font-size:8pt;
+  color:var(--muted);display:block;margin-top:1mm;}
+
+@media print{html,body{width:210mm;}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HEADER -->
+<div class="hdr">
+  <div>
+    <div class="brand">PLICA</div>
+    <div class="title">Car Return Photo Fraud<br><em>Detecting AI-Edited Return Images</em></div>
+    <div class="sub">AI manipulation detection · Deposit protection · Forensic photo analysis</div>
+  </div>
+  <div class="hdr-r">
+    Independent Forensic Boutique<br>
+    ruslanm@plicaforensic.com<br>
+    plicaforensic.com<br>
+    api.plicaforensic.com/try
+  </div>
+</div>
+
+<!-- HOOK -->
+<div class="hook">
+  <div class="hook-q">
+    Your customer submits return photos. The car looks <em>clean</em>.<br>
+    You release the deposit. Two hours later your agent inspects the car — and finds the scratches.
+  </div>
+  <div class="hook-how">
+    <strong>What happened:</strong> The customer photographed the damaged car, edited the scratches and dents out using a mobile AI app — Snapseed, Adobe Firefly, or any generative inpainting tool — then submitted the edited image through your portal. Your system accepted it. <strong>The deposit was released on a manipulated photo.</strong>
+  </div>
+</div>
+
+<!-- BODY -->
+<div class="body-grid">
+
+  <!-- LEFT -->
+  <div>
+    <div class="sec">How the attack works — step by step</div>
+    <div class="scenario">
+      <div class="sc-step client">
+        <div class="sc-n">1</div>
+        <div>
+          <div class="sc-text">Customer photographs damaged car at return</div>
+          <div class="sc-sub">Real photo — scratches, dents, damage visible</div>
+        </div>
+      </div>
+      <div class="sc-step client">
+        <div class="sc-n">2</div>
+        <div>
+          <div class="sc-text">Opens mobile AI editing app</div>
+          <div class="sc-sub">Snapseed healing brush, Adobe Firefly, Samsung AI eraser, ChatGPT image edit — removes damage in seconds</div>
+        </div>
+      </div>
+      <div class="sc-step portal">
+        <div class="sc-n">3</div>
+        <div>
+          <div class="sc-text">Submits edited photo through your portal</div>
+          <div class="sc-sub">Your upload pipeline recompresses the image — partially masking AI editing artifacts</div>
+        </div>
+      </div>
+      <div class="sc-step result">
+        <div class="sc-n">4</div>
+        <div>
+          <div class="sc-text">System accepts photo — deposit released</div>
+          <div class="sc-sub">No forensic check. No signal. No proof of manipulation.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">What forensics detects</div>
+    <table class="sig-table">
+      <thead>
+        <tr>
+          <th>Signal</th>
+          <th>What it reveals</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Inpainting artifacts</td>
+          <td>AI-generated texture where damage was removed — different frequency pattern from surrounding pixels</td>
+          <td><span class="sig-tag catch">Detects</span></td>
+        </tr>
+        <tr>
+          <td>DCT inconsistency</td>
+          <td>Edited region has different JPEG compression history than the rest of the image</td>
+          <td><span class="sig-tag catch">Detects</span></td>
+        </tr>
+        <tr>
+          <td>PRNU break</td>
+          <td>Sensor noise pattern absent in edited region — camera fingerprint interrupted</td>
+          <td><span class="sig-tag catch">Detects</span></td>
+        </tr>
+        <tr>
+          <td>GAN fingerprint</td>
+          <td>Diffusion model texture signature in inpainted area — invisible to human eye</td>
+          <td><span class="sig-tag catch">Detects</span></td>
+        </tr>
+        <tr>
+          <td>Sterility score</td>
+          <td>Missing physical signals in edited zone vs intact surrounding area</td>
+          <td><span class="sig-tag catch">Detects</span></td>
+        </tr>
+        <tr>
+          <td>Human eye review</td>
+          <td>Edited photo looks clean — manipulation not visible</td>
+          <td><span class="sig-tag miss">Misses</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- RIGHT -->
+  <div>
+    <div class="sec">What Plica does — three steps</div>
+    <div class="what-steps">
+      <div class="ws">
+        <div class="ws-n">1</div>
+        <div>
+          <div class="ws-title">Upload the photo</div>
+          <div class="ws-desc">Send return photos via api.plicaforensic.com/try or by email. JPEG, PNG, HEIC supported. No integration required to start.</div>
+          <span class="ws-tag">Instant · no setup</span>
+        </div>
+      </div>
+      <div class="ws">
+        <div class="ws-n">2</div>
+        <div>
+          <div class="ws-title">Run forensic analysis</div>
+          <div class="ws-desc">Multi-layer detection: inpainting artifacts, DCT inconsistency, PRNU break, GAN fingerprint, sterility score. Returns verdict with Forensic Reason Codes — not just a score.</div>
+          <span class="ws-tag">Forensics v2 · FRC codes</span>
+        </div>
+      </div>
+      <div class="ws">
+        <div class="ws-n">3</div>
+        <div>
+          <div class="ws-title">Report with evidence</div>
+          <div class="ws-desc">PDF report with forensic breakdown: which signals were detected, where exactly in the image, with what confidence. Show it to the customer or use it in a dispute.</div>
+          <span class="ws-tag">PDF report · human-readable</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:3mm;">
+      <div class="sec">Verdict per photo</div>
+      <div class="verdict-grid">
+        <div class="vd ok">
+          <div class="vd-label">Authentic</div>
+          <div class="vd-text">Physical signals intact. No editing artifacts. Deposit release safe.</div>
+        </div>
+        <div class="vd warn">
+          <div class="vd-label">Review</div>
+          <div class="vd-text">Anomalies present. Channel degradation possible. Manual check before release.</div>
+        </div>
+        <div class="vd risk">
+          <div class="vd-label">Manipulated</div>
+          <div class="vd-text">AI editing detected. Inpainting artifacts confirmed. Hold deposit. Request re-inspection.</div>
+        </div>
+      </div>
+
+      <div class="cta">
+        <div class="cta-title">Try it on your most<br><em>suspicious return photos</em></div>
+        <div class="cta-desc">
+          Send us 10 return photos — including any you suspect were manipulated. We return a forensic verdict with signal-level breakdown within 48 hours. Free to start.
+        </div>
+        <div class="cta-contact">
+          Try free: api.plicaforensic.com/try<br>
+          Contact: ruslanm@plicaforensic.com<br>
+          Subject: "Car Return Diagnostic · [your company]"
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="fl">
+    <strong>Ruslan Mishyn</strong> · Founder · Plica · Independent Forensic Boutique<br>
+    ruslanm@plicaforensic.com · plicaforensic.com · sdb26.com
+  </div>
+  <div class="fr">
+    Forensics v2 · SDB-26 v1.1 · api.plicaforensic.com/try
+    <em>Truth lives in the layers.</em>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>14-Day Pilot — DocLens</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Instrument+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap');
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--bg:#fafaf8;--surface:#f2f0eb;--surface2:#e8e5de;--border:#d0ccc3;--accent:#1a3a5c;--accent2:#c0392b;--text:#1a1a18;--muted:#7a7770;--display:'Space Mono',monospace;--body:'Instrument Sans',sans-serif;}
+  html,body{width:210mm;min-height:297mm;background:var(--bg);color:var(--text);font-family:var(--body);font-size:10pt;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .page{width:210mm;min-height:297mm;display:flex;flex-direction:column;}
+  .header{background:var(--accent);padding:10mm 14mm 9mm;position:relative;overflow:hidden;}
+  .header::after{content:'';position:absolute;right:-20px;top:-20px;width:110px;height:110px;border:2px solid rgba(255,255,255,0.07);border-radius:50%;}
+  .offer-tag{font-family:var(--display);font-size:7pt;color:rgba(255,255,255,0.5);letter-spacing:0.15em;margin-bottom:7px;}
+  .title{font-family:var(--display);font-size:18pt;color:#fff;line-height:1.05;font-weight:700;max-width:340px;}
+  .subtitle{font-size:8.5pt;color:rgba(255,255,255,0.76);margin-top:7px;max-width:390px;line-height:1.5;font-weight:300;}
+  .promise{background:var(--accent2);padding:8px 14mm;}
+  .promise p{font-family:var(--display);font-size:9pt;color:#fff;letter-spacing:0.05em;line-height:1.3;}
+  .body{padding:8mm 14mm;flex:1;display:flex;flex-direction:column;gap:7px;}
+  .sec-label{font-family:var(--display);font-size:6.5pt;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:4px;}
+  .scope-block{background:var(--surface);border:1px solid var(--border);padding:7px 11px;display:flex;gap:0;align-items:stretch;}
+  .scope-col{flex:1;padding:0 7px;display:flex;flex-direction:column;gap:2px;}
+  .scope-col:first-child{padding-left:0;}
+  .scope-sep{width:1px;background:var(--border);flex-shrink:0;margin:0 3px;}
+  .scope-label{font-size:5.5pt;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;}
+  .scope-val{font-size:7pt;color:var(--text);line-height:1.3;}
+  .pilot{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+  .week{background:var(--surface);border:1px solid var(--border);padding:7px 10px;border-radius:2px;}
+  .week-label{font-family:var(--display);font-size:8pt;font-weight:700;color:var(--accent);margin-bottom:4px;}
+  .week-items{font-size:7.2pt;color:var(--text);line-height:1.55;}
+  .deliverables{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+  .deliv-card{background:var(--surface);border:1px solid var(--border);border-top:2px solid var(--accent);padding:8px 9px;}
+  .deliv-name{font-size:8pt;font-weight:500;color:var(--text);margin-bottom:3px;}
+  .deliv-desc{font-size:7pt;color:var(--muted);line-height:1.35;}
+  .proof-block{background:var(--surface);border:1px solid var(--border);padding:6px 11px;display:flex;flex-wrap:wrap;gap:4px 14px;}
+  .proof-item{font-size:7pt;color:var(--muted);display:flex;align-items:center;gap:4px;}
+  .proof-dot{color:var(--accent);font-size:8pt;}
+  .killer{background:var(--accent);padding:8px 12px;border-radius:2px;}
+  .killer-label{font-family:var(--display);font-size:6.5pt;color:rgba(255,255,255,0.6);letter-spacing:0.12em;margin-bottom:4px;}
+  .killer-q{font-size:8.5pt;color:#fff;font-style:italic;line-height:1.5;}
+  .footer{padding:5mm 14mm 7mm;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:12px;}
+  .footer-left{font-size:7pt;color:var(--muted);line-height:1.6;}
+  .footer-left strong{color:var(--text);}
+  .cta-footer{background:var(--accent);padding:5px 12px;border-radius:2px;text-align:center;}
+  .cta-footer .cta-main{font-family:'Space Mono',monospace;font-size:8.5pt;color:#fff;font-weight:700;}
+  .cta-footer .cta-sub{font-size:6.5pt;color:rgba(255,255,255,0.8);margin-top:1px;}
+  .footer-right{font-family:var(--display);font-size:8pt;color:var(--accent);text-align:right;line-height:1.7;}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div class="offer-tag">PILOT — 14 BUSINESS DAYS</div>
+    <div class="title">TWO-WEEK FORENSIC PILOT<br>FOR LIVE KYC RISK</div>
+    <div class="subtitle">From baseline to operational decision support: we run layered forensic analysis on agreed case sets and deliver reproducible outputs for Ops, Audit, and Board-level risk discussion.</div>
+  </div>
+  <div class="promise"><p>FROM "INTERESTING SIGNAL" TO ACTIONABLE CONTROL PLAN.</p></div>
+  <div class="body">
+    <div class="sec-label">Pilot envelope</div>
+    <div class="scope-block">
+      <div class="scope-col"><div class="scope-label">DURATION</div><div class="scope-val">14 business days</div></div>
+      <div class="scope-sep"></div>
+      <div class="scope-col"><div class="scope-label">SAMPLE</div><div class="scope-val">200–400 files (mixed outcomes)</div></div>
+      <div class="scope-sep"></div>
+      <div class="scope-col"><div class="scope-label">WORK MODE</div><div class="scope-val">Offline batch + weekly review call</div></div>
+      <div class="scope-sep"></div>
+      <div class="scope-col"><div class="scope-label">TARGET</div><div class="scope-val">Disputed and edge-case decision quality</div></div>
+    </div>
+
+    <div class="sec-label">Execution plan</div>
+    <div class="pilot">
+      <div class="week"><div class="week-label">WEEK 1 — BASELINE + TRIAGE</div><div class="week-items">• Intake and corpus mapping<br>• Initial run with FRC outputs<br>• Identify top 3 failure clusters<br>• Agree escalation rules and review thresholds</div></div>
+      <div class="week"><div class="week-label">WEEK 2 — VALIDATE + HANDOFF</div><div class="week-items">• Targeted rerun on edge cases<br>• Compound verdict review (if agentic mode)<br>• Produce risk package and recommendation set<br>• Final readout with implementation priorities</div></div>
+    </div>
+
+    <div class="sec-label">Outputs</div>
+    <div class="deliverables">
+      <div class="deliv-card"><div class="deliv-name">Pilot scorecard</div><div class="deliv-desc">Bypass and review distribution by class/cluster, with confidence bands.</div></div>
+      <div class="deliv-card"><div class="deliv-name">Evidence packet sample set</div><div class="deliv-desc">Representative cases with traceable chain: input → signals → FRC → action.</div></div>
+      <div class="deliv-card"><div class="deliv-name">90-day action plan</div><div class="deliv-desc">Prioritized controls and ownership map for rollout after pilot.</div></div>
+    </div>
+
+    <div class="proof-block">
+      <div class="proof-item"><span class="proof-dot">●</span> Built on SDB-26 taxonomy and FRC schema</div>
+      <div class="proof-item"><span class="proof-dot">●</span> Optional A2A / compound-verdict track</div>
+      <div class="proof-item"><span class="proof-dot">●</span> No mandatory production integration for pilot phase</div>
+      <div class="proof-item"><span class="proof-dot">●</span> Executive readout included</div>
+    </div>
+
+    <div class="killer">
+      <div class="killer-label">KILLER QUESTION</div>
+      <div class="killer-q">"In two weeks, can we show exactly where our current KYC stack fails on edge cases and what to fix first?"</div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="footer-left"><strong>Ruslan Mishyn</strong> — AI PM &amp; Forensic Researcher<br>sevrusik@gmail.com · sdb26.com · linkedin.com/in/mishyn-ruslan</div>
+    <div class="cta-footer"><div class="cta-main">BOOK 14-DAY PILOT</div><div class="cta-sub">Founding slots available</div></div>
+    <div class="footer-right">DocLens<br>Forensic Boutique</div>
+  </div>
+</div>
+</body>
+</html>

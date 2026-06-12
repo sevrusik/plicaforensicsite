@@ -1,0 +1,113 @@
+{
+  "profile_url": "https://medium.com/@sevrusik",
+  "feed_url": "https://medium.com/feed/@sevrusik",
+  "count": 10,
+  "items": [
+    {
+      "title": "Mastercard built the payment rail for agents.",
+      "link": "https://medium.com/@sevrusik/mastercard-built-the-payment-rail-for-agents-6e6fa76b0fb0",
+      "pub_date": "Thu, 11 Jun 2026 07:48:01 GMT",
+      "categories": [
+        "fintech",
+        "ai"
+      ],
+      "description": "Mastercard built the payment rail for agents. The evidence layer is still missing. Why autonomous commerce will need more than authorization if it wants to stay defensible."
+    },
+    {
+      "title": "When the Agent Has Already Acted",
+      "link": "https://medium.com/@sevrusik/when-the-agent-has-already-acted-428a51ddd474",
+      "pub_date": "Mon, 08 Jun 2026 06:00:28 GMT",
+      "categories": [
+        "ai-agent",
+        "ai",
+        "future"
+      ],
+      "description": "Why We Are Not Ready for Incidents in the Agentic Economy"
+    },
+    {
+      "title": "Agents Can Negotiate Anything. They Still Cannot Trust a File.",
+      "link": "https://medium.com/@sevrusik/agents-can-negotiate-anything-they-still-cannot-trust-a-file-022953c5eb1e",
+      "pub_date": "Sun, 07 Jun 2026 07:33:30 GMT",
+      "categories": [
+        "future",
+        "agents",
+        "data-science"
+      ],
+      "description": "Payments answer one question. Evidence answers another."
+    },
+    {
+      "title": "Template Farms Don’t Just Scale Fraud. They Poison the Baseline.",
+      "link": "https://medium.com/@sevrusik/template-farms-dont-just-scale-fraud-they-poison-the-baseline-73bff508f5d1",
+      "pub_date": "Sat, 06 Jun 2026 17:16:38 GMT",
+      "categories": [
+        "fraud-detection",
+        "kyc",
+        "data-analysis"
+      ],
+      "description": "The deeper problem is not the fake. It is the trusted sample."
+    },
+    {
+      "title": "Synthetic Data Is Useful. It Is Not Forensic Truth.",
+      "link": "https://medium.com/@sevrusik/synthetic-data-is-useful-it-is-not-forensic-truth-fee2903cac3c",
+      "pub_date": "Fri, 05 Jun 2026 08:44:55 GMT",
+      "categories": [
+        "ai",
+        "data-science"
+      ],
+      "description": "The sensor layer matters"
+    },
+    {
+      "title": "The OWASP Gap: Agentic AI Secures the Agent. Not the Document It Reads.",
+      "link": "https://medium.com/@sevrusik/the-owasp-gap-agentic-ai-secures-the-agent-not-the-document-it-reads-67b89ab8a658",
+      "pub_date": "Fri, 05 Jun 2026 05:18:25 GMT",
+      "categories": [
+        "fraud-detection",
+        "future",
+        "gen-ai-revolution"
+      ],
+      "description": "What OWASP v2 gets right"
+    },
+    {
+      "title": "Build for Agents. Think Like a Human.",
+      "link": "https://medium.com/@sevrusik/build-for-agents-think-like-a-human-f70d571afb13",
+      "pub_date": "Wed, 03 Jun 2026 17:31:21 GMT",
+      "categories": [
+        "agents",
+        "ai"
+      ],
+      "description": "Layer 1 — EXIF/XMP structural anomalies (the metadata layer)"
+    },
+    {
+      "title": "Five Evidence Controls for Regulated AI Workflows",
+      "link": "https://medium.com/@sevrusik/five-evidence-controls-for-regulated-ai-workflows-98de447ceff7",
+      "pub_date": "Wed, 03 Jun 2026 08:12:56 GMT",
+      "categories": [
+        "ai"
+      ],
+      "description": "Why policy is not enough"
+    },
+    {
+      "title": "Document Event Recorder: What Document Forensics Can Learn from Tesla",
+      "link": "https://medium.com/@sevrusik/document-event-recorder-what-document-forensics-can-learn-from-tesla-02f6c8b33320",
+      "pub_date": "Sun, 31 May 2026 08:23:54 GMT",
+      "categories": [
+        "tesla",
+        "digital-forensics",
+        "future"
+      ],
+      "description": "What Tesla Gets Right"
+    },
+    {
+      "title": "The PIPL Tax: Why a Compressed File Can Cost 10–20x More Than a Clean One",
+      "link": "https://medium.com/@sevrusik/the-pipl-tax-why-a-compressed-file-can-cost-10-20x-more-than-a-clean-one-e20c509a2759",
+      "pub_date": "Fri, 29 May 2026 16:08:24 GMT",
+      "categories": [
+        "cost-optimization",
+        "ai",
+        "token"
+      ],
+      "description": "Two Files, One Workflow"
+    }
+  ],
+  "synced_at": "2026-06-12T14:55:40Z"
+}

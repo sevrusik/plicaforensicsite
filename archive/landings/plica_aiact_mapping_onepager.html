@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plica · AI Act High-Risk Mapping</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --night:#1A3A3A;--night-soft:#244F4F;
+  --white:#F8F6F1;--surface:#EFEDE6;--cream:#E8E4DA;
+  --ink:#1C1C1A;--muted:#6B6B63;--border:#CEC9BC;
+  --copper:#8B5E3C;--copper-bg:#F5EDE4;
+  --red:#B83232;--red-bg:#FEF6F6;
+  --amber:#8A5A00;--amber-bg:#FFFBF0;
+  --green:#1A5C32;--green-bg:#F0FAF4;
+  --serif:'DM Serif Display',Georgia,serif;
+  --mono:'DM Mono',monospace;--sans:'DM Sans',system-ui,sans-serif;
+}
+html,body{width:210mm;min-height:297mm;background:var(--white);
+  font-family:var(--sans);color:var(--ink);
+  -webkit-print-color-adjust:exact;print-color-adjust:exact;
+  -webkit-font-smoothing:antialiased;}
+.page{width:210mm;min-height:297mm;padding:11mm 13mm 9mm;
+  display:flex;flex-direction:column;gap:5mm;}
+
+/* HEADER */
+.hdr{display:flex;justify-content:space-between;align-items:flex-end;
+  padding-bottom:4mm;border-bottom:2px solid var(--ink);}
+.brand{font-family:var(--mono);font-size:11pt;font-weight:500;
+  color:var(--night);letter-spacing:0.18em;margin-bottom:2mm;}
+.title{font-family:var(--serif);font-size:19pt;color:var(--ink);
+  line-height:1.05;margin-bottom:1mm;}
+.title em{font-style:italic;color:var(--night);}
+.sub{font-size:8pt;color:var(--muted);}
+.hdr-r{text-align:right;font-family:var(--mono);font-size:7pt;
+  color:var(--muted);line-height:1.8;}
+.draft-badge{font-family:var(--mono);font-size:7pt;
+  border:1px solid var(--copper);color:var(--copper);
+  padding:2px 7px;display:inline-block;margin-bottom:2mm;
+  letter-spacing:0.08em;}
+
+/* KEY MESSAGE */
+.key-msg{background:var(--night);padding:5mm 7mm;margin-bottom:0;}
+.km-label{font-family:var(--mono);font-size:7.5pt;
+  color:rgba(255,255,255,0.35);letter-spacing:0.14em;
+  text-transform:uppercase;margin-bottom:3mm;}
+.km-text{font-family:var(--serif);font-size:11.5pt;color:white;
+  line-height:1.45;}
+.km-text em{color:#C4963A;font-style:normal;}
+
+/* SECTION LABEL */
+.sec{font-family:var(--mono);font-size:7pt;color:var(--muted);
+  letter-spacing:0.16em;text-transform:uppercase;
+  border-bottom:1px solid var(--border);padding-bottom:2px;margin-bottom:3mm;}
+
+/* TWO COL */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:4mm;}
+
+/* REGULATORY SIGNALS */
+.signals{display:flex;flex-direction:column;gap:2px;}
+.signal{padding:5px 8px;background:var(--surface);border-left:2.5px solid var(--border);}
+.signal.critical{border-left-color:var(--red);background:var(--red-bg);}
+.signal.warn{border-left-color:var(--copper);background:var(--copper-bg);}
+.signal.ok{border-left-color:var(--green);background:var(--green-bg);}
+.sig-title{font-size:8pt;font-weight:500;color:var(--ink);margin-bottom:2px;}
+.sig-desc{font-size:7.5pt;color:var(--muted);line-height:1.5;}
+
+/* MAPPING TABLE */
+.map-table{width:100%;border-collapse:collapse;}
+.map-table thead tr{background:var(--night);}
+.map-table th{font-family:var(--mono);font-size:7pt;color:rgba(255,255,255,0.7);
+  letter-spacing:0.08em;text-transform:uppercase;
+  padding:5px 8px;text-align:left;}
+.map-table td{padding:6px 8px;border-bottom:1px solid var(--border);
+  font-size:7.5pt;vertical-align:top;line-height:1.5;}
+.map-table tr:nth-child(even) td{background:var(--surface);}
+.map-table tr:last-child td{border-bottom:none;}
+.td-pressure{color:var(--ink);font-weight:500;}
+.td-response{font-family:var(--mono);font-size:6.5pt;color:var(--night);}
+
+/* 5 CLAIMS */
+.claims{display:flex;flex-direction:column;gap:2px;}
+.claim{display:flex;gap:6px;padding:4px 0;
+  border-bottom:1px solid var(--border);}
+.claim:last-child{border-bottom:none;}
+.claim-n{font-family:var(--mono);font-size:8pt;color:var(--border);
+  flex-shrink:0;width:14px;}
+.claim-text{font-size:7.5pt;color:var(--ink);line-height:1.5;}
+
+/* GUARDRAILS */
+.guard-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;}
+.guard-box{padding:5px 8px;}
+.guard-box.do{background:var(--green-bg);border-left:2px solid var(--green);}
+.guard-box.dont{background:var(--red-bg);border-left:2px solid var(--red);}
+.guard-label{font-family:var(--mono);font-size:7pt;font-weight:500;
+  letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px;}
+.guard-box.do .guard-label{color:var(--green);}
+.guard-box.dont .guard-label{color:var(--red);}
+.guard-item{font-size:7.5pt;color:var(--muted);line-height:1.6;
+  padding-left:10px;position:relative;}
+.guard-item::before{position:absolute;left:0;}
+.guard-box.do .guard-item::before{content:'✓';color:var(--green);}
+.guard-box.dont .guard-item::before{content:'✗';color:var(--red);}
+
+/* FOOTER */
+.footer{margin-top:auto;padding-top:3mm;border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:flex-end;}
+.fl{font-size:7.5pt;color:var(--muted);line-height:1.7;}
+.fl strong{color:var(--ink);}
+.fr{text-align:right;font-family:var(--mono);font-size:7pt;
+  color:var(--muted);line-height:1.8;}
+.fr em{font-family:var(--serif);font-style:italic;font-size:8pt;
+  color:var(--muted);display:block;margin-top:1mm;}
+
+@media print{html,body{width:210mm;}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HEADER -->
+<div class="hdr">
+  <div>
+    <div class="brand">PLICA</div>
+    <div class="title">AI Act High-Risk Classification<br><em>Evidence Layer Mapping</em></div>
+    <div class="sub">Draft Commission Guidelines · Article 6 · Annex III · Stakeholder Consultation 2026</div>
+  </div>
+  <div class="hdr-r">
+    <div class="draft-badge">Draft · Non-Binding</div>
+    <div>Independent Forensic Boutique<br>ruslanm@plicaforensic.com<br>plicaforensic.com</div>
+  </div>
+</div>
+
+<!-- KEY MESSAGE -->
+<div class="key-msg">
+  <div class="km-label">Conference-Ready Message</div>
+  <div class="km-text">
+    In AI Act high-risk contexts, the argument is no longer <em>"we had human review."</em>
+    The argument is <em>"we can prove which object was evaluated, what changed, and why the decision path is reproducible."</em>
+  </div>
+</div>
+
+<!-- REGULATORY SIGNALS + MAPPING -->
+<div class="two-col">
+
+  <!-- LEFT: Regulatory Signals -->
+  <div>
+    <div class="sec">Regulatory Signals Relevant to Plica</div>
+    <div class="signals">
+
+      <div class="signal critical">
+        <div class="sig-title">Intended purpose drives classification</div>
+        <div class="sig-desc">Marketing, docs, terms, and technical design must be coherent. Human involvement alone does not remove high-risk classification.</div>
+      </div>
+
+      <div class="signal warn">
+        <div class="sig-title">Split architectures treated as whole</div>
+        <div class="sig-desc">Splitting workflows into modules does not avoid classification if combined outputs materially influence decisions.</div>
+      </div>
+
+      <div class="signal warn">
+        <div class="sig-title">Annex III Point 5 — finance</div>
+        <div class="sig-desc">Creditworthiness/credit score: high-risk. Life/health insurance pricing: high-risk. Fraud detection carve-out exists — but mixed-purpose stacks need careful purpose boundaries.</div>
+      </div>
+
+      <div class="signal critical">
+        <div class="sig-title">Article 6(3) filter is narrow</div>
+        <div class="sig-desc">Exceptions are conditional and monitored. Profiling in covered contexts is generally not filter-eligible. Cannot be treated as default escape.</div>
+      </div>
+
+      <div class="signal ok">
+        <div class="sig-title">Direction is clear, binding later</div>
+        <div class="sig-desc">Final interpretation remains with CJEU. But organisations should already assume stricter documentation and traceability expectations.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- RIGHT: Mapping Table -->
+  <div>
+    <div class="sec">Plica Control Layer Mapping</div>
+    <table class="map-table">
+      <thead>
+        <tr>
+          <th style="width:48%">AI Act Pressure</th>
+          <th>Plica Response</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-pressure">Intended purpose must be clear</td>
+          <td class="td-response">workflow_id + file_class + decision context in Evidence Packet</td>
+        </tr>
+        <tr>
+          <td class="td-pressure">Human oversight ≠ de-classification</td>
+          <td class="td-response">Intake + witness chain independent from reviewer/model claims</td>
+        </tr>
+        <tr>
+          <td class="td-pressure">Split systems treated as whole</td>
+          <td class="td-response">transform_log across pipeline boundaries (Transformation Continuity)</td>
+        </tr>
+        <tr>
+          <td class="td-pressure">Filter claims need substantiation</td>
+          <td class="td-response">Packet-level evidence for why system did/did not materially influence decision</td>
+        </tr>
+        <tr>
+          <td class="td-pressure">Supervisory scrutiny on outcomes</td>
+          <td class="td-response">Decision-grade provenance: hash + metadata + FRC codes + witness result</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Positioning -->
+    <div style="margin-top:3mm;padding:5px 8px;background:var(--surface);border-left:3px solid var(--night);">
+      <div style="font-family:var(--mono);font-size:7pt;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:3px;">Positioning</div>
+      <div style="font-size:8pt;color:var(--ink);line-height:1.5;">Plica is <strong>not a replacement</strong> for KYC or credit models. It is the <strong>object-level evidence layer beneath them</strong> — making classification, compliance, and audit positions defensible.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 5 CLAIMS + GUARDRAILS -->
+<div class="two-col">
+
+  <!-- LEFT: 5 Claims -->
+  <div>
+    <div class="sec">5 Claims We Can Safely Make Publicly</div>
+    <div class="claims">
+      <div class="claim">
+        <div class="claim-n">1</div>
+        <div class="claim-text">The draft Guidelines reinforce intended-purpose discipline for classification.</div>
+      </div>
+      <div class="claim">
+        <div class="claim-n">2</div>
+        <div class="claim-text">Human involvement alone does not remove high-risk classification.</div>
+      </div>
+      <div class="claim">
+        <div class="claim-n">3</div>
+        <div class="claim-text">In finance, key Annex III use cases include creditworthiness and life/health insurance pricing for natural persons.</div>
+      </div>
+      <div class="claim">
+        <div class="claim-n">4</div>
+        <div class="claim-text">Filter exceptions under Article 6(3) are conditional and should not be treated as default escapes.</div>
+      </div>
+      <div class="claim">
+        <div class="claim-n">5</div>
+        <div class="claim-text">Evidence-grade traceability at intake and decision points reduces regulatory and audit ambiguity.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Guardrails -->
+  <div>
+    <div class="sec">Guardrails for External Messaging</div>
+    <div class="guard-grid">
+      <div class="guard-box do">
+        <div class="guard-label">Say</div>
+        <div class="guard-item">"aligned with draft guidance direction"</div>
+        <div class="guard-item">"supports defensible documentation"</div>
+        <div class="guard-item">"draft / non-binding status"</div>
+        <div class="guard-item">"reduces audit ambiguity"</div>
+      </div>
+      <div class="guard-box dont">
+        <div class="guard-label">Do Not Say</div>
+        <div class="guard-item">"AI Act requires Plica"</div>
+        <div class="guard-item">"guaranteed legal compliance"</div>
+        <div class="guard-item">"this is final law"</div>
+        <div class="guard-item">"classification confirmed"</div>
+      </div>
+    </div>
+    <div style="margin-top:3mm;padding:5px 8px;background:var(--amber-bg);border-left:2px solid var(--amber);">
+      <div style="font-size:7.5pt;color:var(--amber);line-height:1.5;font-style:italic;">Not legal advice. Classification decisions require qualified legal counsel. Draft guidelines are non-binding — final interpretation by CJEU only.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="fl">
+    <strong>Ruslan Mishyn</strong> · Founder · Plica · Independent Forensic Boutique<br>
+    ruslanm@plicaforensic.com · plicaforensic.com · sdb26.com
+  </div>
+  <div class="fr">
+    v0.1 · Working draft · Conference use<br>
+    Phase 0 diagnostic — free · 48h · one workflow
+    <em>Truth lives in the layers.</em>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

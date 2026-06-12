@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plica · AI Fakes in Car Rental Insurance</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --night:#1A3A3A;--white:#F8F6F1;--surface:#EFEDE6;
+  --ink:#1C1C1A;--muted:#6B6B63;--border:#CEC9BC;
+  --copper:#8B5E3C;--copper-bg:#F5EDE4;
+  --red:#B83232;--red-bg:#FEF6F6;--red-bd:#F0C0C0;
+  --amber:#8A5A00;--amber-bg:#FFFBF0;--amber-bd:#E8C870;
+  --green:#1A5C32;--green-bg:#F0FAF4;--green-bd:#A8D8B8;
+  --serif:'DM Serif Display',Georgia,serif;
+  --mono:'DM Mono',monospace;--sans:'DM Sans',system-ui,sans-serif;
+}
+html,body{width:210mm;min-height:297mm;background:var(--white);
+  font-family:var(--sans);color:var(--ink);
+  -webkit-print-color-adjust:exact;print-color-adjust:exact;
+  -webkit-font-smoothing:antialiased;}
+.page{width:210mm;min-height:297mm;padding:12mm 14mm 10mm;
+  display:flex;flex-direction:column;gap:5mm;}
+
+/* HEADER */
+.hdr{display:flex;justify-content:space-between;align-items:flex-end;
+  padding-bottom:4mm;border-bottom:2px solid var(--ink);}
+.brand{font-family:var(--mono);font-size:11pt;font-weight:500;
+  color:var(--night);letter-spacing:0.18em;margin-bottom:2mm;}
+.title{font-family:var(--serif);font-size:19pt;color:var(--ink);
+  line-height:1.05;margin-bottom:1mm;}
+.title em{font-style:italic;color:var(--night);}
+.sub{font-size:8pt;color:var(--muted);}
+.hdr-r{text-align:right;font-family:var(--mono);font-size:7pt;
+  color:var(--muted);line-height:1.9;}
+
+/* HOOK */
+.hook{background:var(--surface);border-left:4px solid var(--night);
+  padding:5mm 7mm;}
+.hook-q{font-family:var(--serif);font-size:13pt;color:var(--ink);
+  line-height:1.35;margin-bottom:3mm;}
+.hook-q em{color:var(--night);font-style:italic;}
+.hook-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;}
+.stat{padding:4mm 5mm;background:var(--white);border:1px solid var(--border);}
+.stat-n{font-family:var(--mono);font-size:14pt;font-weight:500;
+  color:var(--night);line-height:1;margin-bottom:2px;}
+.stat-n.red{color:var(--red);}
+.stat-n.amber{color:var(--amber);}
+.stat-desc{font-size:7pt;color:var(--muted);line-height:1.4;}
+
+/* SECTION */
+.sec{font-family:var(--mono);font-size:7pt;color:var(--muted);
+  letter-spacing:0.16em;text-transform:uppercase;
+  border-bottom:1px solid var(--border);padding-bottom:2px;margin-bottom:3mm;}
+
+/* BODY GRID */
+.body-grid{display:grid;grid-template-columns:1fr 1fr;gap:4mm;}
+
+/* ATTACK TABLE */
+.attack-table{width:100%;border-collapse:collapse;}
+.attack-table thead tr{background:var(--surface);}
+.attack-table th{font-family:var(--mono);font-size:7pt;color:var(--muted);
+  letter-spacing:0.08em;text-transform:uppercase;
+  padding:5px 8px;text-align:left;border-bottom:1px solid var(--border);}
+.attack-table td{padding:6px 8px;border-bottom:1px solid var(--border);
+  font-size:7.5pt;vertical-align:top;line-height:1.5;color:var(--ink);}
+.attack-table tr:last-child td{border-bottom:none;}
+.attack-table td:first-child{font-weight:500;color:var(--red);}
+.attack-note{margin-top:2mm;font-size:7pt;color:var(--red);
+  padding:4px 8px;background:var(--red-bg);border-left:2px solid var(--red);}
+
+/* PIPL BOX */
+.pipl-box{background:var(--surface);padding:5mm 6mm;}
+.pipl-flow{display:flex;flex-direction:column;gap:2px;margin-bottom:3mm;}
+.pipl-step{display:grid;grid-template-columns:90px 1fr;gap:6px;
+  padding:4px 6px;align-items:center;}
+.pipl-step.ok{background:var(--green-bg);}
+.pipl-step.warn{background:var(--amber-bg);}
+.pipl-step.risk{background:var(--red-bg);}
+.pipl-label{font-family:var(--mono);font-size:7pt;font-weight:500;}
+.pipl-step.ok .pipl-label{color:var(--green);}
+.pipl-step.warn .pipl-label{color:var(--amber);}
+.pipl-step.risk .pipl-label{color:var(--red);}
+.pipl-desc{font-size:7.5pt;color:var(--ink);line-height:1.4;}
+
+/* TIER BOX */
+.tier-list{display:flex;flex-direction:column;gap:2px;}
+.tier-row{display:grid;grid-template-columns:70px 1fr;gap:6px;
+  align-items:start;padding:5px 8px;}
+.tier-row.cr{background:var(--green-bg);border-left:3px solid var(--green);}
+.tier-row.wk{background:var(--amber-bg);border-left:3px solid var(--amber);}
+.tier-row.st{background:var(--red-bg);border-left:3px solid var(--red);}
+.tier-name{font-family:var(--mono);font-size:7pt;font-weight:500;}
+.tier-row.cr .tier-name{color:var(--green);}
+.tier-row.wk .tier-name{color:var(--amber);}
+.tier-row.st .tier-name{color:var(--red);}
+.tier-action{font-size:7.5pt;color:var(--ink);line-height:1.4;}
+
+/* DIAGNOSTIC */
+.diag-box{background:var(--white);border:1px solid var(--border);padding:5mm 6mm;}
+.diag-list{display:flex;flex-direction:column;gap:3px;margin-bottom:3mm;}
+.diag-item{display:flex;gap:8px;align-items:flex-start;
+  padding:4px 0;border-bottom:1px solid var(--border);}
+.diag-item:last-child{border-bottom:none;}
+.diag-n{font-family:var(--mono);font-size:9pt;color:var(--border);
+  flex-shrink:0;width:16px;line-height:1.3;}
+.diag-text{font-size:7.5pt;color:var(--ink);line-height:1.4;}
+
+/* CTA */
+.cta-box{background:var(--white);border:1px solid var(--border);
+  border-left:4px solid var(--copper);padding:5mm 7mm;}
+.cta-title{font-family:var(--serif);font-size:11pt;color:var(--ink);
+  margin-bottom:2mm;line-height:1.2;}
+.cta-title em{color:var(--copper);font-style:italic;}
+.cta-desc{font-size:7.5pt;color:var(--muted);line-height:1.6;margin-bottom:3mm;}
+.cta-how{font-family:var(--mono);font-size:7pt;color:var(--night);
+  line-height:1.8;border-top:1px solid var(--border);padding-top:2mm;}
+
+/* FOOTER */
+.footer{margin-top:auto;padding-top:3mm;border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:flex-end;}
+.fl{font-size:7pt;color:var(--muted);line-height:1.7;}
+.fl strong{color:var(--ink);}
+.fr{text-align:right;font-family:var(--mono);font-size:7pt;
+  color:var(--muted);line-height:1.8;}
+.fr em{font-family:var(--serif);font-style:italic;font-size:8pt;
+  color:var(--muted);display:block;margin-top:1mm;}
+
+@media print{html,body{width:210mm;}}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- HEADER -->
+<div class="hdr">
+  <div>
+    <div class="brand">PLICA</div>
+    <div class="title">AI Fakes in Car Rental Insurance<br><em>The Document Layer Nobody Is Checking</em></div>
+    <div class="sub">Forensic evidence integrity · Claims fraud · Driver licence verification · Damage documentation</div>
+  </div>
+  <div class="hdr-r">
+    Independent Forensic Boutique<br>
+    ruslanm@plicaforensic.com<br>
+    plicaforensic.com · api.plicaforensic.com
+  </div>
+</div>
+
+<!-- HOOK -->
+<div class="hook">
+  <div class="hook-q">
+    A customer submits a driving licence and damage photos via your portal.<br>
+    <em>Can you prove the documents are what they claim to be — and that your pipeline didn't destroy the evidence before you checked?</em>
+  </div>
+  <div class="hook-stats">
+    <div class="stat">
+      <div class="stat-n red">11%</div>
+      <div class="stat-desc">of fraud now involves synthetic identity — 8× YoY growth (LexisNexis 2026)</div>
+    </div>
+    <div class="stat">
+      <div class="stat-n amber">$442B</div>
+      <div class="stat-desc">AI-enabled fraud losses globally (Interpol 2026)</div>
+    </div>
+    <div class="stat">
+      <div class="stat-n red">58%</div>
+      <div class="stat-desc">detection score on AI fake missed by standard KYC stack — real Plica case</div>
+    </div>
+    <div class="stat">
+      <div class="stat-n">blind</div>
+      <div class="stat-desc">spot: the document layer before your detector runs</div>
+    </div>
+  </div>
+</div>
+
+<!-- BODY -->
+<div class="body-grid">
+
+  <!-- LEFT -->
+  <div>
+    <div class="sec">Attack vectors — car rental insurance</div>
+    <table class="attack-table">
+      <thead>
+        <tr>
+          <th>Attack type</th>
+          <th>How it works</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>AI-generated licence</td>
+          <td>Synthetic driving licence passes basic OCR and face match. No physical sensor noise. No real device metadata.</td>
+        </tr>
+        <tr>
+          <td>Cloned metadata</td>
+          <td>AI-generated image with legitimate iPhone EXIF transplanted from a real photo. Standard detector sees "authentic" metadata.</td>
+        </tr>
+        <tr>
+          <td>AI damage photos</td>
+          <td>Generated or manipulated damage images submitted for claims. Pipeline recompression erases synthetic artifacts before review.</td>
+        </tr>
+        <tr>
+          <td>Synthetic identity</td>
+          <td>Fictitious driver with stitched identity attributes. Passes KYC onboarding. Rents vehicle. Disappears.</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="attack-note">
+      Standard KYC stacks score a pipeline derivative — not the original submission. By the time your detector runs, the forensic signals are gone.
+    </div>
+
+    <div style="margin-top:3mm;">
+      <div class="sec">Why your pipeline is the problem</div>
+      <div class="pipl-box">
+        <div class="pipl-flow">
+          <div class="pipl-step ok">
+            <div class="pipl-label">Upload</div>
+            <div class="pipl-desc">Original document — forensic signals intact</div>
+          </div>
+          <div class="pipl-step warn">
+            <div class="pipl-label">Mobile SDK</div>
+            <div class="pipl-desc">Resize + normalize — EXIF partially stripped</div>
+          </div>
+          <div class="pipl-step risk">
+            <div class="pipl-label">CDN / AV</div>
+            <div class="pipl-desc">Recompress + sanitize — hash changed, PRNU lost</div>
+          </div>
+          <div class="pipl-step risk">
+            <div class="pipl-label">Detector</div>
+            <div class="pipl-desc">Scores derivative — synthetic may look identical to degraded genuine</div>
+          </div>
+        </div>
+        <div style="font-size:7pt;color:var(--muted);line-height:1.5;">
+          Pipeline-Induced Provenance Loss (PIPL) — forensic signal destruction by ordinary engineering steps. Your infrastructure creates the blind spot your fraud team cannot see.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div>
+    <div class="sec">What Plica adds — provenance tiering</div>
+    <div class="tier-list" style="margin-bottom:3mm;">
+      <div class="tier-row cr">
+        <div class="tier-name">camera_rich</div>
+        <div class="tier-action">Physical capture signals intact. Genuine sensor noise present. Fast-path approval with documented evidence.</div>
+      </div>
+      <div class="tier-row wk">
+        <div class="tier-name">weak</div>
+        <div class="tier-action">Partial provenance. Likely channel degradation — WhatsApp, email. Secondary check before approval.</div>
+      </div>
+      <div class="tier-row st">
+        <div class="tier-name">sterile</div>
+        <div class="tier-action">No forensic origin signal. AI generation profile. Hold claim — request original or in-person verification.</div>
+      </div>
+    </div>
+    <div style="font-size:7.5pt;color:var(--muted);line-height:1.6;
+      padding:5px 8px;background:var(--surface);margin-bottom:3mm;">
+      Not a replacement for your KYC vendor. The <strong>object integrity layer beneath it</strong> — applied at intake before any pipeline operation.
+    </div>
+
+    <div class="sec">48-hour diagnostic — four questions</div>
+    <div class="diag-box">
+      <div class="diag-list">
+        <div class="diag-item">
+          <div class="diag-n">1</div>
+          <div class="diag-text">Is the original document preserved — or only a pipeline copy reaches your detector?</div>
+        </div>
+        <div class="diag-item">
+          <div class="diag-n">2</div>
+          <div class="diag-text">What transforms occur between upload and vendor API — and are they logged?</div>
+        </div>
+        <div class="diag-item">
+          <div class="diag-n">3</div>
+          <div class="diag-text">Can you reproduce a claims decision from 90 days ago and show what was examined?</div>
+        </div>
+        <div class="diag-item">
+          <div class="diag-n">4</div>
+          <div class="diag-text">Can you distinguish a synthetic document from a genuine one degraded by your own pipeline?</div>
+        </div>
+      </div>
+      <div style="font-family:var(--mono);font-size:7pt;color:var(--muted);
+        letter-spacing:0.08em;text-transform:uppercase;margin-bottom:3px;">Deliverable</div>
+      <div style="font-size:7.5pt;color:var(--ink);line-height:1.6;">
+        Workflow map · provenance tier mix · top gaps · 90-day fix roadmap
+      </div>
+    </div>
+
+    <div style="margin-top:3mm;">
+      <div class="cta-box">
+        <div class="cta-title">Intake Evidence Diagnostic —<br><em>48h · one workflow · fixed fee</em></div>
+        <div class="cta-desc">
+          Send 10 sample documents — licences, damage photos, or claims submissions. We return a signal-level breakdown of what your stack catches, misses, and where provenance breaks before your detector runs.
+        </div>
+        <div class="cta-how">
+          Try free: api.plicaforensic.com/try<br>
+          Contact: ruslanm@plicaforensic.com
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="fl">
+    <strong>Ruslan Mishyn</strong> · Founder · Plica · Independent Forensic Boutique<br>
+    ruslanm@plicaforensic.com · plicaforensic.com · sdb26.com
+  </div>
+  <div class="fr">
+    SDB-26 v1.1 · open benchmark · github.com/sevrusik/SDB26<br>
+    Not legal advice · Specification v0.1
+    <em>Truth lives in the layers.</em>
+  </div>
+</div>
+
+</div>
+</body>
+</html>

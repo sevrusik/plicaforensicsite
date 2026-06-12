@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plica — Independent Forensic Boutique</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  /* Base — warm stone */
+  --white:#F8F6F1;        /* stone off-white, not pure white */
+  --surface:#EFEDE6;      /* slightly cooler, card surfaces */
+  --cream:#E8E4DA;        /* deeper surface, alt sections */
+  --cream-mid:#E2DDD2;    /* hover states, subtle depth */
+
+  /* Text */
+  --ink:#1C1C1A;          /* charcoal, not pure black */
+  --muted:#6B6B63;        /* slate gray, warm undertone */
+  --border:#CEC9BC;       /* warm stone border */
+
+  /* Primary — deep teal */
+  --night:#1A3A3A;        /* deep teal / midnight teal */
+  --night-soft:#244F4F;   /* hover: slightly darker + cooler */
+  --night-deep:#122929;   /* active: deepest */
+
+  /* Signal — muted copper */
+  --copper:#8B5E3C;       /* muted copper, warm amber */
+  --copper-bg:#F5EDE4;    /* copper tint background */
+  --copper-border:#D4A882;/* copper border */
+
+  /* Legacy aliases for red/gold → copper */
+  --red:#8B5E3C;
+  --gold:#8B5E3C;
+
+  --serif:'DM Serif Display',Georgia,serif;
+  --mono:'DM Mono',monospace;--sans:'DM Sans',system-ui,sans-serif;
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--white);color:var(--ink);overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+
+
+/* THEME TOGGLE */
+.theme-btn{
+  width:36px;height:36px;border-radius:50%;border:1px solid var(--border);
+  background:var(--surface);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;transition:all 0.2s;flex-shrink:0;
+}
+.theme-btn:hover{background:var(--cream);border-color:var(--night);}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(248,246,241,0.96);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 48px;height:60px;}
+.nav-brand{font-family:var(--mono);font-size:13px;font-weight:500;
+  color:var(--night);letter-spacing:0.18em;text-decoration:none;}
+.nav-links{display:flex;gap:32px;list-style:none;}
+.nav-links a{font-size:13px;color:var(--muted);text-decoration:none;
+  letter-spacing:0.03em;transition:color 0.2s;}
+.nav-links a:hover{color:var(--ink);}
+.nav-right{display:flex;align-items:center;gap:16px;}
+.lang-switch{display:flex;gap:0;border:1px solid var(--border);overflow:hidden;}
+.lang-btn{font-family:var(--mono);font-size:11px;font-weight:500;
+  padding:6px 12px;background:transparent;border:none;cursor:pointer;
+  color:var(--muted);letter-spacing:0.06em;transition:all 0.15s;}
+.lang-btn.active{background:var(--night);color:white;}
+.lang-btn:hover:not(.active){background:var(--cream-mid);color:var(--ink);}
+.nav-cta{font-family:var(--mono);font-size:11px;font-weight:500;
+  color:var(--white);background:var(--night);
+  padding:9px 20px;text-decoration:none;letter-spacing:0.08em;
+  transition:background 0.2s;}
+.nav-cta:hover{background:var(--night-soft);}
+
+/* HERO */
+.hero{min-height:100vh;background:var(--white);
+  display:flex;align-items:center;padding:80px 48px;}
+.hero-inner{max-width:1200px;margin:0 auto;width:100%;
+  display:grid;grid-template-columns:1fr 480px;
+  gap:80px;align-items:center;}
+.hero-text{}
+.hero-visual{display:flex;align-items:center;justify-content:center;}
+.hero-pre{font-family:var(--mono);font-size:11px;color:var(--muted);
+  letter-spacing:0.18em;text-transform:uppercase;margin-bottom:32px;
+  display:flex;align-items:center;gap:12px;}
+.hero-pre::before{content:'';width:28px;height:1px;background:var(--border);}
+.hero-title{font-family:var(--serif);font-size:clamp(44px,6vw,76px);
+  line-height:1.02;color:var(--ink);margin-bottom:32px;letter-spacing:-0.01em;}
+.hero-title em{font-style:italic;color:var(--night);}
+.hero-body{font-size:18px;color:var(--muted);line-height:1.7;
+  max-width:600px;margin-bottom:16px;}
+.hero-tagline{font-family:var(--mono);font-size:12px;color:var(--muted);
+  letter-spacing:0.12em;margin-bottom:40px;}
+.hero-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+.btn-primary{font-family:var(--mono);font-size:11px;font-weight:500;
+  background:var(--night);color:var(--white);
+  padding:13px 28px;text-decoration:none;letter-spacing:0.1em;
+  transition:background 0.2s;}
+.btn-primary:hover{background:var(--night-soft);}
+.btn-secondary{font-family:var(--mono);font-size:11px;font-weight:500;
+  color:var(--night);border:1px solid var(--night);
+  padding:12px 28px;text-decoration:none;letter-spacing:0.1em;
+  transition:all 0.2s;}
+.btn-secondary:hover{background:var(--night);color:var(--white);}
+
+/* SECTIONS */
+section{padding:88px 48px;}
+.container{max-width:1100px;margin:0 auto;}
+.s-tag{font-family:var(--mono);font-size:10px;color:var(--muted);
+  letter-spacing:0.18em;text-transform:uppercase;margin-bottom:16px;
+  display:flex;align-items:center;gap:10px;}
+.s-tag::before{content:'';width:20px;height:1px;background:var(--border);}
+.s-title{font-family:var(--serif);font-size:clamp(28px,3.5vw,44px);
+  line-height:1.1;color:var(--ink);margin-bottom:48px;}
+.s-title em{font-style:italic;color:var(--night);}
+
+/* PROBLEM */
+#problem{background:var(--surface);}
+.problem-statement{font-size:17px;color:var(--muted);line-height:1.75;
+  max-width:680px;margin-bottom:48px;}
+.problem-statement strong{color:var(--ink);}
+.problem-verdict{font-family:var(--serif);font-size:22px;color:var(--ink);
+  line-height:1.4;border-left:3px solid var(--night);
+  padding-left:24px;max-width:560px;}
+
+/* MEASURE */
+#measure{background:var(--white);}
+.measure-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;}
+.measure-card{background:var(--surface);padding:32px 24px;
+  border-top:2px solid var(--border);transition:border-color 0.2s;}
+.measure-card:hover{border-top-color:var(--night);background:var(--white);}
+.mc-letter{font-family:var(--serif);font-size:44px;color:var(--night);
+  line-height:1;margin-bottom:12px;}
+.mc-word{font-family:var(--mono);font-size:9px;color:var(--muted);
+  letter-spacing:0.14em;text-transform:uppercase;margin-bottom:12px;}
+.mc-def{font-size:13px;color:var(--muted);line-height:1.65;}
+.measure-note{margin-top:24px;padding:20px 24px;
+  background:var(--copper-bg);border-left:3px solid var(--copper);
+  display:flex;align-items:center;gap:16px;}
+.measure-note p{font-size:14px;color:var(--muted);line-height:1.6;}
+.measure-note a{color:var(--night);font-family:var(--mono);font-size:12px;
+  text-decoration:none;white-space:nowrap;}
+
+/* ENGAGEMENTS */
+#engagements{background:var(--surface);}
+.eng-list{display:flex;flex-direction:column;gap:2px;}
+.eng-row{display:grid;grid-template-columns:140px 1fr 160px;
+  gap:0;background:var(--white);
+  border-left:3px solid transparent;transition:all 0.2s;}
+.eng-row:hover{border-left-color:var(--night);}
+.eng-phase{padding:32px 28px;border-right:1px solid var(--border);}
+.eng-phase-label{font-family:var(--mono);font-size:10px;color:var(--muted);
+  letter-spacing:0.12em;text-transform:uppercase;margin-bottom:6px;}
+.eng-phase-name{font-family:var(--serif);font-size:17px;color:var(--night);}
+.eng-body{padding:32px 40px;}
+.eng-title{font-family:var(--serif);font-size:20px;color:var(--ink);margin-bottom:10px;}
+.eng-desc{font-size:14px;color:var(--muted);line-height:1.7;}
+.eng-right{padding:32px 28px;border-left:1px solid var(--border);text-align:right;}
+.eng-scope{font-family:var(--mono);font-size:10px;color:var(--muted);
+  line-height:1.9;margin-bottom:12px;}
+.eng-price{font-family:var(--mono);font-size:11px;color:var(--night);
+  font-weight:500;letter-spacing:0.08em;text-transform:uppercase;
+  border-bottom:1px solid var(--night);padding-bottom:2px;display:inline-block;}
+
+/* WHO */
+#who{background:var(--white);}
+.who-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;}
+.who-card{padding:32px 28px;background:var(--surface);}
+.who-role{font-family:var(--mono);font-size:10px;color:var(--night);
+  letter-spacing:0.12em;text-transform:uppercase;margin-bottom:12px;font-weight:500;}
+.who-q{font-family:var(--serif);font-size:16px;color:var(--ink);
+  line-height:1.4;margin-bottom:10px;font-style:italic;}
+.who-a{font-size:13px;color:var(--muted);line-height:1.65;}
+
+/* ARTICLES */
+#articles{background:var(--cream);}
+.art-list{display:flex;flex-direction:column;gap:2px;}
+.art-card{display:grid;grid-template-columns:1fr 40px;gap:24px;
+  align-items:center;padding:28px 32px;background:var(--white);
+  border-left:3px solid transparent;text-decoration:none;transition:all 0.2s;}
+.art-card:hover{border-left-color:var(--night);}
+.art-tag{font-family:var(--mono);font-size:10px;color:var(--muted);
+  letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px;}
+.art-title{font-family:var(--serif);font-size:19px;color:var(--ink);
+  line-height:1.3;margin-bottom:8px;}
+.art-desc{font-size:13px;color:var(--muted);line-height:1.6;}
+.art-arrow{font-size:20px;color:var(--border);transition:color 0.2s;}
+.art-card:hover .art-arrow{color:var(--night);}
+
+/* FAQ */
+#faq{background:var(--white);}
+.faq-list{display:grid;grid-template-columns:1fr 1fr;gap:2px;}
+.faq-item{padding:28px;background:var(--surface);}
+.faq-q{font-family:var(--serif);font-size:16px;color:var(--ink);
+  margin-bottom:10px;line-height:1.3;}
+.faq-a{font-size:13px;color:var(--muted);line-height:1.7;}
+.faq-a a{color:var(--night);}
+
+/* CONNECT */
+#connect{background:var(--night-deep);padding:88px 48px;}
+#connect .container{display:grid;grid-template-columns:1fr 1fr;
+  gap:80px;align-items:start;}
+.conn-title{font-family:var(--serif);font-size:clamp(26px,3vw,40px);
+  color:var(--white);line-height:1.15;margin-bottom:20px;}
+.conn-title em{color:var(--gold);font-style:italic;}
+.conn-sub{font-size:14px;color:rgba(255,255,255,0.5);line-height:1.75;
+  margin-bottom:28px;}
+.conn-direct{font-family:var(--mono);font-size:11px;
+  color:rgba(255,255,255,0.3);font-style:italic;
+  border-top:1px solid rgba(255,255,255,0.08);padding-top:16px;}
+.conn-links{display:flex;flex-direction:column;gap:2px;}
+.conn-link{display:grid;grid-template-columns:52px 1fr;gap:16px;
+  align-items:center;padding:16px 20px;
+  background:rgba(255,255,255,0.05);text-decoration:none;
+  border:1px solid rgba(255,255,255,0.06);transition:all 0.2s;}
+.conn-link:hover{background:rgba(255,255,255,0.09);}
+.cl-icon{font-family:var(--mono);font-size:9px;color:var(--gold);
+  letter-spacing:0.1em;text-transform:uppercase;}
+.cl-text{font-size:14px;color:var(--white);}
+.cl-sub{font-family:var(--mono);font-size:10px;
+  color:rgba(255,255,255,0.3);margin-top:2px;}
+
+/* FOOTER */
+footer{background:var(--night-deep);border-top:1px solid rgba(255,255,255,0.06);
+  padding:20px 48px;display:flex;justify-content:space-between;align-items:center;}
+.footer-l,.footer-r{font-family:var(--mono);font-size:10px;
+  color:rgba(255,255,255,0.25);}
+
+@media(max-width:900px){
+  nav{padding:0 20px;}
+  .nav-links{display:none;}
+  section,#connect{padding:60px 24px;}
+  .hero{padding:80px 24px 60px;}
+  .hero-inner{grid-template-columns:1fr;}
+  .hero-visual{display:none;}
+  .measure-grid,.who-grid,.faq-list,
+  #connect .container{grid-template-columns:1fr;}
+  .eng-row{grid-template-columns:1fr;}
+  .eng-phase,.eng-right{border:none;padding:16px 24px;}
+  .eng-body{padding:0 24px 24px;}
+}
+
+/* Dark theme via JS class */
+html.dark{
+  --white:#1A1A17;
+  --surface:#222220;
+  --cream:#2A2A27;
+  --cream-mid:#313130;
+  --ink:#E8E6E0;
+  --muted:#9A9890;
+  --border:#3A3A36;
+  --night:#2A6666;
+  --night-soft:#337777;
+  --night-deep:#1A4444;
+  --copper:#A07040;
+  --copper-bg:#2A2218;
+  --copper-border:#6A4A28;
+  --red:#A07040;
+  --gold:#A07040;
+}
+html.dark nav{background:rgba(26,26,23,0.96) !important;}
+html.dark .eng-row{background:var(--surface);}
+html.dark .art-card{background:var(--surface);}
+
+/* Dark theme via system preference (when no manual override) */
+@media(prefers-color-scheme:dark){
+  html:not(.light):not(.dark){
+    --white:#1A1A17;
+    --surface:#222220;
+    --cream:#2A2A27;
+    --cream-mid:#313130;
+    --ink:#E8E6E0;
+    --muted:#9A9890;
+    --border:#3A3A36;
+    --night:#2A6666;
+    --night-soft:#337777;
+    --night-deep:#1A4444;
+    --copper:#A07040;
+    --copper-bg:#2A2218;
+    --copper-border:#6A4A28;
+    --red:#A07040;
+    --gold:#A07040;
+  }
+  html:not(.light):not(.dark) nav{background:rgba(26,26,23,0.96) !important;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-brand" href="#">PLICA</a>
+  <ul class="nav-links">
+    <li><a href="#problem" data-i18n="nav.problem">Problem</a></li>
+    <li><a href="#measure" data-i18n="nav.measure">Methodology</a></li>
+    <li><a href="#engagements" data-i18n="nav.engagements">Engagements</a></li>
+    <li><a href="#who" data-i18n="nav.who">Who it's for</a></li>
+    <li><a href="#articles" data-i18n="nav.writing">Writing</a></li>
+    <li><a href="#faq" data-i18n="nav.faq">FAQ</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="Toggle theme">☀️</button>
+    <div class="lang-switch">
+      <button class="lang-btn active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('ru')">RU</button>
+    </div>
+    <a class="nav-cta" href="mailto:ruslanm@plicaforensic.com" data-i18n="nav.cta">Book Phase 0 →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-pre" data-i18n="hero.pre">Independent Forensic Boutique · Larnaca, Cyprus</div>
+      <h1 class="hero-title" data-i18n-html="hero.title">AI makes decisions.<br><em>We make them defensible.</em></h1>
+      <p class="hero-body" data-i18n="hero.body">Plica is an independent forensic boutique for regulated file workflows. We audit the gap between the file your client submitted and the file your stack actually examined.</p>
+      <div class="hero-tagline" data-i18n="hero.tagline">Truth lives in the layers.</div>
+      <div class="hero-actions">
+        <a class="btn-primary" href="mailto:ruslanm@plicaforensic.com" data-i18n="hero.cta1">Book Phase 0 →</a>
+        <a class="btn-secondary" href="#measure" data-i18n="hero.cta2">Read the methodology</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <svg width="400" height="460" viewBox="0 0 400 460" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- Layer E bottom shadow -->
+  <rect x="52" y="388" width="296" height="8" rx="4" fill="var(--border)" opacity="0.4"/>
+
+  <!-- Layer E — A · Authenticity -->
+  <rect x="44" y="356" width="296" height="80" rx="3" fill="var(--night)" stroke="var(--border)" stroke-width="1"/>
+  <text x="60" y="376" font-family="DM Mono,monospace" font-size="8" fill="rgba(255,255,255,0.35)" letter-spacing="2">A · AUTHENTICITY</text>
+  <rect x="60" y="384" width="72" height="20" rx="2" fill="var(--night-soft)"/>
+  <text x="68" y="398" font-family="DM Mono,monospace" font-size="9" fill="white" letter-spacing="1">GENUINE</text>
+  <rect x="140" y="384" width="60" height="20" rx="2" fill="rgba(255,255,255,0.06)"/>
+  <text x="148" y="398" font-family="DM Mono,monospace" font-size="9" fill="rgba(255,255,255,0.35)">0.84 conf</text>
+  <rect x="60" y="414" width="180" height="3" rx="1" fill="rgba(255,255,255,0.08)"/>
+  <rect x="60" y="414" width="151" height="3" rx="1" fill="var(--night-soft)"/>
+  <text x="246" y="418" font-family="DM Mono,monospace" font-size="8" fill="rgba(255,255,255,0.3)">84%</text>
+
+  <!-- Layer D — C · Consistency -->
+  <rect x="28" y="272" width="296" height="76" rx="3" fill="var(--cream-mid)" stroke="var(--border)" stroke-width="1"/>
+  <text x="44" y="292" font-family="DM Mono,monospace" font-size="8" fill="var(--muted)" letter-spacing="2">C · CONSISTENCY</text>
+  <rect x="44" y="300" width="64" height="18" rx="2" fill="var(--surface)"/>
+  <text x="51" y="313" font-family="DM Mono,monospace" font-size="8" fill="var(--night)">metadata</text>
+  <rect x="116" y="300" width="48" height="18" rx="2" fill="var(--surface)"/>
+  <text x="122" y="313" font-family="DM Mono,monospace" font-size="8" fill="var(--night)">sensor</text>
+  <rect x="172" y="300" width="48" height="18" rx="2" fill="var(--surface)"/>
+  <text x="178" y="313" font-family="DM Mono,monospace" font-size="8" fill="var(--night)">dct hist</text>
+  <text x="44" y="336" font-family="DM Mono,monospace" font-size="8" fill="var(--muted)">layers_agree:</text>
+  <text x="130" y="336" font-family="DM Mono,monospace" font-size="8" fill="var(--night)">true</text>
+  <circle cx="270" cy="332" r="4" fill="var(--night-soft)" opacity="0.5"/>
+  <circle cx="284" cy="332" r="4" fill="var(--night-soft)" opacity="0.7"/>
+  <circle cx="298" cy="332" r="4" fill="var(--night-soft)"/>
+
+  <!-- Layer C — I · Integrity -->
+  <rect x="14" y="188" width="296" height="76" rx="3" fill="var(--surface)" stroke="var(--border)" stroke-width="1"/>
+  <text x="30" y="208" font-family="DM Mono,monospace" font-size="8" fill="var(--muted)" letter-spacing="2">I · INTEGRITY</text>
+  <!-- FFT bars -->
+  <rect x="30" y="218" width="3" height="18" rx="1" fill="var(--night)" opacity="0.3"/>
+  <rect x="36" y="213" width="3" height="23" rx="1" fill="var(--night)" opacity="0.5"/>
+  <rect x="42" y="208" width="3" height="28" rx="1" fill="var(--night)" opacity="0.7"/>
+  <rect x="48" y="214" width="3" height="22" rx="1" fill="var(--night)" opacity="0.5"/>
+  <rect x="54" y="220" width="3" height="16" rx="1" fill="var(--night)" opacity="0.3"/>
+  <text x="30" y="252" font-family="DM Mono,monospace" font-size="7" fill="var(--muted)">FFT analysis</text>
+  <!-- PRNU bar -->
+  <text x="80" y="228" font-family="DM Mono,monospace" font-size="8" fill="var(--muted)">PRNU corr</text>
+  <rect x="80" y="234" width="140" height="3" rx="1" fill="var(--border)"/>
+  <rect x="80" y="234" width="112" height="3" rx="1" fill="var(--copper)"/>
+  <!-- FRC -->
+  <text x="30" y="254" font-family="DM Mono,monospace" font-size="7" fill="var(--copper)">FRC-L1-FFT-GRID · FRC-L1-PRNU-ABSENT</text>
+
+  <!-- Layer B — L · Lineage -->
+  <rect x="6" y="104" width="296" height="76" rx="3" fill="var(--white)" stroke="var(--border)" stroke-width="1"/>
+  <text x="22" y="124" font-family="DM Mono,monospace" font-size="8" fill="var(--muted)" letter-spacing="2">L · LINEAGE</text>
+  <!-- transform chain -->
+  <rect x="22" y="132" width="48" height="18" rx="2" fill="var(--surface)"/>
+  <text x="28" y="145" font-family="DM Mono,monospace" font-size="8" fill="var(--ink)">intake</text>
+  <text x="74" y="145" font-family="DM Mono,monospace" font-size="10" fill="var(--border)">→</text>
+  <rect x="86" y="132" width="44" height="18" rx="2" fill="var(--copper-bg)" stroke="var(--copper)" stroke-width="1"/>
+  <text x="91" y="145" font-family="DM Mono,monospace" font-size="8" fill="var(--copper)">resize</text>
+  <text x="134" y="145" font-family="DM Mono,monospace" font-size="10" fill="var(--border)">→</text>
+  <rect x="146" y="132" width="52" height="18" rx="2" fill="var(--copper-bg)" stroke="var(--copper)" stroke-width="1"/>
+  <text x="150" y="145" font-family="DM Mono,monospace" font-size="8" fill="var(--copper)">recompr</text>
+  <!-- hashes -->
+  <text x="22" y="164" font-family="DM Mono,monospace" font-size="7.5" fill="var(--muted)">sha256_intake:</text>
+  <text x="116" y="164" font-family="DM Mono,monospace" font-size="7.5" fill="var(--night)">a3f7c291…</text>
+  <text x="22" y="176" font-family="DM Mono,monospace" font-size="7.5" fill="var(--muted)">sha256_analysis:</text>
+  <text x="128" y="176" font-family="DM Mono,monospace" font-size="7.5" fill="var(--copper)">t7u6v5w4…</text>
+
+  <!-- Layer A top — P · Provenance (the document) -->
+  <rect x="0" y="0" width="296" height="96" rx="3" fill="var(--white)" stroke="var(--border)" stroke-width="1.5"/>
+  <rect x="0" y="0" width="296" height="28" rx="3" fill="var(--night)"/>
+  <rect x="0" y="20" width="296" height="8" fill="var(--night)"/>
+  <text x="16" y="18" font-family="DM Mono,monospace" font-size="8.5" fill="rgba(255,255,255,0.8)" letter-spacing="2">P · PROVENANCE</text>
+  <!-- document fields -->
+  <rect x="16" y="36" width="80" height="7" rx="1" fill="var(--border)"/>
+  <rect x="16" y="50" width="120" height="7" rx="1" fill="var(--cream-mid)"/>
+  <rect x="16" y="64" width="96" height="7" rx="1" fill="var(--cream-mid)"/>
+  <!-- sterility badge -->
+  <rect x="210" y="34" width="70" height="20" rx="2" fill="var(--copper-bg)"/>
+  <text x="216" y="48" font-family="DM Mono,monospace" font-size="7.5" fill="var(--copper)">sterility: 0.12</text>
+  <!-- exif line -->
+  <text x="16" y="86" font-family="DM Mono,monospace" font-size="7" fill="var(--muted)">Make: Apple · Model: iPhone 15 · GPS: ✓</text>
+
+  <!-- Vertical connector line -->
+  <line x1="148" y1="96" x2="148" y2="104" stroke="var(--border)" stroke-width="1" stroke-dasharray="3,2"/>
+  <line x1="148" y1="180" x2="148" y2="188" stroke="var(--border)" stroke-width="1" stroke-dasharray="3,2"/>
+  <line x1="148" y1="264" x2="148" y2="272" stroke="var(--border)" stroke-width="1" stroke-dasharray="3,2"/>
+  <line x1="148" y1="348" x2="148" y2="356" stroke="var(--border)" stroke-width="1" stroke-dasharray="3,2"/>
+
+</svg>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="container">
+    <div class="s-tag" data-i18n="problem.tag">The problem</div>
+    <h2 class="s-title" data-i18n-html="problem.title">The detector sees a copy.<br><em>Not the original.</em></h2>
+    <p class="problem-statement" data-i18n-html="problem.body">Most KYC teams believe they verify the customer's file. In reality, the detector often sees a pipeline copy — already resized, recompressed, normalised, or sanitised by the intake stack.<br><br>That means the verdict may be valid for the derivative object — but <strong>not defensible for the original evidence.</strong></p>
+    <blockquote class="problem-verdict" data-i18n="problem.verdict">"Show me exactly what you examined in that document — and prove it." When that question arrives from a regulator, a confidence score is not an answer.</blockquote>
+  </div>
+</section>
+
+<!-- MEASURE -->
+<section id="measure">
+  <div class="container">
+    <div class="s-tag" data-i18n="measure.tag">What we measure</div>
+    <h2 class="s-title">P · L · I · C · A</h2>
+    <div class="measure-grid">
+      <div class="measure-card">
+        <div class="mc-letter">P</div>
+        <div class="mc-word" data-i18n="m.p.word">Provenance</div>
+        <p class="mc-def" data-i18n="m.p.def">Where the file came from. Does its digital biography match what was claimed?</p>
+      </div>
+      <div class="measure-card">
+        <div class="mc-letter">L</div>
+        <div class="mc-word" data-i18n="m.l.word">Lineage</div>
+        <p class="mc-def" data-i18n="m.l.def">What changed before the decision. Every pipeline transform — logged with before/after hash.</p>
+      </div>
+      <div class="measure-card">
+        <div class="mc-letter">I</div>
+        <div class="mc-word" data-i18n="m.i.word">Integrity</div>
+        <p class="mc-def" data-i18n="m.i.def">What physical signals survived. PRNU, DCT, FFT — the signals that distinguish a camera from a generator.</p>
+      </div>
+      <div class="measure-card">
+        <div class="mc-letter">C</div>
+        <div class="mc-word" data-i18n="m.c.word">Consistency</div>
+        <p class="mc-def" data-i18n="m.c.def">Whether signal layers agree. Metadata vs. sensor physics vs. compression history.</p>
+      </div>
+      <div class="measure-card">
+        <div class="mc-letter">A</div>
+        <div class="mc-word" data-i18n="m.a.word">Authenticity</div>
+        <p class="mc-def" data-i18n="m.a.def">Whether the result can be defended under scrutiny. Reproducible verdict, 90 days later.</p>
+      </div>
+    </div>
+    <div class="measure-note">
+      <p data-i18n="measure.note">Formalised in <strong>SDB-26</strong> — an open benchmark framework for measuring synthetic document bypass rate. Published under CC BY 4.0.</p>
+      <a href="https://github.com/sevrusik/SDB26" target="_blank">sdb26.com →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ENGAGEMENTS -->
+<section id="engagements">
+  <div class="container">
+    <div class="s-tag" data-i18n="eng.tag">Engagements</div>
+    <h2 class="s-title" data-i18n-html="eng.title">Four entry points.<br><em>One ladder.</em></h2>
+    <div class="eng-list">
+      <div class="eng-row">
+        <div class="eng-phase">
+          <div class="eng-phase-label" data-i18n="eng.e1.label">Phase 0</div>
+          <div class="eng-phase-name" data-i18n="eng.e1.name">Quick Scan</div>
+        </div>
+        <div class="eng-body">
+          <div class="eng-title" data-i18n="eng.e1.title">48-hour evidence review.</div>
+          <p class="eng-desc" data-i18n="eng.e1.desc">Send a ZIP of labelled document images. We return a signal-level breakdown of what your current stack catches, what it misses, and where provenance breaks. No infrastructure, no PII, no commitment.</p>
+        </div>
+        <div class="eng-right">
+          <div class="eng-scope" data-i18n="eng.e1.scope">≤ 100 files<br>48h turnaround<br>JPEG · PNG · WebP</div>
+          <div class="eng-price" data-i18n="eng.e1.price">Contact us</div>
+        </div>
+      </div>
+      <div class="eng-row">
+        <div class="eng-phase">
+          <div class="eng-phase-label" data-i18n="eng.e15.label">Scan</div>
+          <div class="eng-phase-name" data-i18n="eng.e15.name">Trust Readiness</div>
+        </div>
+        <div class="eng-body">
+          <div class="eng-title" data-i18n="eng.e15.title">Trust Readiness Scan.</div>
+          <p class="eng-desc" data-i18n="eng.e15.desc">Fast assessment of where your AI-enabled workflow may be exposed to regulatory, control, and evidence-trail risk. One workflow, one stakeholder call, executive brief. Fixed scope, fixed price.</p>
+        </div>
+        <div class="eng-right">
+          <div class="eng-scope" data-i18n="eng.e15.scope">1 workflow
+1–2 days
+45 min readout call</div>
+          <div class="eng-price" data-i18n="eng.e15.price">Contact us</div>
+        </div>
+      </div>
+
+      <div class="eng-row">
+        <div class="eng-phase">
+          <div class="eng-phase-label" data-i18n="eng.e2.label">Phase 1</div>
+          <div class="eng-phase-name" data-i18n="eng.e2.name">Full Audit</div>
+        </div>
+        <div class="eng-body">
+          <div class="eng-title" data-i18n="eng.e2.title">Evidence Pipeline Audit.</div>
+          <p class="eng-desc" data-i18n="eng.e2.desc">We map upload → pipeline → decision and show where the file stops being what your client submitted. Transform log design, hash chain repair, audit trail gap report. Three deliverables: ops, audit, board.</p>
+        </div>
+        <div class="eng-right">
+          <div class="eng-scope" data-i18n="eng.e2.scope">10–14 days<br>50–150 files<br>DPA required</div>
+          <div class="eng-price" data-i18n="eng.e2.price">Contact us</div>
+        </div>
+      </div>
+      <div class="eng-row">
+        <div class="eng-phase">
+          <div class="eng-phase-label" data-i18n="eng.e3.label">Ongoing</div>
+          <div class="eng-phase-name" data-i18n="eng.e3.name">Retainer</div>
+        </div>
+        <div class="eng-body">
+          <div class="eng-title" data-i18n="eng.e3.title">Quarterly Forensic Baseline Review.</div>
+          <p class="eng-desc" data-i18n="eng.e3.desc">When your KYC vendor updates their model, you'll know what changed in FPR and bypass rate within the same week — not when a regulator asks.</p>
+        </div>
+        <div class="eng-right">
+          <div class="eng-scope" data-i18n="eng.e3.scope">Quarterly<br>Your corpus + SDB-26<br>Alert same week</div>
+          <div class="eng-price" data-i18n="eng.e3.price">Contact us</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO -->
+<section id="who">
+  <div class="container">
+    <div class="s-tag" data-i18n="who.tag">Who it's for</div>
+    <h2 class="s-title" data-i18n-html="who.title">The question changes<br><em>by role.</em></h2>
+    <div class="who-grid">
+      <div class="who-card">
+        <div class="who-role">MLRO · Head of Compliance</div>
+        <div class="who-q" data-i18n="who.w1.q">"If a regulator asks what we examined — can we show more than a vendor PASS?"</div>
+        <p class="who-a" data-i18n="who.w1.a">Plica produces a structured evidence record per decision — FRC reason codes, intake hash, transform log. Reproducible. Citable in regulatory review.</p>
+      </div>
+      <div class="who-card">
+        <div class="who-role">Head of Fraud · CTO</div>
+        <div class="who-q" data-i18n="who.w2.q">"Where in our pipeline does synthetic content pass undetected?"</div>
+        <p class="who-a" data-i18n="who.w2.a">We measure bypass rate by generator, attack level, and pipeline stage. You see exactly where the gap is — before the next incident.</p>
+      </div>
+      <div class="who-card">
+        <div class="who-role">CRO · Legal · Board</div>
+        <div class="who-q" data-i18n="who.w3.q">"What is our actual exposure if an approved file turns out to be synthetic?"</div>
+        <p class="who-a" data-i18n="who.w3.a">We quantify the evidence gap — what fraction of past decisions can be reconstructed to original upload — and what it takes to close it.</p>
+      </div>
+      <div class="who-card">
+        <div class="who-role">Founder · Startup · Small Fintech</div>
+        <div class="who-q" data-i18n="who.w4.q">"We use AI in onboarding but have no idea what our pipeline does to documents before the model sees them."</div>
+        <p class="who-a" data-i18n="who.w4.a">Trust Readiness Scan gives you a fast, fixed-scope answer: where provenance breaks, what signals are lost, and what to fix first. No enterprise contract required.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARTICLES -->
+<section id="articles">
+  <div class="container">
+    <div class="s-tag" data-i18n="art.tag">Writing</div>
+    <h2 class="s-title" data-i18n-html="art.title">From the field.<br><em>On Medium.</em></h2>
+    <div class="art-list">
+      <a class="art-card" href="https://medium.com/@sevrusik/the-synthetic-feedback-loop-bbb5c50da4bf" target="_blank" rel="noopener">
+        <div>
+          <div class="art-tag" data-i18n="art.a1.tag">May 2026 · Evidence Integrity</div>
+          <div class="art-title" data-i18n="art.a1.title">The Synthetic Feedback Loop: Why Text Audit Can't Catch What Physics Reveals</div>
+          <p class="art-desc" data-i18n="art.a1.desc">The EY case and the harder version of the problem: source documents that are text-valid but physics-invalid.</p>
+        </div>
+        <div class="art-arrow">→</div>
+      </a>
+      <a class="art-card" href="https://medium.com/@sevrusik/what-your-file-verification-data-is-not-telling-you-a-lesson-from-abraham-wald-72fbc88a39c2" target="_blank" rel="noopener">
+        <div>
+          <div class="art-tag" data-i18n="art.a2.tag">May 2026 · KYC · Compliance</div>
+          <div class="art-title" data-i18n="art.a2.title">What Your File Verification Data Is Not Telling You: A Lesson from Abraham Wald</div>
+          <p class="art-desc" data-i18n="art.a2.desc">Survivorship bias in document workflows — the three gaps standard KYC metrics systematically miss.</p>
+        </div>
+        <div class="art-arrow">→</div>
+      </a>
+      <a class="art-card" href="https://medium.com/@sevrusik" target="_blank" rel="noopener">
+        <div>
+          <div class="art-tag" data-i18n="art.a3.tag">May 2026 · Agent-to-Agent · KYC</div>
+          <div class="art-title" data-i18n="art.a3.title">What Is a VEBA — and Why Your AI Agents Need One</div>
+          <p class="art-desc" data-i18n="art.a3.desc">The file an agent receives is not evidence. It is a submission. Without provenance, it is a black box — and a black box is an attack surface.</p>
+        </div>
+        <div class="art-arrow">→</div>
+      </a>
+      <a class="art-card" href="https://medium.com/@sevrusik" target="_blank" rel="noopener">
+        <div>
+          <div class="art-tag" data-i18n="art.a4.tag">May 2026 · Pipeline · Forensics</div>
+          <div class="art-title" data-i18n="art.a4.title">What Transmission Channels Secretly Do to Your Documents</div>
+          <p class="art-desc" data-i18n="art.a4.desc">WhatsApp, email gateways, CDN — each one rewrites the file before your detector sees it. One passport. One iPhone. Two paths. Two different objects.</p>
+        </div>
+        <div class="art-arrow">→</div>
+      </a>
+      <a class="art-card" href="https://medium.com/@sevrusik" target="_blank" rel="noopener">
+        <div>
+          <div class="art-tag" data-i18n="art.a5.tag">May 2026 · Trust · Provenance</div>
+          <div class="art-title" data-i18n="art.a5.title">A Document Is Not Only Judged by What It Says</div>
+          <p class="art-desc" data-i18n="art.a5.desc">AI authorship changes how people perceive texts. AI mediation changes how institutions perceive documents. The deeper shift: authenticity is now about lineage, not content.</p>
+        </div>
+        <div class="art-arrow">→</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="container">
+    <div class="s-tag" data-i18n="faq.tag">FAQ</div>
+    <h2 class="s-title" data-i18n="faq.title">Before you reach out.</h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q" data-i18n="faq.q1">Does Plica replace our KYC vendor?</div>
+        <p class="faq-a" data-i18n="faq.a1">No. Plica is an independent forensic layer — not a replacement for Sumsub, Onfido, or Veriff. We audit what they produce and the pipeline that feeds them.</p>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" data-i18n="faq.q2">What file types does Phase 0 accept?</div>
+        <p class="faq-a" data-i18n="faq.a2">JPEG, PNG, WebP. No real PII at Phase 0 — use anonymised or synthetic labelled samples. PDF and video from Phase 1.</p>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" data-i18n="faq.q3">Do you sign NDA before Phase 1?</div>
+        <p class="faq-a" data-i18n="faq.a3">Yes. Phase 1 requires mutual NDA, DPA, agreed retention limits, and subprocessor disclosure before any data transfer. We prepare standard templates.</p>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" data-i18n="faq.q4">Who should we put you in touch with?</div>
+        <p class="faq-a" data-i18n="faq.a4">MLRO, Head of Compliance, Head of Fraud, or CRO — whoever owns the KYC decision process and has visibility into vendor contracts and audit obligations.</p>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" data-i18n="faq.q5">We already have a KYC vendor. Is this relevant?</div>
+        <p class="faq-a" data-i18n="faq.a5">Especially then. The gap Plica addresses is in the pipeline before the vendor, and in the evidence record after. Vendors don't certify their own decisions. We do — independently.</p>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" data-i18n="faq.q7">Does this help with EU AI Act compliance?</div>
+        <p class="faq-a" data-i18n="faq.a7">Phase 0 and the Trust Readiness Scan map your current workflow against Article 16 audit trail obligations — showing where evidence integrity gaps exist before a regulator asks. We assess the object layer: what the system examined, not just how the system was built.</p>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" data-i18n="faq.q6">What is SDB-26?</div>
+        <p class="faq-a" data-i18n="faq.a6">An open benchmark framework for measuring synthetic document bypass rate. Published on GitHub under CC BY 4.0. P-L-I-C-A and FRC reason codes are formalised there. <a href="https://sdb26.com">sdb26.com →</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONNECT -->
+<section id="connect">
+  <div class="container">
+    <div>
+      <h2 class="conn-title" data-i18n-html="connect.title">If the question is<br><em>"can we prove it"</em> —</h2>
+      <p class="conn-sub" data-i18n="connect.sub">Start with Phase 0. 48-hour turnaround. Send a ZIP of labelled document images. We return a signal-level breakdown — what your stack catches, what it misses, where provenance breaks.</p>
+      <p class="conn-direct" data-i18n="connect.direct">We'll be direct if we can help — and equally direct if we can't.</p>
+    </div>
+    <div class="conn-links">
+      <a class="conn-link" href="mailto:ruslanm@plicaforensic.com">
+        <div class="cl-icon">Email</div>
+        <div><div class="cl-text">ruslanm@plicaforensic.com</div><div class="cl-sub" data-i18n="connect.email_sub">Phase 0 · scoping call · any question</div></div>
+      </a>
+      <a class="conn-link" href="https://plicaforensic.com" target="_blank">
+        <div class="cl-icon">Web</div>
+        <div><div class="cl-text">plicaforensic.com</div><div class="cl-sub" data-i18n="connect.web_sub">Documentation · SDB-26 · engagements</div></div>
+      </a>
+      <a class="conn-link" href="https://github.com/sevrusik/SDB26" target="_blank">
+        <div class="cl-icon">GitHub</div>
+        <div><div class="cl-text">SDB-26</div><div class="cl-sub">CC BY 4.0 · open benchmark framework</div></div>
+      </a>
+      <a class="conn-link" href="https://linkedin.com/in/mishyn-ruslan" target="_blank">
+        <div class="cl-icon">LI</div>
+        <div><div class="cl-text">Ruslan Mishyn</div><div class="cl-sub">linkedin.com/in/mishyn-ruslan</div></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-l">Plica · Independent Forensic Boutique · Larnaca, Cyprus · ruslanm@plicaforensic.com</div>
+  <div class="footer-r">SDB-26 v1.0.12 · plicaforensic.com · Truth lives in the layers.</div>
+</footer>
+
+<script>
+const i18n = {
+  en: {
+    'nav.problem':'Problem','nav.measure':'Methodology','nav.engagements':'Engagements',
+    'nav.who':"Who it's for",'nav.writing':'Writing','nav.faq':'FAQ','nav.cta':'Book Phase 0 →',
+    'hero.pre':'Independent Forensic Boutique · Larnaca, Cyprus',
+    'hero.title':'AI makes decisions.<br><em>We make them defensible.</em>',
+    'hero.body':'Plica is an independent forensic boutique for regulated file workflows. We audit the gap between the file your client submitted and the file your stack actually examined.',
+    'hero.tagline':'Truth lives in the layers.',
+    'hero.cta1':'Book Phase 0 →','hero.cta2':'Read the methodology',
+    'problem.tag':'The problem',
+    'problem.title':'The detector sees a copy.<br><em>Not the original.</em>',
+    'problem.body':'Most KYC teams believe they verify the customer\'s file. In reality, the detector often sees a pipeline copy — already resized, recompressed, normalised, or sanitised by the intake stack.<br><br>That means the verdict may be valid for the derivative object — but <strong>not defensible for the original evidence.</strong>',
+    'problem.verdict':'"Show me exactly what you examined in that document — and prove it." When that question arrives from a regulator, a confidence score is not an answer.',
+    'measure.tag':'What we measure',
+    'm.p.word':'Provenance','m.p.def':'Where the file came from. Does its digital biography match what was claimed?',
+    'm.l.word':'Lineage','m.l.def':'What changed before the decision. Every pipeline transform — logged with before/after hash.',
+    'm.i.word':'Integrity','m.i.def':'What physical signals survived. PRNU, DCT, FFT — the signals that distinguish a camera from a generator.',
+    'm.c.word':'Consistency','m.c.def':'Whether signal layers agree. Metadata vs. sensor physics vs. compression history.',
+    'm.a.word':'Authenticity','m.a.def':'Whether the result can be defended under scrutiny. Reproducible verdict, 90 days later.',
+    'measure.note':'Formalised in <strong>SDB-26</strong> — an open benchmark framework for measuring synthetic document bypass rate. Published under CC BY 4.0.',
+    'eng.tag':'Engagements',
+    'eng.title':'Four entry points.<br><em>One ladder.</em>',
+    'eng.e15.label':'Scan','eng.e15.name':'Trust Readiness','eng.e15.title':'Trust Readiness Scan.',
+    'eng.e15.desc':'Fast assessment of where your AI-enabled workflow may be exposed to regulatory, control, and evidence-trail risk. One workflow, one stakeholder call, executive brief. Fixed scope, fixed price.',
+    'eng.e15.scope':'1 workflow\n1–2 days\n45 min readout call','eng.e15.price':'Contact us',
+    'eng.e1.label':'Phase 0','eng.e1.name':'Quick Scan','eng.e1.title':'48-hour evidence review.',
+    'eng.e1.desc':'Send a ZIP of labelled document images. We return a signal-level breakdown of what your current stack catches, what it misses, and where provenance breaks. No infrastructure, no PII, no commitment.',
+    'eng.e1.scope':'≤ 100 files\n48h turnaround\nJPEG · PNG · WebP','eng.e1.price':'Contact us',
+    'eng.e2.label':'Phase 1','eng.e2.name':'Full Audit','eng.e2.title':'Evidence Pipeline Audit.',
+    'eng.e2.desc':'We map upload → pipeline → decision and show where the file stops being what your client submitted. Transform log design, hash chain repair, audit trail gap report. Three deliverables: ops, audit, board.',
+    'eng.e2.scope':'10–14 days\n50–150 files\nDPA required','eng.e2.price':'Contact us',
+    'eng.e3.label':'Ongoing','eng.e3.name':'Retainer','eng.e3.title':'Quarterly Forensic Baseline Review.',
+    'eng.e3.desc':"When your KYC vendor updates their model, you'll know what changed in FPR and bypass rate within the same week — not when a regulator asks.",
+    'eng.e3.scope':'Quarterly\nYour corpus + SDB-26\nAlert same week','eng.e3.price':'Contact us',
+    'who.tag':"Who it's for",'who.title':'The question changes<br><em>by role.</em>',
+    'who.w1.q':'"If a regulator asks what we examined — can we show more than a vendor PASS?"',
+    'who.w1.a':'Plica produces a structured evidence record per decision — FRC reason codes, intake hash, transform log. Reproducible. Citable in regulatory review.',
+    'who.w2.q':'"Where in our pipeline does synthetic content pass undetected?"',
+    'who.w2.a':'We measure bypass rate by generator, attack level, and pipeline stage. You see exactly where the gap is — before the next incident.',
+    'who.w3.q':'"What is our actual exposure if an approved file turns out to be synthetic?"',
+    'who.w4.q':'"We use AI in onboarding but have no idea what our pipeline does to documents before the model sees them."',
+    'who.w4.a':'Trust Readiness Scan gives you a fast, fixed-scope answer: where provenance breaks, what signals are lost, and what to fix first. No enterprise contract required.',
+    'who.w3.a':'We quantify the evidence gap — what fraction of past decisions can be reconstructed to original upload — and what it takes to close it.',
+    'art.tag':'Writing','art.title':'From the field.<br><em>Eight articles on Medium.</em>',
+    'art.a1.tag':'May 2026 · Evidence Integrity',
+    'art.a1.title':"The Synthetic Feedback Loop: Why Text Audit Can't Catch What Physics Reveals",
+    'art.a1.desc':'The EY case and the harder version of the problem: source documents that are text-valid but physics-invalid.',
+    'art.a2.tag':'May 2026 · KYC · Compliance',
+    'art.a2.title':'What Your File Verification Data Is Not Telling You: A Lesson from Abraham Wald',
+    'art.a3.tag':'May 2026 · Agent-to-Agent · KYC',
+    'art.a3.title':'What Is a VEBA — and Why Your AI Agents Need One',
+    'art.a3.desc':'The file an agent receives is not evidence. It is a submission. Without provenance, it is a black box — and a black box is an attack surface.',
+    'art.a4.tag':'May 2026 · Pipeline · Forensics',
+    'art.a4.title':'What Transmission Channels Secretly Do to Your Documents',
+    'art.a4.desc':'WhatsApp, email gateways, CDN — each one rewrites the file before your detector sees it. One passport. One iPhone. Two paths. Two different objects.',
+    'art.a5.tag':'May 2026 · Trust · Provenance',
+    'art.a5.title':'A Document Is Not Only Judged by What It Says',
+    'art.a5.desc':'AI authorship changes how people perceive texts. AI mediation changes how institutions perceive documents. The deeper shift: authenticity is now about lineage, not content.',
+    'art.a2.desc':'Survivorship bias in document workflows — the three gaps standard KYC metrics systematically miss.',
+    'faq.tag':'FAQ','faq.title':'Before you reach out.',
+    'faq.q1':'Does Plica replace our KYC vendor?',
+    'faq.a1':'No. Plica is an independent forensic layer — not a replacement for Sumsub, Onfido, or Veriff. We audit what they produce and the pipeline that feeds them.',
+    'faq.q2':'What file types does Phase 0 accept?',
+    'faq.a2':'JPEG, PNG, WebP. No real PII at Phase 0 — use anonymised or synthetic labelled samples. PDF and video from Phase 1.',
+    'faq.q3':'Do you sign NDA before Phase 1?',
+    'faq.a3':'Yes. Phase 1 requires mutual NDA, DPA, agreed retention limits, and subprocessor disclosure before any data transfer. We prepare standard templates.',
+    'faq.q4':'Who should we put you in touch with?',
+    'faq.a4':'MLRO, Head of Compliance, Head of Fraud, or CRO — whoever owns the KYC decision process and has visibility into vendor contracts and audit obligations.',
+    'faq.q5':'We already have a KYC vendor. Is this relevant?',
+    'faq.a5':"Especially then. The gap Plica addresses is in the pipeline before the vendor, and in the evidence record after. Vendors don't certify their own decisions. We do — independently.",
+    'faq.q7':'Does this help with EU AI Act compliance?',
+    'faq.a7':'Phase 0 and the Trust Readiness Scan map your current workflow against Article 16 audit trail obligations — showing where evidence integrity gaps exist before a regulator asks. We assess the object layer: what the system examined, not just how the system was built.',
+    'faq.q6':'What is SDB-26?',
+    'faq.a6':'An open benchmark framework for measuring synthetic document bypass rate. Published on GitHub under CC BY 4.0. P-L-I-C-A and FRC reason codes are formalised there. <a href="https://sdb26.com">sdb26.com →</a>',
+    'connect.title':'If the question is<br><em>"can we prove it"</em> —',
+    'connect.sub':'Start with Phase 0. 48-hour turnaround. Send a ZIP of labelled document images. We return a signal-level breakdown — what your stack catches, what it misses, where provenance breaks.',
+    'connect.direct':"We'll be direct if we can help — and equally direct if we can't.",
+    'connect.email_sub':'Phase 0 · scoping call · any question',
+    'connect.web_sub':'Documentation · SDB-26 · engagements',
+  },
+  ru: {
+    'nav.problem':'Проблема','nav.measure':'Методология','nav.engagements':'Услуги',
+    'nav.who':'Для кого','nav.writing':'Статьи','nav.faq':'FAQ','nav.cta':'Начать Phase 0 →',
+    'hero.pre':'Независимая Forensic Boutique · Ларнака, Кипр',
+    'hero.title':'ИИ принимает решения.<br><em>Мы делаем их защищаемыми.</em>',
+    'hero.body':'Plica — независимая forensic boutique для регулируемых файловых процессов. Мы аудируем разрыв между файлом, который подал клиент, и файлом, который реально проверил ваш стек.',
+    'hero.tagline':'Истина живёт в слоях.',
+    'hero.cta1':'Начать Phase 0 →','hero.cta2':'Читать методологию',
+    'problem.tag':'Проблема',
+    'problem.title':'Детектор видит копию.<br><em>Не оригинал.</em>',
+    'problem.body':'Большинство KYC-команд считают, что проверяют файл клиента. На самом деле детектор часто видит производную pipeline — уже уменьшенную, пересжатую, нормализованную или санитизированную intake-стеком.<br><br>Это означает, что вердикт может быть обоснованным для производного объекта — но <strong>не защищаемым для исходного доказательства.</strong>',
+    'problem.verdict':'"Покажите, что именно вы проверяли в этом документе — и докажите это." Когда этот вопрос приходит от регулятора, confidence score — не ответ.',
+    'measure.tag':'Что мы измеряем',
+    'm.p.word':'Происхождение','m.p.def':'Откуда пришёл файл. Совпадает ли его цифровая биография с заявленной?',
+    'm.l.word':'Родословная','m.l.def':'Что изменилось до решения. Каждая трансформация pipeline — залогирована с хешем до/после.',
+    'm.i.word':'Целостность','m.i.def':'Какие физические сигналы выжили. PRNU, DCT, FFT — сигналы, отличающие камеру от генератора.',
+    'm.c.word':'Согласованность','m.c.def':'Согласованы ли слои сигналов. Метаданные vs. физика сенсора vs. история сжатия.',
+    'm.a.word':'Подлинность','m.a.def':'Выдержит ли результат scrutiny. Воспроизводимый вердикт через 90 дней.',
+    'measure.note':'Формализовано в <strong>SDB-26</strong> — открытом benchmark-фреймворке для измерения bypass rate синтетических документов. Опубликован под лицензией CC BY 4.0.',
+    'eng.tag':'Услуги',
+    'eng.title':'Четыре точки входа.<br><em>Одна лестница.</em>',
+    'eng.e15.label':'Scan','eng.e15.name':'Trust Readiness','eng.e15.title':'Trust Readiness Scan.',
+    'eng.e15.desc':'Fast assessment of where your AI-enabled workflow may be exposed to regulatory, control, and evidence-trail risk. One workflow, one stakeholder call, executive brief. Fixed scope, fixed price.',
+    'eng.e15.scope':'1 workflow\n1–2 days\n45 min readout call','eng.e15.price':'Contact us',
+    'eng.e15.label':'Скан','eng.e15.name':'Trust Readiness','eng.e15.title':'Скан готовности.',
+    'eng.e15.desc':'Быстрая оценка где ваш AI-процесс может быть уязвим к регуляторным, контрольным и доказательным рискам. Один workflow, один звонок, executive brief. Фиксированный scope, фиксированная цена.',
+    'eng.e15.scope':'1 workflow\n1–2 дня\nЗвонок 45 мин','eng.e15.price':'Напишите нам',
+    'eng.e1.label':'Phase 0','eng.e1.name':'Быстрый скан','eng.e1.title':'48-часовой evidence review.',
+    'eng.e1.desc':'Пришлите ZIP с размеченными изображениями документов. Мы возвращаем разбивку по сигналам: что ваш текущий стек ловит, что пропускает и где рвётся provenance. Никакой инфраструктуры, персональных данных, обязательств.',
+    'eng.e1.scope':'≤ 100 файлов\n48 часов\nJPEG · PNG · WebP','eng.e1.price':'Напишите нам',
+    'eng.e2.label':'Phase 1','eng.e2.name':'Полный аудит','eng.e2.title':'Evidence Pipeline Audit.',
+    'eng.e2.desc':'Мы картируем upload → pipeline → decision и показываем, где файл перестаёт быть тем, что подал клиент. Проектирование transform log, восстановление hash chain, отчёт о пробелах. Три результата: для ops, аудита и совета.',
+    'eng.e2.scope':'10–14 дней\n50–150 файлов\nТребуется DPA','eng.e2.price':'Напишите нам',
+    'eng.e3.label':'Постоянно','eng.e3.name':'Retainer','eng.e3.title':'Квартальный Forensic Baseline Review.',
+    'eng.e3.desc':'Когда ваш KYC-вендор обновляет модель, вы узнаете, что изменилось в FPR и bypass rate, в ту же неделю — а не когда спросит регулятор.',
+    'eng.e3.scope':'Ежеквартально\nВаш корпус + SDB-26\nАлерт в ту же неделю','eng.e3.price':'Напишите нам',
+    'who.tag':'Для кого','who.title':'Вопрос меняется<br><em>в зависимости от роли.</em>',
+    'who.w1.q':'"Если регулятор спросит, что мы проверяли — можем показать больше чем PASS от вендора?"',
+    'who.w1.a':'Plica производит структурированную доказательную запись по каждому решению — FRC reason codes, intake hash, transform log. Воспроизводимо. Цитируемо в regulatory review.',
+    'who.w2.q':'"Где в нашем pipeline синтетический контент проходит незамеченным?"',
+    'who.w2.a':'Мы измеряем bypass rate по генератору, уровню атаки и этапу pipeline. Вы видите, где именно пробел — до следующего инцидента.',
+    'who.w3.q':'"Какова наша реальная экспозиция, если одобренный файл окажется синтетическим?"',
+    'who.w3.a':'Мы количественно оцениваем evidence gap — какая доля прошлых решений может быть восстановлена до исходной загрузки — и что нужно для его устранения.',
+    'art.tag':'Статьи','art.title':'Из практики.<br><em>На Medium.</em>',
+    'art.a1.tag':'Май 2026 · Доказательная целостность',
+    'art.a1.title':'Замкнутый круг синтетики: почему текстовый аудит не видит то, что видит физика',
+    'art.a1.desc':'Кейс EY и более сложная версия проблемы: исходные документы, которые текстово валидны, но физически невалидны.',
+    'art.a2.tag':'Май 2026 · KYC · Compliance',
+    'art.a2.title':'Что не говорят данные верификации файлов: урок Абрахама Вальда',
+    'art.a3.tag':'Май 2026 · Agent-to-Agent · KYC',
+    'art.a3.title':'Что такое VEBA — и почему вашим ИИ-агентам это нужно',
+    'art.a3.desc':'Файл который получает агент — не доказательство. Это submission. Без провенанса — чёрный ящик. А чёрный ящик — это вектор атаки.',
+    'art.a4.tag':'Май 2026 · Pipeline · Forensics',
+    'art.a4.title':'Что каналы передачи данных тайно делают с вашими документами',
+    'art.a4.desc':'WhatsApp, email-шлюзы, CDN — каждый переписывает файл до того как его увидит детектор. Один паспорт. Один iPhone. Два пути. Два разных объекта.',
+    'art.a5.tag':'Май 2026 · Доверие · Провенанс',
+    'art.a5.title':'Документ судят не только по тому что он говорит',
+    'art.a5.desc':'AI авторство меняет восприятие текстов. AI медиация меняет восприятие документов институтами. Более глубокий сдвиг: подлинность теперь про lineage, не про контент.',
+    'art.a2.desc':'Survivorship bias в документальных процессах — три пробела, которые стандартные KYC-метрики систематически пропускают.',
+    'faq.tag':'FAQ','faq.title':'Прежде чем написать.',
+    'faq.q1':'Plica заменяет ваш KYC-вендор?',
+    'faq.a1':'Нет. Plica — независимый форензический слой, а не замена Sumsub, Onfido или Veriff. Мы аудируем то, что они производят, и pipeline, который их питает.',
+    'faq.q2':'Какие форматы файлов принимает Phase 0?',
+    'faq.a2':'JPEG, PNG, WebP. Никаких реальных персональных данных при Phase 0 — используйте анонимизированные или синтетические размеченные образцы. PDF и видео — с Phase 1.',
+    'faq.q3':'Вы подписываете NDA перед Phase 1?',
+    'faq.a3':'Да. Phase 1 требует взаимного NDA, DPA, согласованных лимитов хранения и раскрытия субпроцессоров до любой передачи данных. Мы готовим стандартные шаблоны.',
+    'faq.q4':'С кем из нашей команды вам нужно связаться?',
+    'faq.a4':'MLRO, Head of Compliance, Head of Fraud или CRO — тот, кто владеет KYC-процессом принятия решений и имеет видимость в контракты с вендорами и audit-обязательства.',
+    'faq.q5':'У нас уже есть KYC-вендор. Это актуально?',
+    'faq.a5':'Тем более. Пробел, который закрывает Plica, — в pipeline до вендора и в доказательной записи после. Вендоры не сертифицируют собственные решения. Мы — независимо.',
+    'faq.q7':'Это помогает с EU AI Act?',
+    'faq.a7':'Phase 0 и Trust Readiness Scan картируют ваш текущий workflow относительно обязательств по audit trail из Article 16 — показывая где есть gaps в доказательной целостности до того как спросит регулятор. Мы оцениваем объектный слой: что система реально проверяла, а не только как система была построена.',
+    'faq.q6':'Что такое SDB-26?',
+    'faq.a6':'Открытый benchmark-фреймворк для измерения bypass rate синтетических документов. Опубликован на GitHub под CC BY 4.0. P-L-I-C-A и FRC reason codes там формализованы. <a href="https://sdb26.com">sdb26.com →</a>',
+    'connect.title':'Если вопрос —<br><em>«можем ли мы это доказать»</em> —',
+    'connect.sub':'Начните с Phase 0. 48 часов. Пришлите ZIP с размеченными изображениями документов. Мы возвращаем разбивку по сигналам — что ловит ваш стек, что пропускает, где рвётся provenance.',
+    'connect.direct':'Мы скажем прямо, если можем помочь — и столь же прямо, если не можем.',
+    'connect.email_sub':'Phase 0 · звонок · любой вопрос',
+    'connect.web_sub':'Документация · SDB-26 · услуги',
+  }
+};
+
+let currentLang = 'en';
+
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent === lang.toUpperCase());
+  });
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (i18n[lang][key] !== undefined) el.textContent = i18n[lang][key];
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const key = el.getAttribute('data-i18n-html');
+    if (i18n[lang][key] !== undefined) el.innerHTML = i18n[lang][key];
+  });
+  document.documentElement.lang = lang;
+}
+
+// Theme toggle
+function toggleTheme() {
+  const html = document.documentElement;
+  const btn = document.getElementById('themeBtn');
+  const isDark = html.classList.contains('dark');
+  if (isDark) {
+    html.classList.remove('dark');
+    html.classList.add('light');
+    btn.textContent = '☀️';
+    localStorage.setItem('plica-theme', 'light');
+  } else {
+    html.classList.remove('light');
+    html.classList.add('dark');
+    btn.textContent = '🌙';
+    localStorage.setItem('plica-theme', 'dark');
+  }
+}
+
+// Init theme from localStorage or system preference
+(function() {
+  const saved = localStorage.getItem('plica-theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const html = document.documentElement;
+  if (saved === 'dark' || (!saved && prefersDark)) {
+    html.classList.add('dark');
+    html.classList.remove('light');
+  } else if (saved === 'light') {
+    html.classList.add('light');
+    html.classList.remove('dark');
+  }
+  // Update button after DOM ready
+  document.addEventListener('DOMContentLoaded', function() {
+    const btn = document.getElementById('themeBtn');
+    if (btn) btn.textContent = html.classList.contains('dark') ? '🌙' : '☀️';
+  });
+})();
+</script>
+
+</body>
+</html>

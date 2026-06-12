@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stratum — Independent Forensic Boutique</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:       #ffffff;
+    --surface:  #f8f8fb;
+    --surface2: #f0f0f6;
+    --border:   #e0e0ec;
+    --accent:   #b8920a;
+    --accent2:  #1d6fba;
+    --hero-bg:  #0f1114;
+    --hero-fg:  #f4f2eb;
+    --hero-muted: rgba(244,242,235,0.72);
+    --text:     #111118;
+    --muted:    #6b6b7e;
+    --mono:     'IBM Plex Mono', monospace;
+    --sans:     'IBM Plex Sans', sans-serif;
+    --display:  'Syne', sans-serif;
+  }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 9.5pt;
+    line-height: 1.5;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Screen: full-width scroll; Print: A4 */
+  @media screen {
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      font-size: 15px;
+    }
+    .page {
+      width: min(920px, 100%);
+      min-height: auto;
+      margin: 0 auto;
+      padding: 24px 20px 40px;
+    }
+    .hero-panel {
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+    .header {
+      margin-bottom: 0;
+    }
+  }
+
+  @media print {
+    html, body {
+      width: 210mm;
+      min-height: 297mm;
+      font-size: 9.5pt;
+    }
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      padding: 12mm 13mm 10mm;
+    }
+    .hero-panel {
+      border-radius: 0;
+    }
+  }
+
+  .page {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        180deg,
+        transparent 0px,
+        transparent 38px,
+        rgba(184,146,10,0.06) 38px,
+        rgba(184,146,10,0.06) 39px
+      );
+    pointer-events: none;
+  }
+
+  /* ── HEADER (compact, above hero) ── */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 14px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background: var(--accent);
+  }
+
+  .logo-area h1 {
+    font-family: var(--display);
+    font-size: clamp(22pt, 5vw, 28pt);
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .logo-area .boutique {
+    font-family: var(--display);
+    font-size: clamp(8pt, 2.2vw, 10pt);
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.02em;
+    margin-top: 6px;
+    max-width: 420px;
+    line-height: 1.35;
+  }
+
+  .logo-area .boutique em {
+    font-style: normal;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .header-meta { text-align: right; }
+  .header-meta .badge {
+    font-family: var(--mono);
+    font-size: 6.5pt;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 1px 6px;
+    border-radius: 2px;
+    display: inline-block;
+    margin-bottom: 3px;
+    letter-spacing: 0.06em;
+  }
+  .header-meta .sub {
+    font-family: var(--mono);
+    font-size: 6pt;
+    color: var(--muted);
+    display: block;
+    letter-spacing: 0.04em;
+    margin-top: 4px;
+  }
+
+  @media screen {
+    .header-meta .badge { font-size: 11px; padding: 3px 8px; }
+    .header-meta .sub { font-size: 11px; }
+  }
+
+  /* ── HERO ── */
+  .hero-panel {
+    background: var(--hero-bg);
+    border: 1px solid #1a1d22;
+    border-left: 4px solid var(--accent);
+    padding: clamp(14px, 3vw, 22px) clamp(14px, 3vw, 24px);
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-kicker {
+    font-family: var(--mono);
+    font-size: 6.5pt;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--hero-muted);
+    margin-bottom: 8px;
+  }
+
+  @media screen {
+    .hero-kicker { font-size: 11px; }
+  }
+
+  .hero-slogan {
+    font-family: var(--display);
+    font-size: clamp(14pt, 3.8vw, 19pt);
+    font-weight: 800;
+    color: var(--hero-fg);
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 10px;
+    max-width: 36em;
+  }
+
+  .hero-slogan span {
+    color: #e8c84a;
+  }
+
+  .hero-lead {
+    font-size: 8.5pt;
+    color: var(--hero-muted);
+    font-weight: 300;
+    line-height: 1.6;
+    max-width: 48em;
+  }
+
+  .hero-lead strong {
+    color: var(--hero-fg);
+    font-weight: 600;
+  }
+
+  @media screen {
+    .hero-lead { font-size: 15px; }
+  }
+
+  .hero-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .hero-pill {
+    font-family: var(--mono);
+    font-size: 5.8pt;
+    color: var(--hero-fg);
+    border: 1px solid rgba(244,242,235,0.22);
+    padding: 3px 8px;
+    border-radius: 2px;
+    letter-spacing: 0.04em;
+  }
+
+  @media screen {
+    .hero-pill { font-size: 11px; }
+  }
+
+  /* ── STRATA LAYERS ── */
+  .layers-label {
+    font-family: var(--mono);
+    font-size: 6pt;
+    color: var(--muted);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .layers-label::before {
+    content: '';
+    display: inline-block;
+    width: 12px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .layers {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-bottom: 11px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .layer {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .layer-id {
+    font-family: var(--mono);
+    font-size: 7pt;
+    font-weight: 600;
+    color: var(--bg);
+    background: var(--layer-color, var(--accent));
+    padding: 5px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 68px;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+    text-align: center;
+  }
+
+  .layer-body {
+    background: var(--surface);
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+  }
+
+  .layer-name {
+    font-family: var(--display);
+    font-size: 8.5pt;
+    font-weight: 700;
+    color: var(--text);
+    min-width: 118px;
+    flex-shrink: 0;
+  }
+
+  .layer-name span {
+    color: var(--layer-color, var(--accent));
+  }
+
+  .layer-desc {
+    font-size: 7.5pt;
+    color: #4b5563;
+    line-height: 1.35;
+    flex: 1;
+  }
+
+  .layer-tech {
+    font-family: var(--mono);
+    font-size: 6pt;
+    color: var(--muted);
+    text-align: right;
+    flex-shrink: 0;
+    opacity: 0.85;
+    max-width: 140px;
+  }
+
+  @media screen {
+    .layer-desc { font-size: 13px; }
+    .layer-name { font-size: 14px; min-width: 130px; }
+    .layer-id { font-size: 11px; }
+    .layer-tech { font-size: 10px; max-width: 160px; }
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+    margin-bottom: 7px;
+    position: relative;
+    z-index: 1;
+  }
+
+  @media screen and (max-width: 720px) {
+    .grid-2 { grid-template-columns: 1fr; }
+    .layer { flex-direction: column; }
+    .layer-id { min-width: 100%; }
+    .layer-body { flex-direction: column; align-items: flex-start; }
+    .layer-tech { text-align: left; max-width: none; }
+  }
+
+  .section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 8px 10px;
+  }
+
+  .section-title {
+    font-family: var(--mono);
+    font-size: 6pt;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .section-title::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 1px;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  @media screen {
+    .section-title { font-size: 11px; }
+  }
+
+  ul { list-style: none; display: flex; flex-direction: column; gap: 3px; }
+
+  ul li {
+    font-size: 7.5pt;
+    color: #374151;
+    padding-left: 11px;
+    position: relative;
+    line-height: 1.35;
+  }
+
+  @media screen {
+    ul li { font-size: 13px; }
+  }
+
+  ul li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .frc-row {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 7px;
+    flex-wrap: wrap;
+  }
+
+  .frc-tag {
+    font-family: var(--mono);
+    font-size: 5.5pt;
+    color: #1d6fba;
+    border: 1px solid rgba(29,111,186,0.25);
+    background: rgba(29,111,186,0.06);
+    padding: 2px 6px;
+    border-radius: 2px;
+    letter-spacing: 0.03em;
+  }
+
+  @media screen {
+    .frc-tag { font-size: 10px; }
+  }
+
+  .verdict-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    margin-bottom: 7px;
+  }
+
+  @media screen and (max-width: 600px) {
+    .verdict-row { grid-template-columns: 1fr; }
+  }
+
+  .verdict-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 6px 9px;
+    text-align: center;
+  }
+
+  .verdict-label {
+    font-family: var(--display);
+    font-size: 9pt;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    margin-bottom: 2px;
+  }
+
+  .verdict-desc {
+    font-size: 6.5pt;
+    color: #6b6b7e;
+    line-height: 1.3;
+  }
+
+  @media screen {
+    .verdict-label { font-size: 14px; }
+    .verdict-desc { font-size: 12px; }
+  }
+
+  .cta {
+    background: var(--accent);
+    padding: 9px 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cta-text { font-size: 8pt; color: #ffffff; font-weight: 400; line-height: 1.4; }
+  .cta-text strong {
+    font-family: var(--display);
+    font-weight: 700;
+    display: block;
+    font-size: 10pt;
+    margin-bottom: 2px;
+    color: #ffffff;
+  }
+
+  @media screen {
+    .cta-text { font-size: 14px; }
+    .cta-text strong { font-size: 17px; }
+  }
+
+  .cta-link {
+    font-family: var(--mono);
+    font-size: 7pt;
+    color: #ffffff;
+    text-align: right;
+    opacity: 0.85;
+    line-height: 1.8;
+    white-space: nowrap;
+    margin-left: 14px;
+  }
+
+  @media screen {
+    .cta-link { font-size: 12px; white-space: normal; }
+  }
+
+  @media screen and (max-width: 640px) {
+    .cta { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .cta-link { text-align: left; margin-left: 0; }
+  }
+
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 7px;
+    border-top: 1px solid var(--border);
+    margin-top: auto;
+    position: relative;
+    z-index: 1;
+    gap: 12px;
+  }
+
+  .footer div {
+    font-family: var(--mono);
+    font-size: 6.5pt;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  @media screen {
+    .footer { flex-direction: column; align-items: flex-start; }
+    .footer div { font-size: 12px; }
+  }
+
+  @media print {
+    html, body { background: #ffffff; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="logo-area">
+      <h1>Stratum</h1>
+      <div class="boutique">Independent Forensic Boutique <em>· layered media &amp; document integrity</em></div>
+    </div>
+    <div class="header-meta">
+      <span class="badge">Evidence-first</span>
+      <span class="badge" style="margin-left:4px;">SDB-26 aligned</span>
+      <span class="sub">One-page brief · 2026</span>
+    </div>
+  </div>
+
+  <div class="hero-panel">
+    <div class="hero-kicker">Forensic Reason Codes · calibrated risk · audit trail</div>
+    <div class="hero-slogan">Show the <span>physics of the file</span> — not a lone probability.</div>
+    <p class="hero-lead">
+      Most stacks stop at a score. <strong>Stratum separates signal into strata</strong> — metadata and provenance, intrinsic pixel physics, model-based generation cues, and policy-aware aggregation — then emits <strong>structured Forensic Reason Codes (FRC)</strong> and confidence that is explicitly calibrated (raw vs. reportable), so compliance and ops can defend the decision without trusting a black box.
+    </p>
+    <div class="hero-pills">
+      <span class="hero-pill">Cross-checks even on “certain” AI paths</span>
+      <span class="hero-pill">Runtime profiles: fast · balanced · deep</span>
+      <span class="hero-pill">Optional OCR / credentials depth</span>
+    </div>
+  </div>
+
+  <div class="layers-label">The Stratum stack — signal layers</div>
+  <div class="layers">
+
+    <div class="layer" style="--layer-color: #4a9ee8;">
+      <div class="layer-id">L1<br>PROVENANCE</div>
+      <div class="layer-body">
+        <div class="layer-name"><span>Provenance</span> layer</div>
+        <div class="layer-desc">Metadata validation, consistency checks, and content-credentials style signals where present. Establishes what the file claims about its own origin before pixels are interpreted.</div>
+        <div class="layer-tech">EXIF · C2PA / credentials</div>
+      </div>
+    </div>
+
+    <div class="layer" style="--layer-color: #e8c84a;">
+      <div class="layer-id">L2<br>PHYSICS</div>
+      <div class="layer-body">
+        <div class="layer-name"><span>Intrinsic</span> layer</div>
+        <div class="layer-desc">Pixel-level integrity: compression artifacts (e.g. JPEG quantization), noise and frequency cues, diffusion / GAN-style fingerprints, ELA-style tamper hints — the “geology” of the image.</div>
+        <div class="layer-tech">Quant · FFT · PRNU-style noise</div>
+      </div>
+    </div>
+
+    <div class="layer" style="--layer-color: #a855f7;">
+      <div class="layer-id">L3<br>MODEL</div>
+      <div class="layer-body">
+        <div class="layer-name"><span>Model</span> layer</div>
+        <div class="layer-desc">AI-generation and editing detectors with explicit confidence; combined with intrinsic cross-checks so high model confidence cannot bypass physics-layer spoofing tests.</div>
+        <div class="layer-tech">Ensemble · guardrails</div>
+      </div>
+    </div>
+
+    <div class="layer" style="--layer-color: #e8704a;">
+      <div class="layer-id">L4<br>AGGREGATE</div>
+      <div class="layer-body">
+        <div class="layer-name"><span>Aggregation</span> layer</div>
+        <div class="layer-desc">Fraud scoring with rule-based floors for strong intrinsic combinations, verdict-aware calibration, and logging that records why raw confidence was adjusted for the report.</div>
+        <div class="layer-tech">FRC mapping · calibration notes</div>
+      </div>
+    </div>
+
+    <div class="layer" style="--layer-color: #4ae87a;">
+      <div class="layer-id">L5<br>PACKET</div>
+      <div class="layer-body">
+        <div class="layer-name"><span>Evidence</span> packet</div>
+        <div class="layer-desc">API and report outputs structured for review: per-detector breakdown, timings, reason codes, and export paths (e.g. JSON + PDF) suitable for pilot KPIs and manual QA.</div>
+        <div class="layer-tech">Case packet · stage timing</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="grid-2">
+    <div class="section">
+      <div class="section-title">Verdict posture</div>
+      <div class="verdict-row" style="margin-bottom:0;">
+        <div class="verdict-card">
+          <div class="verdict-label" style="color:#4ae87a;">CONSISTENT</div>
+          <div class="verdict-desc">Layers agree; low forensic tension. Typical “real” posture when physics and provenance align.</div>
+        </div>
+        <div class="verdict-card">
+          <div class="verdict-label" style="color:#e8c84a;">UNCERTAIN</div>
+          <div class="verdict-desc">Mixed or weak signals — calibrated confidence reflects ambiguity; human review or resubmit.</div>
+        </div>
+        <div class="verdict-card">
+          <div class="verdict-label" style="color:#e85a4a;">HIGH RISK</div>
+          <div class="verdict-desc">Strong model and/or intrinsic evidence; floors and FRCs document the basis for action.</div>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Why it matters now</div>
+      <ul>
+        <li>Agent-mediated flows add a new spoofing surface: provenance claims vs. pixel reality</li>
+        <li>Regulators and partners increasingly ask for <em>effectiveness evidence</em>, not only process</li>
+        <li>Independent benchmarks (SDB-26) make generator drift and bypass rates discussable</li>
+        <li>Boutique depth: methodology, disclosure, and pilot metrics — not a generic risk API</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section" style="margin-bottom:7px; position:relative; z-index:1;">
+    <div class="section-title">Forensic Reason Codes — explainable output</div>
+    <div class="frc-row" style="margin-bottom:0;">
+      <span class="frc-tag">FRC-META-INCONSISTENT</span>
+      <span class="frc-tag">FRC-CRED-AI-MARKER</span>
+      <span class="frc-tag">FRC-INTR-JPEG-ANOMALY</span>
+      <span class="frc-tag">FRC-INTR-GAN-FINGERPRINT</span>
+      <span class="frc-tag">FRC-INTR-DIFFUSION</span>
+      <span class="frc-tag">FRC-AI-HIGH-CONF</span>
+      <span class="frc-tag">FRC-CROSS-WEAK-INTRINSIC</span>
+      <span class="frc-tag">FRC-SCORE-FLOOR-APPLIED</span>
+      <span class="frc-tag">FRC-CALIB-GUARDRAIL</span>
+      <span class="frc-tag">FRC-AGG-MANUAL-REVIEW</span>
+    </div>
+    <p style="font-size:7pt;color:#6b7280;margin-top:6px;line-height:1.35;">Illustrative codes — actual catalog follows your FRC schema and deployment profile.</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="section">
+      <div class="section-title">Deployment &amp; data boundary</div>
+      <ul>
+        <li>Designed for controlled environments: on-prem or private VPC as required</li>
+        <li>Configurable depth: skip or enable heavy OCR / visual OCR by runtime profile</li>
+        <li>Stage-level timing for pilot SLAs (report p50/p95 honestly — no magic latency claims)</li>
+        <li>REST-style analysis pipeline suitable for integration tests and golden files</li>
+      </ul>
+    </div>
+    <div class="section">
+      <div class="section-title">SDB-26 · measurement</div>
+      <ul>
+        <li>Open benchmark framing for synthetic document and media risk (methodology, not a vendor seal)</li>
+        <li>Discuss bypass rate, confidence gaps, and generator sensitivity with stakeholders</li>
+        <li>Reproducible JSON-oriented results for regression and vendor comparison</li>
+        <li>Aligns Stratum outputs with what a serious pilot should measure</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="cta">
+    <div class="cta-text">
+      <strong>Pilot: layered evidence, not a single number.</strong>
+      Independent forensic boutique · FRC-first reporting · SDB-26-aligned evaluation
+    </div>
+    <div class="cta-link">
+      stratum.fyi<br>
+      sdb26.com<br>
+      github.com/sevrusik/SDB26
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>Ruslan Mishyn · AI PM &amp; forensic research · sevrusik@gmail.com · linkedin.com/in/mishyn-ruslan</div>
+    <div style="text-align:right;">Stratum · FraudLens stack · SDB-26 · FRC</div>
+  </div>
+
+</div>
+</body>
+</html>

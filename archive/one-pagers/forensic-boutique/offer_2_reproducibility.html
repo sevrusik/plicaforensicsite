@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Decision Reproducibility — DocLens</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Instrument+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap');
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#fafaf8;--surface:#f2f0eb;--surface2:#e8e5de;
+    --border:#d0ccc3;--accent:#1a3a5c;--accent2:#c0392b;
+    --green:#145a32;--green-bg:#e8f5e0;--green-border:#b8dba8;
+    --text:#1a1a18;--muted:#7a7770;
+    --display:'Space Mono',monospace;--body:'Instrument Sans',sans-serif;
+  }
+  html,body{width:210mm;min-height:297mm;background:var(--bg);color:var(--text);
+    font-family:var(--body);font-size:10pt;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .page{width:210mm;min-height:297mm;display:flex;flex-direction:column;}
+  .header{background:var(--accent);padding:10mm 14mm 9mm;position:relative;overflow:hidden;}
+  .header::after{content:'';position:absolute;right:-20px;top:-20px;width:110px;height:110px;
+    border:2px solid rgba(255,255,255,0.07);border-radius:50%;}
+  .offer-tag{font-family:var(--display);font-size:7pt;color:rgba(255,255,255,0.5);letter-spacing:0.15em;margin-bottom:7px;}
+  .header-row{display:flex;justify-content:space-between;align-items:flex-end;}
+  .title{font-family:var(--display);font-size:18pt;color:#fff;line-height:1.05;font-weight:700;max-width:310px;}
+  .subtitle{font-size:8.5pt;color:rgba(255,255,255,0.7);margin-top:7px;max-width:330px;line-height:1.5;font-weight:300;}
+  .qr-area{display:flex;flex-direction:column;align-items:flex-end;gap:4px;z-index:1;}
+  .qr-area img{width:42px;height:42px;border:2px solid rgba(255,255,255,0.2);border-radius:2px;}
+  .qr-lbl{font-family:var(--display);font-size:5pt;color:rgba(255,255,255,0.4);text-align:right;}
+  .promise{background:var(--accent2);padding:8px 14mm;}
+  .promise p{font-family:var(--display);font-size:9pt;color:#fff;letter-spacing:0.05em;line-height:1.3;}
+  .body{padding:8mm 14mm;flex:1;display:flex;flex-direction:column;gap:7px;}
+  .sec-label{font-family:var(--display);font-size:6.5pt;color:var(--accent);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:4px;}
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+  .compare-before{background:var(--surface2);border:1px solid var(--border);padding:8px 10px;border-radius:2px;}
+  .compare-after{background:var(--green-bg);border:1px solid var(--green-border);padding:8px 10px;border-radius:2px;}
+  .compare-tag{font-family:var(--display);font-size:6.5pt;font-weight:700;letter-spacing:0.1em;margin-bottom:4px;}
+  .compare-before .compare-tag{color:var(--accent2);}
+  .compare-after .compare-tag{color:var(--green);}
+  .compare-text{font-size:7.5pt;line-height:1.45;color:var(--text);}
+  .deliverables{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+  .deliv-card{background:var(--surface);border:1px solid var(--border);
+    border-top:2px solid var(--accent);padding:8px 9px;}
+  .deliv-audience{font-family:var(--display);font-size:7pt;color:var(--accent);font-weight:700;margin-bottom:3px;}
+  .deliv-name{font-size:8pt;font-weight:500;color:var(--text);margin-bottom:3px;}
+  .deliv-desc{font-size:7pt;color:var(--muted);line-height:1.35;}
+  .pilot{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+  .week{background:var(--surface);border:1px solid var(--border);padding:7px 10px;border-radius:2px;}
+  .week-label{font-family:var(--display);font-size:9pt;font-weight:700;color:var(--accent);margin-bottom:3px;}
+  .week-items{font-size:7.5pt;color:var(--text);line-height:1.55;}
+  /* SHARED */
+  .scope-block{background:var(--surface);border:1px solid var(--border);
+    padding:7px 11px;display:flex;gap:0;align-items:stretch;}
+  .scope-col{flex:1;padding:0 7px;display:flex;flex-direction:column;gap:2px;}
+  .scope-col:first-child{padding-left:0;}
+  .scope-sep{width:1px;background:var(--border);flex-shrink:0;margin:0 3px;}
+  .scope-label{font-size:5.5pt;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;}
+  .scope-val{font-size:7pt;color:var(--text);line-height:1.3;}
+  .proof-block{background:var(--surface);border:1px solid var(--border);
+    padding:6px 11px;display:flex;flex-wrap:wrap;gap:4px 14px;}
+  .proof-item{font-size:7pt;color:var(--muted);display:flex;align-items:center;gap:4px;}
+  .proof-dot{color:var(--accent);font-size:8pt;}
+  .killer{background:var(--accent);padding:8px 12px;border-radius:2px;}
+  .killer-label{font-family:var(--display);font-size:6.5pt;color:rgba(255,255,255,0.6);letter-spacing:0.12em;margin-bottom:4px;}
+  .killer-q{font-size:8.5pt;color:#fff;font-style:italic;line-height:1.5;}
+  .footer{padding:5mm 14mm 7mm;border-top:1px solid var(--border);
+    display:flex;justify-content:space-between;align-items:center;gap:12px;}
+  .footer-left{font-size:7pt;color:var(--muted);line-height:1.6;}
+  .footer-left strong{color:var(--text);}
+  .cta-footer{background:var(--accent);padding:5px 12px;border-radius:2px;text-align:center;}
+  .cta-footer .cta-main{font-family:'Space Mono',monospace;font-size:8.5pt;color:#fff;font-weight:700;}
+  .cta-footer .cta-sub{font-size:6.5pt;color:rgba(255,255,255,0.8);margin-top:1px;}
+  .footer-right{font-family:var(--display);font-size:8pt;color:var(--accent);text-align:right;line-height:1.7;}
+  @media print{html,body{width:210mm;}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <div class="offer-tag">OFFER 02 — DECISION REPRODUCIBILITY</div>
+    <div class="header-row">
+      <div>
+        <div class="title">INDEPENDENT VERIFICATION<br>OF REPRODUCIBILITY</div>
+        <div class="subtitle">We turn a disputed case from an opinion into reproducible evidence. Not "what was decided" — provably "how it was decided."</div>
+      </div>
+      <div class="qr-area">
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAIAAAAgbqG5AAADNElEQVR4nO3dQW7bMAAAwaToC/z/N+YLyWVPFVAQDEkpyMyxcGyrWBCiTFHvn5+fb/D29ufuL8BTSIFIgUiBSIFIgUiBSIFIgUiBSIH8HXnR6/Xa/T3+4+Pj459/uX6f62uuVv3ViJHvfNLIkRoViBSIFIgUiBTI0AziauSMdM7cmfa+8/OTs4xV5r6PUYFIgUiBSIFIgUzOIK7uPYved54/8j6rjuLe/0OjApECkQKRApECWTaDOGnVGqFVc4F9c4qTjApECkQKRApECuRHziBGzthPzg7uvcdhFaMCkQKRApECkQJZNoM4edV9br4wcp5//auR4zq5FmsfowKRApECkQKRApmcQdx71X3VbxAjR7Hv946n/XJhVCBSIFIgUiBSIO+/54lyJ/dldR8EP5gUiBSIFIgUyNAM4vnX2PfthrTqSFc9sWLffk1GBSIFIgUiBSIFMrSKadW6nX1rjUY8bTfXuTVUI+a+j1GBSIFIgUiBSIFs3Itp33n13PucnJusWvt08unbRgUiBSIFIgUiBXL0iXJzOx3NfdaIe3/vuPfYr4wKRApECkQKRApkcgZx73qk5++GdPL+hau5zzIqECkQKRApECmQyTup5zx/h6J7j/TkmqUrowKRApECkQKRAjn6TOqT1+H3ffrc+5z8lcR9EHyLFIgUiBSIFMiyVUxz9l11P/nUhnv3oVo1xzEqECkQKRApECmQZc+D2PdMhJH3WbWSZ+T77Lu/4+rkzMioQKRApECkQKRAJp8HMfeaVZ/1tPumr562z9IIowKRApECkQKRAhmaQdx7ZrtvdnDyzu5Vv5J4HgTbSYFIgUiBSIHcfB/E1cndkOZWKO0785+z6n/MqECkQKRApECkQI4+Ue5q39qnfSudVr1mFXdSs5gUiBSIFIgUyNHdXPeZmy+cfNrCyXu95xgViBSIFIgUiBTIj5xBjFx1P7lCacTT7vW+MioQKRApECkQKZBlM4h7nzd9ctfTk/u7ntw51qhApECkQKRApEAmZxD3Xi0/OTtY9Vcn1z65D4JvkQKRApECkQIZeqIcv4FRgUiBSIFIgUiBSIFIgUiBSIFIgUiBfAEWoHMg2/EbjwAAAABJRU5ErkJggg==" alt="QR">
+        <div class="qr-lbl">sdb26.com</div>
+      </div>
+    </div>
+  </div>
+  <div class="promise"><p>NOT JUST "WHAT WAS DECIDED" — PROVABLY "HOW IT WAS DECIDED"</p></div>
+  <div class="body">
+    <div class="sec-label">Before vs After</div>
+    <div class="compare">
+      <div class="compare-before">
+        <div class="compare-tag">BEFORE</div>
+        <div class="compare-text">Disputed case → call analyst → call vendor → get confidence score → write narrative → hope regulator accepts.<br><br>Time: days. Reproducibility: zero. Audit risk: high.</div>
+      </div>
+      <div class="compare-after">
+        <div class="compare-tag">AFTER</div>
+        <div class="compare-text">Disputed case → pull case packet → structured FRC reason codes → signal-level evidence → policy path → reproducible verdict.<br><br>Time: targeted reduction. Reproducibility: 100%.</div>
+      </div>
+    </div>
+    <div class="sec-label">Scope &amp; Timeline</div>
+    <div class="scope-block">
+      <div class="scope-col"><div class="scope-label">SCOPE</div><div class="scope-val">20–30 historical disputed cases</div></div>
+      <div class="scope-sep"></div>
+      <div class="scope-col"><div class="scope-label">TIMELINE</div><div class="scope-val">10 business days</div></div>
+      <div class="scope-sep"></div>
+      <div class="scope-col"><div class="scope-label">OUTPUTS</div><div class="scope-val">RAG scorecard · top gaps · quick wins</div></div>
+      <div class="scope-sep"></div>
+      <div class="scope-col"><div class="scope-label">OUTCOME</div><div class="scope-val">Targeted reduction in disputed-case resolution time</div></div>
+    </div>
+    <div class="sec-label">Three Deliverables — Three Audiences</div>
+    <div class="deliverables">
+      <div class="deliv-card">
+        <div class="deliv-audience">FOR OPS</div>
+        <div class="deliv-name">Process Exposure Map</div>
+        <div class="deliv-desc">Where synthetic artifacts enter. What controls fire or don't. Prioritised fixes by impact and time-to-implement.</div>
+      </div>
+      <div class="deliv-card">
+        <div class="deliv-audience">FOR AUDIT</div>
+        <div class="deliv-name">Verifiability Gap Report</div>
+        <div class="deliv-desc">Which decisions are reproducible. Which are not. What the audit trail can and cannot prove.</div>
+      </div>
+      <div class="deliv-card">
+        <div class="deliv-audience">FOR BOARD</div>
+        <div class="deliv-name">Residual Risk Package</div>
+        <div class="deliv-desc">Where residual risk sits. What to address in 90 days. Readable without data science expertise.</div>
+      </div>
+    </div>
+    <div class="proof-block">
+      <div class="proof-item"><span class="proof-dot">●</span> Built on SDB-26 v1.0.10 · FRC A2A v0.5.2</div>
+      <div class="proof-item"><span class="proof-dot">●</span> Schema-valid outputs · machine-readable JSON</div>
+      <div class="proof-item"><span class="proof-dot">●</span> Sample deliverables available on request</div>
+      <div class="proof-item"><span class="proof-dot">●</span> Complementary to insured vendors — not a replacement</div>
+    </div>
+    <div class="killer">
+      <div class="killer-label">KILLER QUESTION FOR THE CALL</div>
+      <div class="killer-q">"Can you today reproduce 20 disputed decisions from six months ago — without the original team and without calling your vendor?"</div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="footer-left">
+      <strong>Ruslan Mishyn</strong> — AI PM &amp; Forensic Researcher<br>
+      sevrusik@gmail.com · sdb26.com · linkedin.com/in/mishyn-ruslan
+    </div>
+    <div class="cta-footer">
+      <div class="cta-main">BOOK A 20-MIN SCOPING CALL</div>
+      <div class="cta-sub">Founding pilot · 3 slots · sevrusik@gmail.com</div>
+    </div>
+    <div class="footer-right">DocLens<br>Forensic Boutique</div>
+  </div>
+</div>
+</body>
+</html>

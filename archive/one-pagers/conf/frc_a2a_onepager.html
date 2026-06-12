@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>FRC A2A Extension — Auditability for Agent-Mediated Onboarding</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#ffffff;--surface:#f8f9fc;--surface2:#f1f4f9;
+    --border:#dde3ee;
+    --accent:#1d4ed8;--accent2:#dc2626;
+    --green:#15803d;--green-bg:#f0fdf4;--green-border:#bbf7d0;
+    --amber:#92400e;--amber-bg:#fffbeb;--amber-border:#fde68a;
+    --red-bg:#fef2f2;--red-border:#fecaca;
+    --blue-bg:#eff6ff;--blue-border:#bfdbfe;
+    --text:#0f1729;--muted:#5a6480;
+    --mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;
+  }
+  html,body{
+    width:210mm;min-height:297mm;background:var(--bg);color:var(--text);
+    font-family:var(--sans);font-size:10pt;line-height:1.5;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;
+  }
+  .page{width:210mm;min-height:297mm;padding:12mm 13mm 11mm;display:flex;flex-direction:column;}
+
+  /* HEADER */
+  .header{display:flex;justify-content:space-between;align-items:flex-start;
+    padding-bottom:9px;border-bottom:2px solid var(--accent);margin-bottom:11px;}
+  .logo h1{font-family:var(--mono);font-size:15pt;font-weight:600;color:var(--accent);
+    letter-spacing:-0.01em;line-height:1.1;}
+  .logo .sub{font-family:var(--mono);font-size:7pt;color:var(--muted);
+    letter-spacing:0.06em;text-transform:uppercase;margin-top:4px;}
+  .header-right{display:flex;align-items:flex-start;gap:10px;}
+  .qr-wrap{display:flex;flex-direction:column;align-items:center;gap:2px;}
+  .qr-wrap img{width:46px;height:46px;border:1px solid var(--border);border-radius:2px;}
+  .qr-wrap .ql{font-family:var(--mono);font-size:5pt;color:var(--muted);
+    text-align:center;line-height:1.3;}
+  .header-meta{text-align:right;}
+  .header-meta .lbl{font-family:var(--mono);font-size:7pt;color:var(--muted);
+    letter-spacing:0.05em;text-transform:uppercase;}
+  .header-meta .val{font-family:var(--mono);font-size:9pt;color:var(--accent);font-weight:600;}
+
+  /* HERO */
+  .hero{background:var(--blue-bg);border:1px solid var(--blue-border);
+    border-left:3px solid var(--accent2);padding:8px 13px;margin-bottom:10px;border-radius:2px;}
+  .hero p{font-size:9pt;color:#1e293b;font-weight:300;line-height:1.5;}
+  .hero strong{color:var(--text);font-weight:600;}
+
+  /* GRIDS */
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:7px;}
+
+  /* SECTION */
+  .section{background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:8px 10px;}
+  .sec-title{font-family:var(--mono);font-size:6.5pt;font-weight:600;color:var(--accent);
+    letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;
+    display:flex;align-items:center;gap:5px;}
+  .sec-title::before{content:'';display:inline-block;width:9px;height:1px;
+    background:var(--accent);flex-shrink:0;}
+
+  ul{list-style:none;display:flex;flex-direction:column;gap:3px;}
+  ul li{font-size:8pt;color:#374151;padding-left:11px;position:relative;line-height:1.35;}
+  ul li::before{content:'›';position:absolute;left:0;color:var(--accent);font-weight:700;}
+
+  .sec-label{font-family:var(--mono);font-size:6.5pt;font-weight:600;color:var(--accent);
+    letter-spacing:0.1em;text-transform:uppercase;
+    display:flex;align-items:center;gap:5px;margin-bottom:5px;}
+  .sec-label::before{content:'';display:inline-block;width:9px;height:1px;
+    background:var(--accent);flex-shrink:0;}
+
+  /* MODES */
+  .modes{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:7px;}
+  .mode-card{border:1px solid var(--border);border-radius:2px;padding:8px 10px;}
+  .mode-a{background:var(--green-bg);border-color:var(--green-border);}
+  .mode-b{background:var(--blue-bg);border-color:var(--blue-border);}
+  .mode-label{font-family:var(--mono);font-size:7.5pt;font-weight:600;margin-bottom:4px;}
+  .mode-a .mode-label{color:var(--green);}
+  .mode-b .mode-label{color:var(--accent);}
+  .mode-desc{font-size:7.5pt;color:#374151;line-height:1.4;}
+  .mode-req{font-family:var(--mono);font-size:6.5pt;margin-top:4px;line-height:1.4;}
+  .mode-a .mode-req{color:var(--green);}
+  .mode-b .mode-req{color:var(--accent);}
+
+  /* COMPOUND VERDICT TABLE */
+  .verdict-table{width:100%;border-collapse:collapse;margin-bottom:7px;font-size:7.5pt;}
+  .verdict-table th{background:var(--surface2);font-family:var(--mono);font-size:6.5pt;
+    font-weight:600;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;
+    padding:5px 7px;text-align:left;border:1px solid var(--border);}
+  .verdict-table td{padding:5px 7px;border:1px solid var(--border);vertical-align:middle;line-height:1.3;}
+  .verdict-table td:first-child{font-family:var(--mono);font-size:7pt;color:var(--text);}
+  .verdict-table td:nth-child(2){font-family:var(--mono);font-size:7pt;color:#374151;}
+  .verdict-trusted{background:var(--green-bg);font-family:var(--mono);font-size:7pt;
+    font-weight:600;color:var(--green);}
+  .verdict-escalate{background:var(--amber-bg);font-family:var(--mono);font-size:7pt;
+    font-weight:600;color:var(--amber);}
+  .verdict-block{background:var(--red-bg);font-family:var(--mono);font-size:7pt;
+    font-weight:600;color:#991b1b;}
+  .verdict-review{background:var(--blue-bg);font-family:var(--mono);font-size:7pt;
+    font-weight:600;color:var(--accent);}
+
+  /* L0 CODES */
+  .codes{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:7px;}
+  .code-item{background:var(--surface);border:1px solid var(--border);
+    border-radius:2px;padding:6px 9px;}
+  .code-key{font-family:var(--mono);font-size:6.5pt;font-weight:600;
+    color:var(--accent);margin-bottom:2px;line-height:1.3;}
+  .code-desc{font-size:7pt;color:#4b5563;line-height:1.3;}
+
+  /* METRICS */
+  .metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:7px;}
+  .metric-card{background:var(--surface);border:1px solid var(--border);
+    border-top:2px solid var(--accent);border-radius:2px;padding:6px 8px;}
+  .metric-abbr{font-family:var(--mono);font-size:10pt;font-weight:600;
+    color:var(--accent);line-height:1;margin-bottom:2px;}
+  .metric-name{font-family:var(--mono);font-size:5.5pt;color:var(--muted);
+    text-transform:uppercase;letter-spacing:0.04em;margin-bottom:2px;}
+  .metric-desc{font-size:6.5pt;color:#4b5563;line-height:1.3;}
+
+  /* TAGS */
+  .tags{margin-bottom:7px;}
+  .tag{display:inline-block;font-family:var(--mono);font-size:6pt;
+    background:var(--blue-bg);color:var(--accent);border:1px solid var(--blue-border);
+    border-radius:2px;padding:1px 5px;margin-right:3px;margin-bottom:3px;}
+
+  /* CTA */
+  .cta{background:var(--accent);border-radius:2px;padding:9px 13px;
+    display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;}
+  .cta-text{font-size:8.5pt;color:#fff;font-weight:400;line-height:1.4;}
+  .cta-text strong{font-weight:600;display:block;font-size:9.5pt;margin-bottom:2px;}
+  .cta-link{font-family:var(--mono);font-size:7pt;color:#fff;
+    text-align:right;opacity:0.9;line-height:1.7;white-space:nowrap;margin-left:14px;}
+
+  /* FOOTER */
+  .footer{display:flex;justify-content:space-between;align-items:center;
+    padding-top:6px;border-top:1px solid var(--border);margin-top:auto;}
+  .footer div{font-family:var(--mono);font-size:7pt;color:var(--muted);line-height:1.5;}
+
+  @media print{html,body{width:210mm;}}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">
+      <h1>FRC A2A Extension</h1>
+      <div class="sub">Auditability for Agent-Mediated Onboarding · SDB-26 v1.0.7</div>
+    </div>
+    <div class="header-right">
+      <div class="qr-wrap">
+        <img src="data:image/png;base64,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" alt="QR FRC A2A docs">
+        <div class="ql">FRC_A2A_EXTENSION.md<br>github.com/sevrusik/SDB26</div>
+      </div>
+      <div class="header-meta">
+        <div class="lbl">Extension</div>
+        <div class="val">v0.5</div>
+        <div class="lbl" style="margin-top:3px;">CC BY 4.0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <p>
+      <strong>Structured controls for agent provenance, instrumentation trace, and compound verdicts.</strong>
+      Agent workflows can be operationally robust but still opaque in decision provenance.
+      FRC A2A adds the <strong>traceability layer</strong> that turns "agent is attested"
+      into an auditable, reproducible compliance record.
+    </p>
+  </div>
+
+  <!-- PROBLEM + WHAT IT ADDS -->
+  <div class="grid-2">
+    <div class="section">
+      <div class="sec-title">The Problem</div>
+      <ul>
+        <li>"Agent is attested" does not guarantee attributable data path</li>
+        <li>Tool calls and connector access are often unlogged at decision level</li>
+        <li>Subagent handoffs create accountability gaps in multi-step flows</li>
+        <li>Mode B (agent-mediated) lacks structured traceability controls</li>
+        <li>Human-in-the-loop assertion is not formally recorded</li>
+      </ul>
+    </div>
+    <div class="section">
+      <div class="sec-title">What FRC A2A Adds</div>
+      <ul>
+        <li>L0/L0-D reason codes for agent and data-path risk signals</li>
+        <li><code style="font-family:var(--mono);font-size:7.5pt;background:#e8edf8;padding:0 3px;border-radius:1px;">instrumentation_trace</code> — tool calls, connectors, handoffs</li>
+        <li>Mode A vs Mode B submission semantics — formally distinguished</li>
+        <li>Compound verdict = document authenticity × agent provenance</li>
+        <li>Optional <code style="font-family:var(--mono);font-size:7.5pt;background:#e8edf8;padding:0 3px;border-radius:1px;">agent_verdict</code> enum for agent-layer only assessment</li>
+        <li>Policy profile presets (strict / balanced) for deployment</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- MODES -->
+  <div class="sec-label">Submission Modes</div>
+  <div class="modes">
+    <div class="mode-card mode-a">
+      <div class="mode-label">Mode A — Human Submission</div>
+      <div class="mode-desc">Document submitted directly by a human via web or mobile interface. Standard KYC onboarding flow.</div>
+      <div class="mode-req">Required: FRC document layer<br>Optional: L0 agent context if headers present</div>
+    </div>
+    <div class="mode-card mode-b">
+      <div class="mode-label">Mode B — Agent Submission</div>
+      <div class="mode-desc">Document submitted programmatically by an AI agent (e.g. Anthropic KYC Screener, agentic pipeline).</div>
+      <div class="mode-req">Required: FRC document layer + full instrumentation_trace<br>Required: L0-D codes for data path verification</div>
+    </div>
+  </div>
+
+  <!-- COMPOUND VERDICT -->
+  <div class="sec-label">Compound Verdict Logic</div>
+  <table class="verdict-table">
+    <thead>
+      <tr>
+        <th>Document verdict</th>
+        <th>Agent state</th>
+        <th>Compound verdict</th>
+        <th>Rationale</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>GENUINE</td>
+        <td>ATTESTED + trace present</td>
+        <td class="verdict-trusted">TRUSTED</td>
+        <td style="font-size:7pt;color:#374151;">Full signal chain verified</td>
+      </tr>
+      <tr>
+        <td>GENUINE</td>
+        <td>UNATTESTED or trace absent</td>
+        <td class="verdict-escalate">ESCALATE</td>
+        <td style="font-size:7pt;color:#374151;">Document real; provenance gap</td>
+      </tr>
+      <tr>
+        <td>SYNTHETIC / EDITED / SCREENSHOT</td>
+        <td>Any agent state</td>
+        <td class="verdict-block">BLOCK</td>
+        <td style="font-size:7pt;color:#374151;">Document failure — agent state irrelevant</td>
+      </tr>
+      <tr>
+        <td>INSUFFICIENT</td>
+        <td>ATTESTED</td>
+        <td class="verdict-review">REVIEW</td>
+        <td style="font-size:7pt;color:#374151;">Insufficient evidence; attested agent</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- L0-D CODES -->
+  <div class="sec-label">Key L0-D Reason Codes (Data Path Layer)</div>
+  <div class="codes">
+    <div class="code-item">
+      <div class="code-key">FRC-L0-DATA-PATH-UNATTRIBUTED</div>
+      <div class="code-desc">Decision cannot be traced to a verified connector or data source.</div>
+    </div>
+    <div class="code-item">
+      <div class="code-key">FRC-L0-CONNECTOR-OUT-OF-POLICY</div>
+      <div class="code-desc">Data source accessed outside the declared connector allowlist.</div>
+    </div>
+    <div class="code-item">
+      <div class="code-key">FRC-L0-HANDOFF-UNAUDITED</div>
+      <div class="code-desc">Subagent handoff has no paired log entry in instrumentation trace.</div>
+    </div>
+    <div class="code-item">
+      <div class="code-key">FRC-L0-TOOL-PERMISSION-VIOLATION</div>
+      <div class="code-desc">Tool invoked outside its declared permission scope.</div>
+    </div>
+    <div class="code-item">
+      <div class="code-key">FRC-L0-SECRET-BINDING-UNKNOWN</div>
+      <div class="code-desc">Credential binding to workload cannot be confirmed.</div>
+    </div>
+    <div class="code-item">
+      <div class="code-key">FRC-L0-HITL-ASSERTION-MISSING</div>
+      <div class="code-desc">No recorded human confirmation before high-risk action in flow.</div>
+    </div>
+  </div>
+
+  <!-- METRICS -->
+  <div class="sec-label">Key Metrics</div>
+  <div class="metrics">
+    <div class="metric-card">
+      <div class="metric-abbr">ABR</div>
+      <div class="metric-name">Agent Bypass Rate</div>
+      <div class="metric-desc">% agent submissions with anomalies receiving TRUSTED verdict.</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-abbr">ACG</div>
+      <div class="metric-name">Agent Confidence Gap</div>
+      <div class="metric-desc">Mean confidence on approvals with L0 flags present.</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-abbr">CDR</div>
+      <div class="metric-name">Chain Disruption Rate</div>
+      <div class="metric-desc">% submissions with broken delegation chain.</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-abbr">TCR</div>
+      <div class="metric-name">Tool Call Coverage</div>
+      <div class="metric-desc">% submissions where all external calls have valid connector_id.</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-abbr">HAR</div>
+      <div class="metric-name">Handoff Audit Rate</div>
+      <div class="metric-desc">% multi-agent runs where every handoff has a paired log.</div>
+    </div>
+  </div>
+
+  <!-- TAGS -->
+  <div class="tags">
+    <span class="tag">Agent Provenance</span>
+    <span class="tag">instrumentation_trace</span>
+    <span class="tag">Mode A / Mode B</span>
+    <span class="tag">Compound Verdict</span>
+    <span class="tag">L0-D Codes</span>
+    <span class="tag">HITL Assertion</span>
+    <span class="tag">Anthropic KYC Screener</span>
+    <span class="tag">CC BY 4.0</span>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta">
+    <div class="cta-text">
+      <strong>Require schema-valid FRC A2A outputs for all Mode B onboarding flows.</strong>
+      Structured agent controls · Reproducible decision traces · Open standard · Free to implement
+    </div>
+    <div class="cta-link">
+      docs/FRC_A2A_EXTENSION.md<br>
+      github.com/sevrusik/SDB26<br>
+      sdb26.com
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div>Ruslan Mishyn · AI PM & Forensic Researcher · sevrusik@gmail.com</div>
+    <div style="text-align:right;">SDB-26 v1.0.7 · FRC A2A v0.5 · DocLens · linkedin.com/in/mishyn-ruslan</div>
+  </div>
+
+</div>
+</body>
+</html>

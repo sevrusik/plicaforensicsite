@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Board-Ready Output — DocLens</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Lato:ital,wght@0,300;0,400;1,300&display=swap');
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#ffffff;--surface:#f7f5f2;--surface2:#ede9e3;
+    --border:#d8d3cc;--accent:#2c4a6e;--accent2:#8b1a1a;--gold:#b8860b;
+    --text:#1c1c1a;--muted:#7a7770;
+    --display:'Playfair Display',serif;--body:'Lato',sans-serif;
+  }
+  html,body{width:210mm;min-height:297mm;background:var(--bg);color:var(--text);
+    font-family:var(--body);font-size:10pt;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .page{width:210mm;min-height:297mm;display:flex;flex-direction:column;}
+  .topbar{height:4px;background:linear-gradient(90deg,var(--accent) 0%,var(--gold) 50%,var(--accent2) 100%);}
+  .header{padding:10mm 14mm 8mm;display:flex;justify-content:space-between;
+    align-items:flex-start;border-bottom:0.5px solid var(--border);}
+  .offer-tag{font-family:var(--body);font-size:7pt;color:var(--muted);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:6px;}
+  .title{font-family:var(--display);font-size:22pt;color:var(--accent);line-height:1.05;font-weight:900;max-width:300px;}
+  .title em{color:var(--gold);font-style:italic;}
+  .subtitle{font-size:8.5pt;color:var(--muted);margin-top:6px;max-width:290px;line-height:1.5;font-weight:300;}
+  .header-right{display:flex;flex-direction:column;align-items:flex-end;gap:5px;}
+  .qr-box{border:0.5px solid var(--border);padding:3px;}
+  .qr-box img{width:42px;height:42px;display:block;}
+  .qr-lbl{font-size:5.5pt;color:var(--muted);text-align:right;font-family:var(--body);}
+  .promise{background:var(--accent);padding:8px 14mm;}
+  .promise p{font-family:var(--display);font-size:10pt;color:#fff;font-style:italic;line-height:1.3;}
+  .body{padding:8mm 14mm;flex:1;display:flex;flex-direction:column;gap:7px;}
+  .sec-label{font-family:var(--body);font-size:6.5pt;color:var(--accent);letter-spacing:0.16em;text-transform:uppercase;margin-bottom:4px;font-weight:400;}
+  .audiences{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+  .aud-card{border:0.5px solid var(--border);overflow:hidden;}
+  .aud-header{padding:7px 9px;border-bottom:0.5px solid var(--border);}
+  .aud-for{font-family:var(--body);font-size:6pt;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:2px;}
+  .aud-title{font-family:var(--display);font-size:10pt;font-weight:700;}
+  .aud-ops .aud-title{color:var(--accent);}
+  .aud-audit .aud-title{color:var(--gold);}
+  .aud-board .aud-title{color:var(--accent2);}
+  .aud-body{padding:7px 9px;background:var(--surface);}
+  .aud-deliverable{font-size:8pt;font-weight:400;color:var(--text);margin-bottom:3px;}
+  .aud-desc{font-size:7pt;color:var(--muted);line-height:1.35;}
+  .translation{background:#fefbf0;border:0.5px solid #d4b060;padding:8px 12px;}
+  .translation p{font-size:8pt;color:var(--text);line-height:1.5;}
+  .translation strong{color:var(--accent2);}
+  .sell{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;}
+  .sell-item{background:var(--surface);border:0.5px solid var(--border);
+    padding:7px 9px;border-top:2px solid var(--accent);}
+  .sell-num{font-family:var(--display);font-size:13pt;color:var(--accent);font-weight:900;line-height:1;margin-bottom:2px;}
+  .sell-label{font-size:7pt;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:3px;}
+  .sell-desc{font-size:7.5pt;color:var(--text);line-height:1.35;}
+  /* SHARED */
+  .scope-block{background:var(--surface);border:0.5px solid var(--border);
+    padding:7px 11px;display:flex;gap:0;align-items:stretch;}
+  .scope-col{flex:1;padding:0 7px;display:flex;flex-direction:column;gap:2px;}
+  .scope-col:first-child{padding-left:0;}
+  .scope-sep{width:1px;background:var(--border);flex-shrink:0;margin:0 3px;}
+  .scope-label{font-size:5.5pt;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;}
+  .scope-val{font-size:7pt;color:var(--text);line-height:1.3;}
+  .proof-block{background:var(--surface);border:0.5px solid var(--border);
+    padding:6px 11px;display:flex;flex-wrap:wrap;gap:4px 14px;}
+  .proof-item{font-size:7pt;color:var(--muted);display:flex;align-items:center;gap:4px;}
+  .proof-dot{color:var(--accent);font-size:8pt;}
+  .killer{background:var(--surface2);border-left:3px solid var(--accent2);padding:8px 12px;}
+  .killer-label{font-family:var(--body);font-size:6.5pt;color:var(--accent2);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:4px;}
+  .killer-q{font-family:var(--display);font-size:9pt;color:var(--text);font-style:italic;line-height:1.5;}
+  .footer{padding:5mm 14mm 7mm;border-top:0.5px solid var(--border);
+    display:flex;justify-content:space-between;align-items:center;gap:12px;}
+  .footer-left{font-size:7pt;color:var(--muted);line-height:1.6;}
+  .footer-left strong{color:var(--text);}
+  .cta-footer{background:var(--accent);padding:5px 12px;border-radius:2px;text-align:center;}
+  .cta-footer .cta-main{font-family:'Playfair Display',serif;font-size:9pt;color:#fff;font-style:italic;}
+  .cta-footer .cta-sub{font-size:6.5pt;color:rgba(255,255,255,0.8);margin-top:1px;}
+  .footer-right{font-family:var(--display);font-size:9pt;color:var(--accent);text-align:right;line-height:1.7;font-style:italic;}
+  @media print{html,body{width:210mm;}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="topbar"></div>
+  <div class="header">
+    <div>
+      <div class="offer-tag">Offer 03 — Compliance, Audit &amp; Board</div>
+      <div class="title">Output for<br><em>Every</em><br>Audience</div>
+      <div class="subtitle">Forensic signals translated into governance decisions — for compliance, audit, and board. Same evidence, three purpose-built formats.</div>
+    </div>
+    <div class="header-right">
+      <div class="qr-box"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAIAAAAgbqG5AAADNElEQVR4nO3dQW7bMAAAwaToC/z/N+YLyWVPFVAQDEkpyMyxcGyrWBCiTFHvn5+fb/D29ufuL8BTSIFIgUiBSIFIgUiBSIFIgUiBSIH8HXnR6/Xa/T3+4+Pj459/uX6f62uuVv3ViJHvfNLIkRoViBSIFIgUiBTI0AziauSMdM7cmfa+8/OTs4xV5r6PUYFIgUiBSIFIgUzOIK7uPYved54/8j6rjuLe/0OjApECkQKRApECWTaDOGnVGqFVc4F9c4qTjApECkQKRApECuRHziBGzthPzg7uvcdhFaMCkQKRApECkQJZNoM4edV9br4wcp5//auR4zq5FmsfowKRApECkQKRApmcQdx71X3VbxAjR7Hv946n/XJhVCBSIFIgUiBSIO+/54lyJ/dldR8EP5gUiBSIFIgUyNAM4vnX2PfthrTqSFc9sWLffk1GBSIFIgUiBSIFMrSKadW6nX1rjUY8bTfXuTVUI+a+j1GBSIFIgUiBSIFs3Itp33n13PucnJusWvt08unbRgUiBSIFIgUiBXL0iXJzOx3NfdaIe3/vuPfYr4wKRApECkQKRApkcgZx73qk5++GdPL+hau5zzIqECkQKRApECmQyTup5zx/h6J7j/TkmqUrowKRApECkQKRAjn6TOqT1+H3ffrc+5z8lcR9EHyLFIgUiBSIFMiyVUxz9l11P/nUhnv3oVo1xzEqECkQKRApECmQZc+D2PdMhJH3WbWSZ+T77Lu/4+rkzMioQKRApECkQKRAJp8HMfeaVZ/1tPumr562z9IIowKRApECkQKRAhmaQdx7ZrtvdnDyzu5Vv5J4HgTbSYFIgUiBSIHcfB/E1cndkOZWKO0785+z6n/MqECkQKRApECkQI4+Ue5q39qnfSudVr1mFXdSs5gUiBSIFIgUyNHdXPeZmy+cfNrCyXu95xgViBSIFIgUiBTIj5xBjFx1P7lCacTT7vW+MioQKRApECkQKZBlM4h7nzd9ctfTk/u7ntw51qhApECkQKRApEAmZxD3Xi0/OTtY9Vcn1z65D4JvkQKRApECkQIZeqIcv4FRgUiBSIFIgUiBSIFIgUiBSIFIgUiBfAEWoHMg2/EbjwAAAABJRU5ErkJggg==" alt="QR"></div>
+      <div class="qr-lbl">sdb26.com</div>
+    </div>
+  </div>
+  <div class="promise"><p>"From engineering logs — into the language of control, accountability, and managed risk."</p></div>
+  <div class="body">
+    <div class="sec-label">Three Deliverables for Three Audiences</div>
+    <div class="audiences">
+      <div class="aud-card aud-ops">
+        <div class="aud-header"><div class="aud-for">For</div><div class="aud-title">Operations</div></div>
+        <div class="aud-body">
+          <div class="aud-deliverable">Process Exposure Map</div>
+          <div class="aud-desc">Where synthetic artifacts enter. What controls trigger or don't. Prioritised fixes by impact and implementation time.</div>
+        </div>
+      </div>
+      <div class="aud-card aud-audit">
+        <div class="aud-header"><div class="aud-for">For</div><div class="aud-title">Audit</div></div>
+        <div class="aud-body">
+          <div class="aud-deliverable">Verifiability Assessment</div>
+          <div class="aud-desc">Which decisions are reproducible. Which are not. What the audit trail can prove — and what it cannot.</div>
+        </div>
+      </div>
+      <div class="aud-card aud-board">
+        <div class="aud-header"><div class="aud-for">For</div><div class="aud-title">Board</div></div>
+        <div class="aud-body">
+          <div class="aud-deliverable">Residual Risk Package</div>
+          <div class="aud-desc">Where residual risk sits. What to address in 90 days. Readable by risk committee — no data science required.</div>
+        </div>
+      </div>
+    </div>
+    <div class="translation">
+      <p><strong>The translation problem:</strong> what a forensic analyst knows about a disputed case rarely reaches the board in a form that supports a decision. We close that gap without losing fidelity — same underlying evidence, three purpose-built formats.</p>
+    </div>
+    <div class="sec-label">Scope &amp; Timeline</div>
+    <div class="scope-block">
+      <div class="scope-col"><div class="scope-label">SCOPE</div><div class="scope-val">20–30 historical disputed cases</div></div>
+      <div class="scope-sep"></div>
+      <div class="scope-col"><div class="scope-label">TIMELINE</div><div class="scope-val">10 business days</div></div>
+      <div class="scope-sep"></div>
+      <div class="scope-col"><div class="scope-label">OUTPUTS</div><div class="scope-val">RAG scorecard · top gaps · quick wins</div></div>
+      <div class="scope-sep"></div>
+      <div class="scope-col"><div class="scope-label">OUTCOME</div><div class="scope-val">Targeted reduction in disputed-case resolution time</div></div>
+    </div>
+    <div class="sec-label">How to Position This Engagement</div>
+    <div class="sell">
+      <div class="sell-item">
+        <div class="sell-num">01</div>
+        <div class="sell-label">Sell as Diagnostic</div>
+        <div class="sell-desc">10 days, not a transformation. Scorecard, gap map, quick wins — not a multi-year programme.</div>
+      </div>
+      <div class="sell-item">
+        <div class="sell-num">02</div>
+        <div class="sell-label">Lead with Pain</div>
+        <div class="sell-desc">"Why can't we reproduce a decision from 6 months ago?" That question is already sitting in most compliance teams.</div>
+      </div>
+      <div class="sell-item">
+        <div class="sell-num">03</div>
+        <div class="sell-label">Show the Output</div>
+        <div class="sell-desc">Decision-ready reporting — not a tech report. Board reads it. Audit signs it. Ops acts on it.</div>
+      </div>
+    </div>
+    <div class="proof-block">
+      <div class="proof-item"><span class="proof-dot">●</span> Built on SDB-26 v1.0.10 · FRC A2A v0.5.2</div>
+      <div class="proof-item"><span class="proof-dot">●</span> Schema-valid outputs · machine-readable JSON</div>
+      <div class="proof-item"><span class="proof-dot">●</span> Sample deliverables available on request</div>
+      <div class="proof-item"><span class="proof-dot">●</span> Complementary to insured vendors — not a replacement</div>
+    </div>
+    <div class="killer">
+      <div class="killer-label">Killer Question for the Call</div>
+      <div class="killer-q">"Does your current report on disputed cases make sense to your board-level risk committee — without a data scientist in the room?"</div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="footer-left">
+      <strong>Ruslan Mishyn</strong> — AI PM &amp; Forensic Researcher<br>
+      sevrusik@gmail.com · sdb26.com · linkedin.com/in/mishyn-ruslan
+    </div>
+    <div class="cta-footer">
+      <div class="cta-main">Book a 20-min scoping call</div>
+      <div class="cta-sub">Founding pilot · 3 slots · sevrusik@gmail.com</div>
+    </div>
+    <div class="footer-right">DocLens<br>Forensic Boutique</div>
+  </div>
+</div>
+</body>
+</html>
