@@ -364,6 +364,7 @@ html.dark .art-card{background:var(--surface);}
     <li><a href="#problem" data-i18n="nav.problem">Problem</a></li>
     <li><a href="#measure" data-i18n="nav.measure">Methodology</a></li>
     <li><a href="#engagements" data-i18n="nav.engagements">Engagements</a></li>
+    <li><a href="client-journey.html" id="navJourneyLink" data-i18n="nav.journey">Client journey</a></li>
     <li><a href="#who" data-i18n="nav.who">Who it's for</a></li>
     <li><a href="#articles" data-i18n="nav.writing">Writing</a></li>
     <li><a href="#faq" data-i18n="nav.faq">FAQ</a></li>
@@ -705,6 +706,16 @@ No signup</div>
   <div class="container">
     <div class="s-tag" data-i18n="art.tag">Writing</div>
     <h2 class="s-title" data-i18n-html="art.title">From the field.<br><em>On Medium.</em></h2>
+    <div class="art-list" style="margin-bottom:2px;">
+      <a class="art-card" href="client-journey.html" id="journeyCard">
+        <div>
+          <div class="art-tag" data-i18n="journey.tag">Architecture · June 2026</div>
+          <div class="art-title" data-i18n="journey.title">Client journey &amp; integration architecture</div>
+          <div class="art-desc" data-i18n="journey.desc">For investors, compliance, and enterprise pilots — what we sell, how files reach verification, where data lives, and honest shipped / roadmap status on every line.</div>
+        </div>
+        <div class="art-arrow">→</div>
+      </a>
+    </div>
     <div class="art-list" id="mediumArticles" aria-live="polite"></div>
   </div>
 </section>
@@ -768,6 +779,10 @@ No signup</div>
         <div class="cl-icon">Web</div>
         <div><div class="cl-text">plicaforensic.com</div><div class="cl-sub" data-i18n="connect.web_sub">Documentation · SDB-26 · engagements</div></div>
       </a>
+      <a class="conn-link" href="client-journey.html" id="connectJourneyLink">
+        <div class="cl-icon">Docs</div>
+        <div><div class="cl-text" data-i18n="connect.journey_title">Client journey &amp; architecture</div><div class="cl-sub" data-i18n="connect.journey_sub">B2B integration · data · shipped vs roadmap</div></div>
+      </a>
       <a class="conn-link" href="https://github.com/sevrusik/SDB26" target="_blank">
         <div class="cl-icon">GitHub</div>
         <div><div class="cl-text">SDB-26</div><div class="cl-sub">CC BY 4.0 · open benchmark framework</div></div>
@@ -789,6 +804,7 @@ No signup</div>
 const i18n = {
   en: {
     'nav.problem':'Problem','nav.products':'Products','nav.usecases':'Use cases','nav.measure':'Methodology','nav.engagements':'Engagements',
+    'nav.journey':'Client journey',
     'nav.who':"Who it's for",'nav.writing':'Writing','nav.faq':'FAQ','nav.cta':'Book Phase 0 →','nav.tryapi':'Try API →',
     'hero.pre':'Independent Forensic Boutique · Larnaca, Cyprus',
     'hero.title':'AI makes decisions.<br><em>We make them defensible.</em>',
@@ -843,6 +859,9 @@ const i18n = {
     'who.w4.a':'Trust Readiness Scan gives you a fast, fixed-scope answer: where provenance breaks, what signals are lost, and what to fix first. No enterprise contract required.',
     'who.w3.a':'We quantify the evidence gap — what fraction of past decisions can be reconstructed to original upload — and what it takes to close it.',
     'art.tag':'Writing','art.title':'From the field.<br><em>On Medium.</em>',
+    'journey.tag':'Architecture · June 2026',
+    'journey.title':'Client journey & integration architecture',
+    'journey.desc':'For investors, compliance, and enterprise pilots — what we sell, how files reach verification, where data lives, and honest shipped / roadmap status on every line.',
     'faq.tag':'FAQ','faq.title':'Before you reach out.',
     'faq.q1':'Does Plica replace our KYC vendor?',
     'faq.a1':'No. Plica is an independent forensic layer — not a replacement for Sumsub, Onfido, or Veriff. We audit what they produce and the pipeline that feeds them.',
@@ -865,9 +884,12 @@ const i18n = {
     'connect.direct':"We'll be direct if we can help — and equally direct if we can't.",
     'connect.email_sub':'Phase 0 · scoping call · any question',
     'connect.web_sub':'Documentation · SDB-26 · engagements',
+    'connect.journey_title':'Client journey & architecture',
+    'connect.journey_sub':'B2B integration · data · shipped vs roadmap',
   },
   ru: {
     'nav.problem':'Проблема','nav.products':'Продукты','nav.usecases':'Применение','nav.measure':'Методология','nav.engagements':'Услуги',
+    'nav.journey':'Путь клиента',
     'nav.who':'Для кого','nav.writing':'Статьи','nav.faq':'FAQ','nav.cta':'Начать Phase 0 →','nav.tryapi':'Try API →',
     'hero.pre':'Независимая Forensic Boutique · Ларнака, Кипр',
     'hero.title':'ИИ принимает решения.<br><em>Мы делаем их защищаемыми.</em>',
@@ -923,6 +945,9 @@ const i18n = {
     'who.w3.q':'"Какова наша реальная экспозиция, если одобренный файл окажется синтетическим?"',
     'who.w3.a':'Мы количественно оцениваем evidence gap — какая доля прошлых решений может быть восстановлена до исходной загрузки — и что нужно для его устранения.',
     'art.tag':'Статьи','art.title':'Из практики.<br><em>На Medium.</em>',
+    'journey.tag':'Архитектура · июнь 2026',
+    'journey.title':'Путь клиента и архитектура интеграции',
+    'journey.desc':'Для инвесторов, compliance и enterprise-пилотов — что мы продаём, как файлы попадают на проверку, где хранятся данные, и честные статусы shipped / roadmap.',
     'faq.tag':'FAQ','faq.title':'Прежде чем написать.',
     'faq.q1':'Plica заменяет ваш KYC-вендор?',
     'faq.a1':'Нет. Plica — независимый форензический слой, а не замена Sumsub, Onfido или Veriff. Мы аудируем то, что они производят, и pipeline, который их питает.',
@@ -945,10 +970,24 @@ const i18n = {
     'connect.direct':'Мы скажем прямо, если можем помочь — и столь же прямо, если не можем.',
     'connect.email_sub':'Phase 0 · звонок · любой вопрос',
     'connect.web_sub':'Документация · SDB-26 · услуги',
+    'connect.journey_title':'Путь клиента и архитектура',
+    'connect.journey_sub':'B2B-интеграция · данные · shipped vs roadmap',
   }
 };
 
 let currentLang = 'en';
+
+function journeyPageHref(lang) {
+  return lang === 'ru' ? 'client-journey-ru.html' : 'client-journey.html';
+}
+
+function updateJourneyLinks(lang) {
+  const href = journeyPageHref(lang);
+  ['navJourneyLink', 'journeyCard', 'connectJourneyLink'].forEach(function (id) {
+    const el = document.getElementById(id);
+    if (el) el.href = href;
+  });
+}
 
 function setLang(lang) {
   currentLang = lang;
@@ -966,8 +1005,11 @@ function setLang(lang) {
     if (i18n[lang][key] !== undefined) el.innerHTML = i18n[lang][key];
   });
   document.documentElement.lang = lang;
+  updateJourneyLinks(lang);
   if (typeof window.plicaRefreshArticleTitle === 'function') window.plicaRefreshArticleTitle();
 }
+
+updateJourneyLinks(currentLang);
 
 </script>
 <script src="plica-medium-feed.js"></script>

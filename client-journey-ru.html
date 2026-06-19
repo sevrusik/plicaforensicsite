@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Как клиент работает с Plica — B2B-путь, архитектура API, хранение данных, shipped vs roadmap. Для инвесторов, compliance и enterprise-пилотов.">
+<title>PLICA — путь клиента и архитектура</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --paper:#F7F5EF;--paper-2:#EFECE3;--line:#D9D3C6;--line-soft:#E6E1D6;
+  --ink:#1B1C1A;--ink-soft:#55534C;--faint:#86827A;
+  --teal:#173C3C;--teal-2:#225050;--teal-deep:#0F2A2A;
+  --copper:#9A6438;--copper-soft:#F3E9DE;--copper-line:#D6B393;
+  --ship:#2E6B4F;--road:#9A6438;--no:#8A8A86;
+  --serif:'Newsreader',Georgia,serif;--mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',system-ui,sans-serif;
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.55;}
+.wrap{max-width:940px;margin:0 auto;padding:0 32px;}
+.topbar{border-bottom:1.5px solid var(--ink);}
+.topbar-in{max-width:940px;margin:0 auto;padding:14px 32px;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;}
+.brand{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:0.22em;color:var(--teal);text-decoration:none;}
+.brand-meta{font-family:var(--mono);font-size:10.5px;color:var(--faint);letter-spacing:0.04em;}
+.topbar-right{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.topbar-link{font-family:var(--mono);font-size:10px;letter-spacing:0.06em;text-transform:uppercase;color:var(--teal);text-decoration:none;border-bottom:1px solid transparent;}
+.topbar-link:hover{border-bottom-color:var(--copper-line);}
+.topbar-link.active{color:var(--copper);border-bottom-color:var(--copper-line);}
+.mast{padding:44px 0 32px;border-bottom:1px solid var(--line);}
+.kicker{font-family:var(--mono);font-size:10.5px;letter-spacing:0.18em;text-transform:uppercase;color:var(--copper);margin-bottom:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.kicker::after{content:'';flex:1;height:1px;background:var(--line);min-width:30px;}
+.mast h1{font-family:var(--serif);font-weight:400;font-size:clamp(28px,4.2vw,42px);line-height:1.12;letter-spacing:-0.01em;margin-bottom:14px;}
+.mast h1 em{font-style:italic;color:var(--teal);}
+.mast-sub{font-size:15.5px;color:var(--ink-soft);max-width:640px;}
+section{padding:32px 0;border-bottom:1px solid var(--line);}
+.eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--faint);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.eyebrow .n{color:var(--copper);font-weight:600;}
+h2{font-family:var(--serif);font-weight:400;font-size:clamp(21px,2.7vw,27px);line-height:1.2;margin-bottom:14px;letter-spacing:-0.01em;}
+h2 em{font-style:italic;color:var(--teal);}
+p{margin-bottom:12px;font-size:14.5px;color:var(--ink-soft);}
+p strong,li strong,td strong{color:var(--ink);font-weight:600;}
+.lead{font-size:15.5px;color:var(--ink);}
+.callout{background:var(--copper-soft);border-left:3px solid var(--copper);padding:13px 16px;margin:14px 0;font-size:13.5px;color:var(--ink);}
+.tbl{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px;}
+.tbl th{background:var(--teal);color:var(--paper);font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:0.03em;text-align:left;padding:9px 12px;text-transform:uppercase;}
+.tbl td{border:1px solid var(--line);padding:9px 12px;vertical-align:top;color:var(--ink-soft);line-height:1.45;}
+.tbl tr:nth-child(even) td{background:var(--paper-2);}
+code{font-family:var(--mono);font-size:0.86em;background:var(--paper-2);border:1px solid var(--line-soft);padding:1px 5px;border-radius:2px;color:var(--copper);}
+.pill{display:inline-block;font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;padding:3px 8px;border-radius:2px;color:#fff;white-space:nowrap;}
+.p-ship{background:var(--ship);}.p-road{background:var(--road);}.p-no{background:var(--no);}
+.flow{font-family:var(--mono);font-size:11.5px;line-height:1.7;color:#CFE0DA;background:var(--teal-deep);padding:20px 22px;border-radius:4px;overflow-x:auto;white-space:pre;margin:12px 0;}
+.flow .hl{color:var(--copper-line);}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);margin:12px 0;}
+.two > div{padding:11px 14px;font-size:13.5px;border-bottom:1px solid var(--line);}
+.two > div:nth-child(odd){background:var(--paper-2);border-right:1px solid var(--line);}
+.two .h{font-family:var(--mono)!important;font-size:10px!important;letter-spacing:0.06em;text-transform:uppercase;font-weight:600;}
+.two .h.yes{color:var(--ship)!important;}.two .h.no{color:var(--no)!important;}
+ul.clean{list-style:none;margin:8px 0 12px;}
+ul.clean li{position:relative;padding-left:18px;margin-bottom:6px;font-size:13.5px;color:var(--ink-soft);}
+ul.clean li::before{content:'—';position:absolute;left:0;color:var(--copper);}
+.foot{padding:26px 0 50px;}
+.foot p{font-size:12px;color:var(--faint);font-style:italic;margin:0;}
+.foot .contact{font-family:var(--mono);font-size:11px;color:var(--ink-soft);font-style:normal;margin-bottom:8px;letter-spacing:0.03em;}
+.foot a{color:var(--teal);text-decoration:none;border-bottom:1px solid var(--copper-line);}
+.note{font-size:12.5px;color:var(--faint);font-style:italic;margin-top:6px;}
+@media(max-width:640px){.wrap,.topbar-in{padding-left:18px;padding-right:18px;}.two{grid-template-columns:1fr;}.two > div:nth-child(odd){border-right:none;}.tbl{font-size:11.5px;}.tbl th,.tbl td{padding:7px 8px;}}
+@media print{body{background:#fff;}section{break-inside:avoid;}.flow{background:#0F2A2A!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}.tbl th,.pill{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <a class="brand" href="index.html">PLICA FORENSIC</a>
+    <div class="topbar-right">
+      <span class="brand-meta">Независимый форензик-бутик</span>
+      <a class="topbar-link" href="index.html">← Главная</a>
+      <a class="topbar-link" href="client-journey.html">EN</a>
+      <a class="topbar-link active" href="client-journey-ru.html" aria-current="page">RU</a>
+      <a class="topbar-link" href="https://api.plicaforensic.com/try" target="_blank" rel="noopener noreferrer">Try API</a>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <header class="mast">
+    <div class="kicker">Путь клиента и архитектура · июнь 2026</div>
+    <h1>Как клиент работает с <em>Plica</em></h1>
+    <p class="mast-sub">Для инвесторов, compliance, юристов и enterprise-пилотов. Что мы продаём, как документ попадает на проверку, как клиент получает результат, где хранятся данные — с честными статусами shipped / roadmap / out of scope.</p>
+  </header>
+
+  <section>
+    <div class="eyebrow"><span class="n">01</span> Что мы продаём</div>
+    <p class="lead">PLICA — независимый forensic-слой для изображений и PDF в регулируемых file-workflow.</p>
+    <div class="two">
+      <div class="h yes">Мы делаем</div>
+      <div class="h no">Мы не делаем</div>
+      <div>Доказываем, подделан ли файл (metadata, структура PDF, OCR vs text layer, pixel/GAN)</div>
+      <div>Hosted KYC / liveness / сессию с камерой</div>
+      <div>Выдаём evidence: JSON, PDF-отчёт, hash, policy hooks</div>
+      <div>AML / sanctions / скрининг по реестрам</div>
+      <div>Встраиваемся в ваш onboarding, claims, underwriting</div>
+      <div>Замену Sumsub, Onfido, LexisNexis</div>
+      <div>Chain of custody с момента intake в API</div>
+      <div>Доказательство «документ был подлинным до того, как попал к вам»</div>
+    </div>
+    <div class="callout"><strong>Граница продукта:</strong> мы отвечаем на «этот файл технически подделан или синтетичен?» — не на «существует ли компания и верен ли счёт в реальном мире?». Второе — ваши реестры, issuer systems, ручная проверка.</div>
+  </section>
+
+  <section>
+    <div class="eyebrow"><span class="n">02</span> Путь клиента (B2B)</div>
+    <div class="flow">┌──────────────┐    ┌──────────────────┐    ┌────────────────┐    ┌─────────────────┐
+│  <span class="hl">Пилот /</span>     │ ─► │  Интеграция API  │ ─► │  <span class="hl">Production</span>    │ ─► │  Аудит / споры  │
+│  trial /try  │    │  + webhook/DPA   │    │  auto-policy   │    │  PDF + hash     │
+└──────────────┘    └──────────────────┘    └────────────────┘    └─────────────────┘</div>
+    <table class="tbl">
+      <thead><tr><th>Этап</th><th>Действия</th><th>Артефакты</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1. Доступ</strong></td><td>Ключ API (sandbox → prod), опционально <code>/try</code> для демо</td><td>API key, лимиты trial</td></tr>
+        <tr><td><strong>2. Интеграция</strong></td><td>Вызов из CRM / KYC-портала / бота / back-office</td><td><code>POST /api/v1/verify</code></td></tr>
+        <tr><td><strong>3. Решение</strong></td><td>Маршрутизация по <code>policy_actions</code>: reject / HITL / approve</td><td>Webhook в вашу очередь</td></tr>
+        <tr><td><strong>4. Аудит</strong></td><td>Хранение forensic record по DPA</td><td>PDF, <code>analysis_id</code>, verify URL, hash</td></tr>
+      </tbody>
+    </table>
+    <p class="note">Пользователь — compliance / fraud / ops клиента или их система (API-to-API). Конечный клиент банка работает в их UI, не в отдельном «банковском приложении Plica».</p>
+  </section>
+
+  <section>
+    <div class="eyebrow"><span class="n">03</span> Как документ попадает на проверку</div>
+    <p>Основной канал — <strong>API</strong> (не десктоп, не отдельный портал загрузки для retail):</p>
+    <ul class="clean">
+      <li><strong>Upload:</strong> multipart — JPEG, PNG, HEIC, WebP, PDF (до лимита сервера)</li>
+      <li><strong>URL:</strong> публичный <code>image_url</code> / <code>file_url</code> (с защитой SSRF)</li>
+      <li><strong>Контекст:</strong> <code>document_type</code>, <code>customer_id</code> / <code>subject_id</code>, <code>product_source</code></li>
+    </ul>
+    <p><strong>Типовые точки входа:</strong> клиент загрузил PDF в их onboarding → их backend → Plica API · оператор в back-office → их UI → Plica API · AI-агент / бот → API (<code>agent_fast</code> для ускоренного PDF).</p>
+  </section>
+
+  <section>
+    <div class="eyebrow"><span class="n">04</span> Как клиент получает результат</div>
+    <table class="tbl">
+      <thead><tr><th>Канал</th><th>Содержимое</th><th>Статус</th><th>Назначение</th></tr></thead>
+      <tbody>
+        <tr><td>JSON (sync)</td><td><code>verdict</code>, <code>fraud_score</code>, <code>analyst_summary</code>, <code>forensic_view</code>, <code>policy_actions</code></td><td><span class="pill p-ship">Shipped</span></td><td>Автоматизация, CRM, rules engine</td></tr>
+        <tr><td>PDF</td><td>Forensic Authenticity Report + verify link + hash</td><td><span class="pill p-ship">Shipped</span></td><td>MLRO, юристы, регулятор, споры</td></tr>
+        <tr><td>Webhook (prod)</td><td>Событие <code>analysis.completed</code> + payload</td><td><span class="pill p-ship">Shipped</span></td><td>HITL-очередь, auto-reject</td></tr>
+        <tr><td>Batch export</td><td>CSV / zip PDF по <code>job_id</code></td><td><span class="pill p-road">Roadmap</span></td><td>Массовая triage</td></tr>
+      </tbody>
+    </table>
+    <div class="callout"><code>requires_manual_review</code> и HITL — сигнал в <strong>ваш</strong> процесс, не отдельная «очередь юристов Plica». При definitive reject (напр. Tampered 85/100) отчёт даёт <strong>один</strong> enforcement path — Reject, без противоречащего «mixed signals».</div>
+  </section>
+
+  <section>
+    <div class="eyebrow"><span class="n">05</span> Приложения — что есть и что планируется</div>
+    <table class="tbl">
+      <thead><tr><th>Поверхность</th><th>Статус</th><th>Роль</th></tr></thead>
+      <tbody>
+        <tr><td>REST API</td><td><span class="pill p-ship">Prod</span></td><td>Основной продукт</td></tr>
+        <tr><td>Trial <code>/try</code></td><td><span class="pill p-ship">Shipped</span></td><td>Пилот, демо, ручная проверка одного файла</td></tr>
+        <tr><td>PDF-отчёт</td><td><span class="pill p-ship">Shipped</span></td><td>Compliance, audit trail</td></tr>
+        <tr><td>B2B-кабинет (ключи, usage, история, retention)</td><td><span class="pill p-road">Roadmap</span></td><td>Self-serve управление</td></tr>
+        <tr><td>Десктоп / mobile SDK</td><td><span class="pill p-no">Не в scope</span></td><td>Клиенты не хотят ещё один клиент; KYC — у вендоров</td></tr>
+      </tbody>
+    </table>
+    <p class="note">Позиция: <strong>API-first.</strong> Веб — для trial и лёгкого review, не замена корпоративного портала клиента.</p>
+  </section>
+
+  <section>
+    <div class="eyebrow"><span class="n">06</span> Хранение данных</div>
+    <table class="tbl">
+      <thead><tr><th>Тип</th><th>Где</th><th>Принцип</th></tr></thead>
+      <tbody>
+        <tr><td>Метаданные анализа</td><td>PostgreSQL / SQLite</td><td>Scores, verdict, structured JSON</td></tr>
+        <tr><td>Файлы (опционально)</td><td><code>data/verify_images/</code> или object storage</td><td>По DPA: срок, регион (EU), право на удаление</td></tr>
+        <tr><td>Кэш</td><td>Redis</td><td>Производительность, не долгосрочный архив</td></tr>
+        <tr><td>Отчёты</td><td>On-demand + кэш preview</td><td>PDF + hash для независимой верификации</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Privacy by design (enterprise):</strong></p>
+    <ul class="clean">
+      <li>Tenant-scoped — нет общей cross-tenant fraud-базы с PII</li>
+      <li>Retention настраивается: только hash + forensic record, без raw file после анализа</li>
+      <li>Шифрование in transit (TLS) и at rest — по договору</li>
+    </ul>
+    <div class="callout"><strong>Для юриста:</strong> мы храним доказательство того, что было проверено на intake, в объёме, согласованном в DPA — не бессрочный архив всех сканов паспортов.</div>
+  </section>
+
+  <section>
+    <div class="eyebrow"><span class="n">07</span> Батчи и несколько субъектов</div>
+    <p><strong>Батч документов — в scope:</strong> пакет файлов (claims, utility bills, statements) · клиент передаёт <code>subject_id</code> / <code>case_id</code> · ответ — verdict по каждому файлу + сводка + export <span class="pill p-road" style="vertical-align:middle">Roadmap: async job_id</span></p>
+    <p class="note">Смысл: массовая triage — какие файлы подозрительны, до ручной проверки критичных полей.</p>
+    <p style="margin-top:14px;"><strong>«По реестрам» — не core, возможна оркестрация:</strong></p>
+    <ul class="clean">
+      <li>ЕГРЮЛ, LexisNexis, credit bureau — подписка и интеграция клиента</li>
+      <li>Plica не конкурирует с data vendors: мы ловим подделку файла, они — правду о контрагенте</li>
+      <li>Опционально позже: webhook «forensic FAIL → не дёргать KYB» или «PASS → продолжить pipeline»</li>
+    </ul>
+  </section>
+
+  <section>
+    <div class="eyebrow"><span class="n">08</span> Content validation — граница отчёта</div>
+    <div class="two">
+      <div class="h yes">В отчёте сегодня</div>
+      <div class="h no">Не в scope без отдельного контракта</div>
+      <div>Арифметика в тексте (PASS / FAIL)</div>
+      <div>Существование адреса, поставщика, счёта в реальных реестрах</div>
+      <div>OCR vs machine-readable text layer (паттерн подмены сумм)</div>
+      <div>«Здравый смысл» контента против внешних authoritative sources</div>
+      <div>Barcode / MRZ cross-check (для ID)</div>
+      <div>&nbsp;</div>
+    </div>
+    <p class="note">Это не обесценивает forensic: подделанный utility bill с OCR 16% и amount drift — ловится <strong>до</strong> любого LexisNexis.</p>
+  </section>
+
+  <section style="border-bottom:none;">
+    <div class="eyebrow"><span class="n">09</span> Типовая архитектура интеграции</div>
+    <div class="flow"> [Конечный клиент]
+        │
+        ▼
+ [Портал клиента: onboarding / claims / CRM]
+        │   upload / subject_id
+        ▼
+ [Backend клиента] ──<span class="hl">POST /api/v1/verify</span>──► [PLICA API]
+        │                                      │
+        │◄── JSON + analysis_id ───────────────┘
+        │
+        ├──► auto-reject (policy_actions)
+        ├──► HITL-очередь клиента (webhook)
+        └──► архив PDF + hash (compliance)</div>
+    <p class="note">Соседи в стеке (комплементарны, не заменяем): Sumsub / Onfido (identity), LexisNexis / реестры (KYB), core banking. Plica — между файлом на входе и решением.</p>
+  </section>
+
+  <footer class="foot">
+    <p class="contact">Руслан Мишин · <a href="mailto:ruslanm@plicaforensic.com">ruslanm@plicaforensic.com</a> · <a href="https://plicaforensic.com">plicaforensic.com</a></p>
+    <p>Decision support, не courtroom verdicts. Forensic-вывод — одна часть расследования, не замена квалифицированной экспертизы или юридической консультации.</p>
+  </footer>
+
+</div>
+</body>
+</html>
