@@ -119,7 +119,7 @@ ul.clean li::before{content:'—';position:absolute;left:0;color:var(--copper);}
       <thead><tr><th>Stage</th><th>Actions</th><th>Artifacts</th></tr></thead>
       <tbody>
         <tr><td><strong>1. Access</strong></td><td>API key (sandbox → prod), optional <code>/try</code> for demo</td><td>API key, trial limits</td></tr>
-        <tr><td><strong>2. Integration</strong></td><td>Call from CRM / KYC portal / bot / back office</td><td><code>POST /api/v1/verify</code></td></tr>
+        <tr><td><strong>2. Integration</strong></td><td>Call from CRM / KYC portal / bot / back office</td><td><code>POST /api/v1/verify</code> (sync) or <code>POST /api/v1/jobs</code> (async batch)</td></tr>
         <tr><td><strong>3. Decision</strong></td><td>Route by <code>policy_actions</code>: reject / HITL / approve</td><td>Webhook into your queue</td></tr>
         <tr><td><strong>4. Audit</strong></td><td>Retain forensic record per DPA</td><td>PDF, <code>analysis_id</code>, verify URL, hash</td></tr>
       </tbody>
@@ -133,7 +133,8 @@ ul.clean li::before{content:'—';position:absolute;left:0;color:var(--copper);}
     <ul class="clean">
       <li><strong>Upload:</strong> multipart — JPEG, PNG, HEIC, WebP, PDF (up to server limit)</li>
       <li><strong>URL:</strong> public <code>image_url</code> / <code>file_url</code> (SSRF-protected)</li>
-      <li><strong>Context:</strong> <code>document_type</code>, <code>customer_id</code> / <code>subject_id</code>, <code>product_source</code></li>
+      <li><strong>Context:</strong> <code>document_type</code>, <code>customer_id</code>, <code>additional_info</code> (case JSON), <code>product_source</code></li>
+      <li><strong>Async batch:</strong> <code>POST /api/v1/jobs/batch</code> — up to 20 files, shared <code>batch_id</code>, poll or <code>webhook_url</code></li>
     </ul>
     <p><strong>Typical entry points:</strong> client uploads a PDF into their onboarding → their backend → Plica API · operator in the back office → their UI → Plica API · AI agent / bot → API (<code>agent_fast</code> for accelerated PDF).</p>
   </section>
@@ -143,10 +144,12 @@ ul.clean li::before{content:'—';position:absolute;left:0;color:var(--copper);}
     <table class="tbl">
       <thead><tr><th>Channel</th><th>Contents</th><th>Status</th><th>Purpose</th></tr></thead>
       <tbody>
-        <tr><td>JSON (sync)</td><td><code>verdict</code>, <code>fraud_score</code>, <code>analyst_summary</code>, <code>forensic_view</code>, <code>policy_actions</code></td><td><span class="pill p-ship">Shipped</span></td><td>Automation, CRM, rules engine</td></tr>
+        <tr><td>JSON (sync)</td><td><code>verdict</code>, <code>fraud_score</code>, <code>analyst_summary</code>, <code>forensic_view</code> (<code>claim_lists</code>, <code>risk_signals</code>), <code>policy_actions</code></td><td><span class="pill p-ship">Shipped</span></td><td>Automation, CRM, rules engine</td></tr>
+        <tr><td>JSON (async)</td><td><code>POST /jobs</code> → poll <code>GET /jobs/{job_id}</code> → <code>GET /jobs/{job_id}/result</code></td><td><span class="pill p-ship">Shipped</span></td><td>Bulk triage, slow PDFs, worker queues</td></tr>
         <tr><td>PDF</td><td>Forensic Authenticity Report + verify link + hash</td><td><span class="pill p-ship">Shipped</span></td><td>MLRO, counsel, regulator, disputes</td></tr>
-        <tr><td>Webhook (prod)</td><td><code>analysis.completed</code> event + payload</td><td><span class="pill p-ship">Shipped</span></td><td>HITL queue, auto-reject</td></tr>
-        <tr><td>Batch export</td><td>CSV / zipped PDFs by <code>job_id</code></td><td><span class="pill p-road">Roadmap</span></td><td>Bulk triage</td></tr>
+        <tr><td>Policy webhook</td><td><code>plica.policy.enforcement</code> on critical <code>policy_actions</code></td><td><span class="pill p-ship">Shipped</span></td><td>HITL queue, auto-reject</td></tr>
+        <tr><td>Job webhook</td><td><code>plica.analysis.completed</code> per <code>webhook_url</code> on job</td><td><span class="pill p-ship">Shipped</span></td><td>Push when batch file finishes</td></tr>
+        <tr><td>Batch export</td><td>CSV / zipped PDFs by <code>batch_id</code></td><td><span class="pill p-road">Roadmap</span></td><td>One-click compliance export</td></tr>
       </tbody>
     </table>
     <div class="callout"><code>requires_manual_review</code> and HITL are a signal into <strong>your</strong> process — not a separate "Plica lawyer queue." On a definitive reject (e.g. Tampered 85/100) the report gives <strong>one</strong> enforcement path — Reject — with no contradictory "mixed signals."</div>
@@ -157,7 +160,7 @@ ul.clean li::before{content:'—';position:absolute;left:0;color:var(--copper);}
     <table class="tbl">
       <thead><tr><th>Surface</th><th>Status</th><th>Role</th></tr></thead>
       <tbody>
-        <tr><td>REST API</td><td><span class="pill p-ship">Prod</span></td><td>The core product</td></tr>
+        <tr><td>REST API</td><td><span class="pill p-ship">Prod</span></td><td>The core product (<code>/verify</code>, <code>/jobs</code>)</td></tr>
         <tr><td>Trial <code>/try</code></td><td><span class="pill p-ship">Shipped</span></td><td>Pilot, demo, manual single-file check</td></tr>
         <tr><td>PDF report</td><td><span class="pill p-ship">Shipped</span></td><td>Compliance, audit trail</td></tr>
         <tr><td>B2B console (keys, usage, history, retention)</td><td><span class="pill p-road">Roadmap</span></td><td>Self-serve management</td></tr>
@@ -189,7 +192,7 @@ ul.clean li::before{content:'—';position:absolute;left:0;color:var(--copper);}
 
   <section>
     <div class="eyebrow"><span class="n">07</span> Batches and multiple subjects</div>
-    <p><strong>Document batches — in scope:</strong> a bundle of files (claims, utility bills, statements) · the client passes <code>subject_id</code> / <code>case_id</code> · response is a per-file verdict + summary + export <span class="pill p-road" style="vertical-align:middle">Roadmap: async job_id</span></p>
+    <p><strong>Document batches — shipped:</strong> <code>POST /api/v1/jobs/batch</code> (up to 20 files) returns a shared <code>batch_id</code> and one <code>job_id</code> per file. Poll <code>GET /api/v1/jobs?batch_id=…</code> or each <code>GET /api/v1/jobs/{job_id}</code>; fetch full JSON at <code>GET /api/v1/jobs/{job_id}/result</code>. Pass <code>customer_id</code> and <code>additional_info</code> (e.g. <code>case_ref</code>) — echoed in the report, not used in scoring.</p>
     <p class="note">Purpose: bulk triage — which files are suspicious — before manual review of the critical fields.</p>
     <p style="margin-top:14px;"><strong>"By registries" — not core, orchestration possible:</strong></p>
     <ul class="clean">
@@ -222,9 +225,10 @@ ul.clean li::before{content:'—';position:absolute;left:0;color:var(--copper);}
  [Client portal: onboarding / claims / CRM]
         │   upload / subject_id
         ▼
- [Client backend] ──<span class="hl">POST /api/v1/verify</span>──► [PLICA API]
+ [Client backend] ── sync: <span class="hl">POST /api/v1/verify</span>
+        │            async: <span class="hl">POST /api/v1/jobs/batch</span> ──► [PLICA API]
         │                                    │
-        │◄── JSON + analysis_id ─────────────┘
+        │◄── JSON / job_id + poll ───────────┘
         │
         ├──► auto-reject (policy_actions)
         ├──► client HITL queue (webhook)
